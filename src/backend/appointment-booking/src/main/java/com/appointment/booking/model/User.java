@@ -1,5 +1,6 @@
 package com.appointment.booking.model;
 
+import com.appointment.booking.enums.Rolename;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -23,6 +24,6 @@ public class User {
     private String email;
     private Date dateOfBirth;
     private String phone;
-    private boolean isAdmin;
-
+    @OneToOne
+    private Role role;
 }
