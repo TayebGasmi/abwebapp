@@ -21,4 +21,8 @@ export const routes: Routes = [
     path: 'new-password',
     loadComponent: () => import('./new-password/new-password.component').then(m => m.NewPasswordComponent)
   }
+  , {
+    path: 'verification'
+    , loadComponent: () => import('./verification/verification.component').then(m => m.VerificationComponent)
+  }
 ];
