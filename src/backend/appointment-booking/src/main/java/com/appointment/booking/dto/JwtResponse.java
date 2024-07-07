@@ -1,17 +1,21 @@
 package com.appointment.booking.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.io.Serializable;
 
 public class JwtResponse implements Serializable {
 
-    private final String jwtToken;
+    private  String value;
 
-    public JwtResponse(String jwtToken) {
-        this.jwtToken = jwtToken;
+    public JwtResponse(@JsonProperty("value") String value) {
+        this.value = value;
     }
     // constructor, getters
-
-    public String getJwtToken() {
-        return jwtToken;
+    public void setValue(String value) {
+        this.value = value;
+    }
+    public String getValue() {
+        return value;
     }
 }
