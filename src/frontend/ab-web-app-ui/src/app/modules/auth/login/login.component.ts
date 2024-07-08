@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, inject} from '@angular/core';
 import {InputTextModule} from "primeng/inputtext";
 import {FormsModule} from "@angular/forms";
 import {CheckboxModule} from "primeng/checkbox";
@@ -7,6 +7,7 @@ import {AppConfigComponent} from "../../../layout/config/app.config.component";
 import {LayoutService} from "../../../layout/service/app.layout.service";
 import {ButtonDirective} from "primeng/button";
 import {Ripple} from "primeng/ripple";
+import {AuthGoogleService} from "../../../core/service/auth-google-service.service";
 
 @Component({
   selector: 'app-login',
@@ -26,9 +27,16 @@ import {Ripple} from "primeng/ripple";
 export class LoginComponent {
   rememberMe: boolean = false;
 
-  constructor(private layoutService: LayoutService) {}
+  constructor(private layoutService: LayoutService) {
+  }
 
   get dark(): boolean {
     return this.layoutService.config.colorScheme !== 'light';
+  }
+
+  private authService = inject(AuthGoogleService);
+
+  signInWithGoogle() {
+    this.authService.login();
   }
 }
