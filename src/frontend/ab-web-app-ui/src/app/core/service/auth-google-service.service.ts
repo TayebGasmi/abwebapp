@@ -19,8 +19,13 @@ export class AuthGoogleService {
       issuer: 'https://accounts.google.com',
       strictDiscoveryDocumentValidation: false,
       clientId: '417207259952-dkf641h2te4kbgll7edehddgci2otijl',
-      redirectUri: "http://localhost:4200",
+      redirectUri: window.location.origin,
       scope: 'openid profile email',
+      oidc: true,
+      responseType: 'code',
+      requestAccessToken: true,
+      showDebugInformation: true,
+
     };
 
     this.oAuthService.configure(authConfig);
@@ -30,7 +35,13 @@ export class AuthGoogleService {
 
   login() {
 
-    this.oAuthService.initImplicitFlow();
+    this.oAuthService.initLoginFlow();
+    this.oAuthService.getIdentityClaims();
+    this.oAuthService .tryLogin({
+      onTokenReceived: (info) => {
+        console.log('state', info);
+      }
+    })
 
   }
 
