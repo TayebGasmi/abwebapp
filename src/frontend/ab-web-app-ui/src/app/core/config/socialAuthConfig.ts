@@ -1,5 +1,5 @@
 import {GoogleInitOptions, GoogleLoginProvider, SocialAuthServiceConfig} from '@abacritt/angularx-social-login';
-
+import {environment} from "../../../environments/environment";
 const googleLoginOptions: GoogleInitOptions = {
   scopes: 'profile email',
 
@@ -12,7 +12,7 @@ export const socialAuthConfig:SocialAuthServiceConfig = {
       {
         id: GoogleLoginProvider.PROVIDER_ID,
         provider: new GoogleLoginProvider(
-          '302542243565-le2eofetpr9b3ppcln0388nc5caoe49f.apps.googleusercontent.com',
+          environment.GOOGLE_CLIENT_ID,
           googleLoginOptions
         )
       }
