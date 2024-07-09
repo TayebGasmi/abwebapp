@@ -38,7 +38,7 @@ export class LayoutService {
     inputStyle: 'outlined',
     menuMode: 'static',
     colorScheme: 'light',
-    theme: 'blue',
+    theme: 'doowi',
     scale: 14,
     menuTheme: 'colorScheme'
   };
