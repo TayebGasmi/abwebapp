@@ -1,47 +1,32 @@
-import { OnInit } from '@angular/core';
-import { Component } from '@angular/core';
-import { AppMenuitemComponent } from './app.menuitem.component';
+import {OnInit} from '@angular/core';
+import {Component} from '@angular/core';
+import {AppMenuitemComponent} from './app.menuitem.component';
+import {MenuMode} from "./service/app.layout.service";
+import {MenuModel} from "../core/models/MenuModel";
 
 
 @Component({
-    selector: 'app-menu',
-    templateUrl: './app.menu.component.html',
-    standalone: true,
-    imports: [AppMenuitemComponent]
+  selector: 'app-menu',
+  templateUrl: './app.menu.component.html',
+  standalone: true,
+  imports: [AppMenuitemComponent]
 })
 export class AppMenuComponent implements OnInit {
 
-    model: any[] = [];
+  model: MenuModel[]= [];
 
-    ngOnInit() {
-        this.model = [
-            {
-                label: 'Dashboards',
-                icon: 'pi pi-home',
-                items: [
-                    {
-                        label: 'Smart School',
-                        icon: 'pi pi-fw pi-home',
-                        routerLink: ['/dashboard']
-                    }
-                ]
-            },
-            {
-            label: 'Settings',
-            icon: 'pi pi-cog',
-            items: [
-              {
-                label: 'Users',
-                icon: 'pi pi-user',
-                routerLink: ['/user']
-              },
-              {
-                label: 'Roles',
-                icon: 'pi pi-fw pi-image',
-                routerLink: ['/role']
-              }
-            ]
-          },
-        ];
-    }
+  ngOnInit() {
+    this.model = [
+      {
+        label:"booking",
+        items:[
+          {
+            label: "calendar",
+            icon: "pi pi-fw pi-calendar",
+            routerLink: "calendar"
+          }
+        ]
+      }
+      ]
+  }
 }

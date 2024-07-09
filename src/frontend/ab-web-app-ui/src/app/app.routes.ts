@@ -1,15 +1,18 @@
-import { Routes } from '@angular/router';
+import {Routes} from '@angular/router';
 import {AppLayoutComponent} from "./layout/app.layout.component";
 
 export const routes: Routes = [
   {
     path: '', component: AppLayoutComponent,
     children: [
-      { path: 'dashboard', data: { breadcrumb: 'Dashboard' }, loadChildren: () => import('./modules/home/pages/dashboard/dashboard.module').then(m => m.DashboardModule) },
-      { path: 'user',data: { breadcrumb: 'Users' }, loadChildren: () => import('./modules/home/pages/user/user.module').then(m => m.UserModule) },
-      { path: 'role',data: { breadcrumb: 'Roles' }, loadChildren: () => import('./modules/home/pages/role/role.module').then(m => m.RoleModule) },
+      {
+        path: 'calendar', loadComponent: () => import('./shared/components/calendar/calendar.component').then(m => m.CalendarComponent)
+      }
     ]
-  },
 
-  { path: '**', redirectTo: '/notfound' }
+  },
+  {
+    path: 'auth', loadChildren: () => import('./modules/auth/auth.routes').then(m => m.routes)
+  },
+  {path: '**', redirectTo: '/notfound'}
 ];
