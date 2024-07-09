@@ -7,7 +7,7 @@ import {AppConfigComponent} from "../../../layout/config/app.config.component";
 import {LayoutService} from "../../../layout/service/app.layout.service";
 import {ButtonDirective} from "primeng/button";
 import {Ripple} from "primeng/ripple";
-import {AuthGoogleService} from "../../../core/service/auth-google-service.service";
+import {GoogleSigninButtonModule, SocialAuthService} from "@abacritt/angularx-social-login";
 
 @Component({
   selector: 'app-login',
@@ -19,7 +19,8 @@ import {AuthGoogleService} from "../../../core/service/auth-google-service.servi
     RouterLink,
     AppConfigComponent,
     ButtonDirective,
-    Ripple
+    Ripple,
+    GoogleSigninButtonModule
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
@@ -34,9 +35,13 @@ export class LoginComponent {
     return this.layoutService.config.colorScheme !== 'light';
   }
 
-  private authService = inject(AuthGoogleService);
+  private authService = inject(SocialAuthService);
 
   signInWithGoogle() {
-    this.authService.login();
+    this.authService.authState.subscribe((user) => {
+        console.log(user);
+      }
+    );
+
   }
 }
