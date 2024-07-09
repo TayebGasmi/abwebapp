@@ -14,7 +14,7 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(withFetch()),
     provideOAuthClient(),
     {
-      provide:'SocialAuthServiceConfig',
+      provide: 'SocialAuthServiceConfig',
       useValue: socialAuthConfig
     }
   ]
