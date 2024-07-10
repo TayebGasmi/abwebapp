@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -24,8 +26,10 @@ public class User {
     private String email;
     private Date dateOfBirth;
     private String phone;
-    @OneToOne
-    private Role role;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id" ),
+            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
+    private Set<Role> roles=new HashSet<>();
 
     public User(String email, String password) {
         this.email = email;

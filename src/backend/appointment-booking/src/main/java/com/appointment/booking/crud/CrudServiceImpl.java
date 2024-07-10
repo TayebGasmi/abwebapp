@@ -27,7 +27,7 @@ public abstract class CrudServiceImpl<T, ID> implements CrudService<T, ID> {
     }
 
     @Override
-    public T create(T entity) {
+    public T create(T entity) throws Exception {
         return repository.save(entity);
     }
 

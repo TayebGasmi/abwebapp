@@ -1,5 +1,7 @@
 package com.appointment.booking.controller;
 
+import com.appointment.booking.crud.CrudController;
+import com.appointment.booking.crud.CrudService;
 import com.appointment.booking.model.User;
 import com.appointment.booking.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,9 +16,14 @@ import java.io.IOException;
 
 @RestController
 @RequestMapping("/usersmanagement")
-public class UserController {
+public class UserController extends CrudController<User,Long> {
     @Autowired
     UserService userService;
+
+    protected UserController(CrudService<User, Long> service) {
+        super(service);
+    }
+
     @PostMapping("/userAdd")
     public ResponseEntity<?> addUser(@RequestBody User user) throws IOException {
         userService.save(user);

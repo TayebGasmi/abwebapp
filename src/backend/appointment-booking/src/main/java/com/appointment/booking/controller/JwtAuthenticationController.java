@@ -8,6 +8,8 @@ import com.appointment.booking.security.UserDetailsServiceImpl;
 import com.appointment.booking.security.jwt.JwtProvider;
 import com.appointment.booking.service.RoleService;
 import com.appointment.booking.service.UserService;
+import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,8 +28,7 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.google.api.client.http.javanet.NetHttpTransport;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collections;
+import java.util.*;
 
 @RestController
 @CrossOrigin
@@ -71,10 +72,10 @@ public class JwtAuthenticationController {
     @PostMapping("/oauth")
     public ResponseEntity<?> google(@RequestBody JwtResponse tokenDto) throws IOException {
         final NetHttpTransport transport = new NetHttpTransport();
-        final JacksonFactory jacksonFactory = JacksonFactory.getDefaultInstance();
-        GoogleIdTokenVerifier.Builder verifier =
-                new GoogleIdTokenVerifier.Builder(transport, jacksonFactory)
-                        .setAudience(Collections.singletonList(googleClientId));
+        final JsonFactory jsonFactory = GsonFactory.getDefaultInstance();
+        GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(new NetHttpTransport(), jsonFactory)
+                .setAudience(Collections.singletonList(googleClientId))
+                .build();
         final GoogleIdToken googleIdToken = GoogleIdToken.parse(verifier.getJsonFactory(), tokenDto.getValue());
         final GoogleIdToken.Payload payload = googleIdToken.getPayload();
         User user;
@@ -89,7 +90,9 @@ public class JwtAuthenticationController {
     private User saveUser(String email){
         User user = new User(email, passwordEncoder.encode(secretPsw));
         Role rolUser = roleService.getByRolName(Rolename.ADMIN).get();
-        user.setRole(rolUser);
+        Set<Role> roles = new HashSet<>();
+        roles.add(rolUser);
+        user.setRoles(roles);
         return userService.save(user);
     }
 
@@ -98,7 +101,7 @@ public class JwtAuthenticationController {
                 new UsernamePasswordAuthenticationToken(user.getEmail(), secretPsw)
         );
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = jwtTokenUtil.generateToken(user.getEmail(),Arrays.asList(user.getRole()));
+        String jwt = jwtTokenUtil.generateToken(user.getEmail(),Arrays.asList(user.getRoles()));
         JwtResponse tokenDto = new JwtResponse(jwt);
         return tokenDto;
     }

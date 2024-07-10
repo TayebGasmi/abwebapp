@@ -11,7 +11,7 @@ public interface CrudService<T, ID> {
 
     boolean existsById(ID id);
 
-    T create(T entity);
+    T create(T entity) throws Exception;
 
     T update(ID id, T entity);
 
