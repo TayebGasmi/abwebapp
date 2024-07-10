@@ -31,8 +31,14 @@
         </div>
         <a class="text-600 cursor-pointer hover:text-primary cursor-pointer ml-auto transition-colors transition-duration-300">Reset password</a>
       </div>
-      <button pButton pRipple label="Log In" class="w-full" [routerLink]="['/']"></button>
-      <asl-google-signin-button size="large"   type='icon' ></asl-google-signin-button>
+      <button pButton pRipple label="Log In" class="w-full"></button>
+
+      <p-divider align="center" layout="horizontal" type="solid">
+        <b>or</b>
+      </p-divider>
+      <div class="flex flex-wrap align-items-center justify-content-center  w-full">
+        <asl-google-signin-button data-use_fedcm_for_prompt="true" class="google-login"  size="large" locale="en" type='standard'></asl-google-signin-button>
+      </div>
     </div>
   </div>
 </div>
