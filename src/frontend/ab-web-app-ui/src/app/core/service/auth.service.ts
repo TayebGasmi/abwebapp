@@ -1,5 +1,6 @@
 import {Injectable} from "@angular/core";
 import {BehaviorSubject} from "rxjs";
+import {SocialUser} from "@abacritt/angularx-social-login";
 
 @Injectable({
   providedIn: 'root'
@@ -16,5 +17,13 @@ export class AuthService {
     this.currentUser.next(user);
   }
 
+  login(user:SocialUser){
+    if(user.provider == 'GOOGLE'){
+      this.googleLogin(user);
+    }
+  }
 
+  googleLogin(user:SocialUser){
+    console.log(user);
+  }
 }

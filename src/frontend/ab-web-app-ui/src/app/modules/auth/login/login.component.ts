@@ -32,15 +32,14 @@ import {AuthService} from "../../../core/service/auth.service";
 export class LoginComponent implements OnInit {
   ngOnInit(): void {
     this.socialAuthService.authState.subscribe((user) => {
-      if (user != null) {
 
-      }
     }
     )
 
   }
 
   rememberMe: boolean = false;
+  private socialAuthService = inject(SocialAuthService);
 
   constructor(private layoutService: LayoutService, private authService: AuthService) {
   }
@@ -49,7 +48,6 @@ export class LoginComponent implements OnInit {
     return this.layoutService.config.colorScheme !== 'light';
   }
 
-  private socialAuthService = inject(SocialAuthService);
 
   signInWithOutlook(): void {
     this.socialAuthService.signIn(MicrosoftLoginProvider.PROVIDER_ID).then(r =>
