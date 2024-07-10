@@ -32,7 +32,7 @@ import {AuthService} from "../../../core/service/auth.service";
 export class LoginComponent implements OnInit {
   ngOnInit(): void {
     this.socialAuthService.authState.subscribe((user) => {
-
+      this.authService.login(user);
     }
     )
 
