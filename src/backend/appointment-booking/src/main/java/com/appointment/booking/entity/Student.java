@@ -13,7 +13,7 @@ import lombok.experimental.SuperBuilder;
 
 @Getter
 @Setter
-@Entity
+
 @Table(name = "student")
 @AllArgsConstructor
 @NoArgsConstructor

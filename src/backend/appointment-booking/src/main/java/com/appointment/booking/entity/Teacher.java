@@ -11,7 +11,7 @@ import lombok.experimental.SuperBuilder;
 
 @Getter
 @Setter
-@Entity
+
 @Table(name = "teacher")
 @AllArgsConstructor
 @NoArgsConstructor
