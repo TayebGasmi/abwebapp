@@ -15,14 +15,15 @@
       <div class="text-900 text-xl font-bold mb-2">Log in</div>
       <span class="text-600 font-medium">Please enter your details</span>
     </div>
+    <form (ngSubmit)="loginUser">
     <div class="flex flex-column">
             <span class="p-input-icon-left w-full mb-4">
                 <i class="pi pi-envelope"></i>
-                <input id="email" type="text" pInputText class="w-full md:w-25rem" placeholder="Email">
+                <input name ="username" id="email" [(ngModel)]="username" type="text" pInputText class="w-full md:w-25rem" placeholder="Email">
             </span>
       <span class="p-input-icon-left w-full mb-4">
                 <i class="pi pi-lock"></i>
-                <input id="password" type="password" pInputText class="w-full md:w-25rem" placeholder="Password">
+                <input name ="password"  [(ngModel)]="password" id="password" type="password" pInputText class="w-full md:w-25rem" placeholder="Password">
             </span>
       <div class="mb-4 flex flex-wrap gap-3">
         <div>
@@ -31,7 +32,11 @@
         </div>
         <a class="text-600 cursor-pointer hover:text-primary cursor-pointer ml-auto transition-colors transition-duration-300">Reset password</a>
       </div>
-      <button pButton pRipple label="Log In" class="w-full"></button>
+
+      <button pButton pRipple label="Log In" (click)="loginUser()" class="w-full"></button>
+      <p-divider align="center" layout="horizontal" type="solid">
+      </p-divider>
+      <button pButton pRipple label="Sign up"  class="w-full"></button>
 
       <p-divider align="center" layout="horizontal" type="solid">
         <b>or</b>
@@ -40,6 +45,7 @@
         <asl-google-signin-button data-use_fedcm_for_prompt="true" class="google-login"  size="large" locale="en" type='standard'></asl-google-signin-button>
       </div>
     </div>
+    </form>
   </div>
 </div>
 

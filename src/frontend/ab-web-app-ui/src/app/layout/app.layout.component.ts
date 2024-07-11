@@ -10,7 +10,6 @@ import { AppConfigComponent } from './config/app.config.component';
 import { AppProfileSidebarComponent } from './app.profilesidebar.component';
 import { AppBreadcrumbComponent } from './app.breadcrumb.component';
 import { NgClass } from '@angular/common';
-import {OAuthService} from "angular-oauth2-oidc";
 
 @Component({
   selector: 'app-layout',
@@ -19,7 +18,6 @@ import {OAuthService} from "angular-oauth2-oidc";
   imports: [NgClass, AppSidebarComponent, AppTopbarComponent, AppBreadcrumbComponent, RouterOutlet, AppProfileSidebarComponent, AppConfigComponent]
 })
 export class AppLayoutComponent implements OnDestroy {
-  private oAuthService = inject(OAuthService);
   overlayMenuOpenSubscription: Subscription;
 
   menuOutsideClickListener: any;
@@ -65,7 +63,6 @@ export class AppLayoutComponent implements OnDestroy {
     .subscribe(() => {
       this.hideMenu();
     });
-   console.log(this.oAuthService.getIdToken());
   }
 
   blockBodyScroll(): void {

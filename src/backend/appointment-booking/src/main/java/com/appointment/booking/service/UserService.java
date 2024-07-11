@@ -19,7 +19,7 @@ public class UserService extends CrudServiceImpl<User, Long> {
     private PasswordEncoder passwordEncoder;
     @Override
     public User create(User entity) throws Exception {
-        if(!getByEmail(entity.getEmail()).isPresent()) {
+        if(!getByEmail(entity.getEmail().toLowerCase()).isPresent()) {
             entity.setPassword(passwordEncoder.encode(entity.getPassword()));
             return super.create(entity);
         }else{
@@ -32,7 +32,7 @@ public class UserService extends CrudServiceImpl<User, Long> {
     }
 
     public Optional<User> getByEmail(String email){
-        return UserRepository.findByEmail(email);
+        return UserRepository.findByEmail(email.toLowerCase());
     }
 
     public boolean existsEmail(String email){

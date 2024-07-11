@@ -79,8 +79,8 @@ public class JwtAuthenticationController {
         final GoogleIdToken googleIdToken = GoogleIdToken.parse(verifier.getJsonFactory(), tokenDto.getValue());
         final GoogleIdToken.Payload payload = googleIdToken.getPayload();
         User user;
-        if(userService.existsEmail(payload.getSubject()))
-            user = userService.getByEmail(payload.getSubject()).get();
+        if(userService.existsEmail(payload.getEmail()))
+            user = userService.getByEmail(payload.getEmail()).get();
         else
             user = saveUser(payload.getEmail());
         JwtResponse tokenRes = login(user);
