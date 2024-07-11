@@ -15,6 +15,13 @@
   <description>appointment-booking</description>
   <properties>
     <java.version>17</java.version>
+    <jjwt-api.version>0.11.5</jjwt-api.version>
+    <google-api-client.version>1.30.9</google-api-client.version>
+    <google-http-client-gson.version>1.40.0</google-http-client-gson.version>
+    <springdoc-openapi-starter-webmvc-ui.version>2.5.0</springdoc-openapi-starter-webmvc-ui.version>
+    <lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
+    <mapstruct.version>1.5.5.Final</mapstruct.version>
+    <projectlombok.version>1.18.28</projectlombok.version>
   </properties>
   <dependencies>
     <dependency>
@@ -42,17 +49,17 @@
     <dependency>
       <groupId>io.jsonwebtoken</groupId>
       <artifactId>jjwt-api</artifactId>
-      <version>0.11.5</version>
+      <version>${jjwt-api.version}</version>
     </dependency>
     <dependency>
       <groupId>io.jsonwebtoken</groupId>
       <artifactId>jjwt-impl</artifactId>
-      <version>0.11.5</version>
+      <version>${jjwt-api.version}</version>
     </dependency>
     <dependency>
       <groupId>io.jsonwebtoken</groupId>
       <artifactId>jjwt-jackson</artifactId>
-      <version>0.11.5</version>
+      <version>${jjwt-api.version}</version>
     </dependency>
 
     <dependency>
@@ -76,12 +83,12 @@
     <dependency>
       <groupId>com.google.api-client</groupId>
       <artifactId>google-api-client</artifactId>
-      <version>1.30.9</version>
+      <version>${google-api-client.version}</version>
     </dependency>
     <dependency>
       <groupId>com.google.http-client</groupId>
       <artifactId>google-http-client-gson</artifactId>
-      <version>1.40.0</version>
+      <version>${google-http-client-gson.version}</version>
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
@@ -91,7 +98,20 @@
     <dependency>
       <groupId>org.springdoc</groupId>
       <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-      <version>2.5.0</version>
+      <version>${springdoc-openapi-starter-webmvc-ui.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-mail</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-thymeleaf</artifactId>
+    </dependency>
+    <dependency>
+      <artifactId>mapstruct</artifactId>
+      <groupId>org.mapstruct</groupId>
+      <version>${mapstruct.version}</version>
     </dependency>
   </dependencies>
 
@@ -108,6 +128,32 @@
             </exclude>
           </excludes>
         </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <annotationProcessorPaths>
+            <path>
+              <artifactId>mapstruct-processor</artifactId>
+              <groupId>org.mapstruct</groupId>
+              <version>${mapstruct.version}</version>
+            </path>
+            <path>
+              <artifactId>lombok</artifactId>
+              <groupId>org.projectlombok</groupId>
+              <version>${projectlombok.version}</version>
+            </path>
+            <path>
+              <artifactId>lombok-mapstruct-binding</artifactId>
+              <groupId>org.projectlombok</groupId>
+              <version>${lombok-mapstruct-binding.version}</version>
+            </path>
+          </annotationProcessorPaths>
+          <source>17</source>
+          <target>17</target>
+        </configuration>
+        <groupId>org.apache.maven.plugins</groupId>
+        <version>3.12.1</version>
       </plugin>
     </plugins>
   </build>

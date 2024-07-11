@@ -1,16 +1,22 @@
-package com.appointment.booking.model;
+package com.appointment.booking.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.*;
+import lombok.experimental.SuperBuilder;
 
 @Getter
 @Setter
 @Entity
 @Table(name = "teacher")
-public class Teacher extends User {
+@AllArgsConstructor
+@NoArgsConstructor
+@SuperBuilder
+public class Teacher extends User  {
 
     @ManyToMany(cascade = { CascadeType.ALL })
     @JoinTable(

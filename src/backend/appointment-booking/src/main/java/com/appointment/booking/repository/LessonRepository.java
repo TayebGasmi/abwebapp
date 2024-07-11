@@ -1,6 +1,6 @@
 package com.appointment.booking.repository;
 
-import com.appointment.booking.model.Lesson;
+import com.appointment.booking.entity.Lesson;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

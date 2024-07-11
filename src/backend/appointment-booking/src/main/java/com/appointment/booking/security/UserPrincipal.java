@@ -1,7 +1,7 @@
 package com.appointment.booking.security;
 
-import com.appointment.booking.model.Role;
-import com.appointment.booking.model.User;
+import com.appointment.booking.entity.Role;
+import com.appointment.booking.entity.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

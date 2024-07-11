@@ -1,20 +1,24 @@
-package com.appointment.booking.model;
+package com.appointment.booking.entity;
 
+import com.appointment.booking.base.BaseEntity;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.*;
+import lombok.experimental.SuperBuilder;
 
 @Getter
 @Setter
 @Entity
 @Table(name = "session")
-public class Session {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", nullable = false)
-    private Long id;
+@AllArgsConstructor
+@NoArgsConstructor
+@SuperBuilder
+public class Session extends BaseEntity<Long> {
+
     @ManyToOne
     @JoinColumn(name = "lesson_id")
     private Lesson lesson;

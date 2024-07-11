@@ -1,6 +1,6 @@
 package com.appointment.booking.security;
 
-import com.appointment.booking.model.User;
+import com.appointment.booking.entity.User;
 import com.appointment.booking.service.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +12,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;

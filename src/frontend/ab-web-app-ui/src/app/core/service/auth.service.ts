@@ -32,7 +32,7 @@ export class AuthService {
 
   googleLogin(user:SocialUser){
 
-
+    console.log(user);
   }
 
   private signInWithOutlook(user: SocialUser) {

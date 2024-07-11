@@ -1,6 +1,8 @@
 package com.appointment.booking.dto;
 
-public class RoleDTO {
-    private Long id;
+import com.appointment.booking.base.BaseDto;
+
+public class RoleDTO extends BaseDto<Long> {
+
     private String name;
 }

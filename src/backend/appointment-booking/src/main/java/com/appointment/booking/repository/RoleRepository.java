@@ -1,7 +1,7 @@
 package com.appointment.booking.repository;
 
 import com.appointment.booking.enums.Rolename;
-import com.appointment.booking.model.Role;
+import com.appointment.booking.entity.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
