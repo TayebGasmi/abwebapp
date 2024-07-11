@@ -1,6 +1,8 @@
 package com.appointment.booking.controller;
 import com.appointment.booking.dto.JwtRequest;
 import com.appointment.booking.dto.JwtResponse;
+import com.appointment.booking.dto.UserDto;
+import com.appointment.booking.dto.UserMapper;
 import com.appointment.booking.enums.Rolename;
 import com.appointment.booking.entity.Role;
 import com.appointment.booking.entity.User;
@@ -50,7 +52,7 @@ public class JwtAuthenticationController {
     private UserDetailsServiceImpl userDetailsService;
     @Autowired
     PasswordEncoder passwordEncoder;
-
+    UserMapper userMapper;
     @RequestMapping(value = "/authenticate", method = RequestMethod.POST)
     public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
         try {
@@ -69,7 +71,7 @@ public class JwtAuthenticationController {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
     }
     @PostMapping("/oauth")
-    public ResponseEntity<?> google(@RequestBody JwtResponse tokenDto) throws IOException {
+    public ResponseEntity<?> google(@RequestBody JwtResponse tokenDto) throws Exception {
         final NetHttpTransport transport = new NetHttpTransport();
         final JsonFactory jsonFactory = GsonFactory.getDefaultInstance();
         GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(new NetHttpTransport(), jsonFactory)
@@ -81,18 +83,19 @@ public class JwtAuthenticationController {
         if(userService.existsEmail(payload.getSubject()))
             user = userService.getByEmail(payload.getSubject()).get();
         else
-            user = saveUser(payload.getEmail());
+            user = userMapper.convertDtoToEntity(saveUser(payload.getEmail()));
         JwtResponse tokenRes = login(user);
         return new ResponseEntity(tokenRes, HttpStatus.OK);
     }
 
-    private User saveUser(String email){
+    private UserDto saveUser(String email) throws Exception {
+
         User user = new User(email, passwordEncoder.encode(secretPsw));
-        Role rolUser = roleService.getByRolName(Rolename.ADMIN).get();
+        Role rolUser = roleService.findByName(Rolename.ADMIN).get();
         Set<Role> roles = new HashSet<>();
         roles.add(rolUser);
         user.setRoles(roles);
-        return userService.save(user);
+        return userService.add(userMapper.convertEntityToDto(user));
     }
 
     private JwtResponse login(User user){

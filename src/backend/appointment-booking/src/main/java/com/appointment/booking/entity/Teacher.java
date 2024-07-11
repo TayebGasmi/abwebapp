@@ -17,7 +17,9 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @SuperBuilder
 public class Teacher extends User  {
-
+    @OneToOne
+    @JoinColumn(name = "school_id", referencedColumnName = "id")
+    private School school;
     @ManyToMany(cascade = { CascadeType.ALL })
     @JoinTable(
             name = "teacher_lesson",

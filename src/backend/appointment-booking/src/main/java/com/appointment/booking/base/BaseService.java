@@ -9,7 +9,7 @@ import java.io.Serializable;
 
 public interface BaseService<E extends BaseEntity, I extends Serializable, D extends BaseDto> {
 
-    D add(D dto);
+    D add(D dto) throws Exception;
 
     D updateById(I id, D dto);
 

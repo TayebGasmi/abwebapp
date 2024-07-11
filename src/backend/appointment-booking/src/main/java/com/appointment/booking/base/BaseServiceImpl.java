@@ -37,7 +37,7 @@ public class BaseServiceImpl<E extends BaseEntity<I>, I extends Serializable, D 
 
     @Override
     @Transactional
-    public D add(D dto) {
+    public D add(D dto) throws Exception {
         E entity = mapper.convertDtoToEntity(dto);
         return mapper.convertEntityToDto(repository.save(entity));
     }

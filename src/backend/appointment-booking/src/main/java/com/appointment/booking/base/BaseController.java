@@ -35,7 +35,7 @@ public abstract class BaseController<E extends BaseEntity<I>, I extends Serializ
         @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Invalid input")})
 
     @PostMapping
-    public ResponseEntity<D> save(@RequestBody @Valid D dto) {
+    public ResponseEntity<D> save(@RequestBody @Valid D dto) throws Exception {
         return new ResponseEntity<>(baseService.add(dto), HttpStatus.CREATED);
     }
 
