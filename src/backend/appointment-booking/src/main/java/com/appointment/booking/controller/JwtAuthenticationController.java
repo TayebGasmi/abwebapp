@@ -3,7 +3,7 @@ import com.appointment.booking.dto.JwtRequest;
 import com.appointment.booking.dto.JwtResponse;
 import com.appointment.booking.dto.UserDto;
 import com.appointment.booking.dto.UserMapper;
-import com.appointment.booking.enums.Rolename;
+import com.appointment.booking.enums.RoleName;
 import com.appointment.booking.entity.Role;
 import com.appointment.booking.entity.User;
 import com.appointment.booking.security.UserDetailsServiceImpl;
@@ -28,7 +28,6 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.google.api.client.http.javanet.NetHttpTransport;
 
-import java.io.IOException;
 import java.util.*;
 
 @RestController
@@ -91,7 +90,7 @@ public class JwtAuthenticationController {
     private UserDto saveUser(String email) throws Exception {
 
         User user = new User(email, passwordEncoder.encode(secretPsw));
-        Role rolUser = roleService.findByName(Rolename.ADMIN).get();
+        Role rolUser = roleService.findByName(RoleName.ADMIN).get();
         Set<Role> roles = new HashSet<>();
         roles.add(rolUser);
         user.setRoles(roles);

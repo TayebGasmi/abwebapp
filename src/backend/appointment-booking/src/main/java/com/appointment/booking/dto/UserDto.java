@@ -3,6 +3,9 @@ package com.appointment.booking.dto;
 import com.appointment.booking.base.BaseDto;
 import com.appointment.booking.base.BaseMapper;
 import com.appointment.booking.entity.User;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,10 +18,17 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 public class UserDto extends BaseDto<Long> {
 
-    private String username;
+    @NotBlank
+    @NotNull
     private String password;
+    @NotBlank
+    @NotNull
     private String firstName;
+    @NotBlank
+    @NotNull
     private String lastName;
+    @NotBlank
+    @NotNull
     private String email;
-    private String phone;
+
 }

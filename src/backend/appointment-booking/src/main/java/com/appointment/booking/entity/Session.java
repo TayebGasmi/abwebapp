@@ -6,13 +6,15 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.util.*;
 import lombok.experimental.SuperBuilder;
+
+import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
-
+@Entity
 @Table(name = "session")
 @AllArgsConstructor
 @NoArgsConstructor
@@ -20,23 +22,25 @@ import lombok.experimental.SuperBuilder;
 public class Session extends BaseEntity<Long> {
 
     @ManyToOne
-    @JoinColumn(name = "lesson_id")
+    @JoinColumn(name = "lesson_id", nullable = false)
     private Lesson lesson;
 
     @ManyToMany
     @JoinTable(
-            name = "session_student",
-            joinColumns = @JoinColumn(name = "session_id"),
-            inverseJoinColumns = @JoinColumn(name = "student_id")
+        name = "session_student",
+        joinColumns = @JoinColumn(name = "session_id"),
+        inverseJoinColumns = @JoinColumn(name = "student_id")
     )
     private Set<Student> students = new HashSet<>();
 
     @ManyToOne
-    @JoinColumn(name = "teacher_id")
+    @JoinColumn(name = "teacher_id", nullable = false)
     private Teacher teacher;
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date sessionDate;
 
+    @Column(name = "session_date", nullable = false)
+    private LocalDateTime sessionDate;
+
+    @Column(nullable = false)
     private String status;
 
 }
