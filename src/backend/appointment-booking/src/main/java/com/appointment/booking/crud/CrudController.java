@@ -35,8 +35,12 @@ public abstract class CrudController<T, ID> {
     }
 
     @PostMapping
-    public T create(@RequestBody T entity) throws Exception{
-        return service.create(entity);
+    public ResponseEntity<T> create(@RequestBody T entity) throws Exception{
+        try {
+            return new ResponseEntity<>(service.create(entity), HttpStatus.CREATED);
+        }catch(Exception ex){
+            return new ResponseEntity<>(null,HttpStatus.METHOD_NOT_ALLOWED);
+        }
     }
 
     @PutMapping("/{id}")
