@@ -44,9 +44,9 @@ export class AuthService {
 
   }
    signBack(login:Login): Observable<any>{
-    return this.httpClient.post<any>("http://localhost:8080/myapp/authenticate",login)
+    return this.httpClient.post<any>("http://localhost:8080//appointment-booking//authenticate",login)
   }
   signupBack(register:Register):Observable<any>{
-    return this.httpClient.post<any>("http://localhost:8080/myapp/usersmanagement",register)
+    return this.httpClient.post<any>(this.APPOINTMENT_BOOKING_URL+"/users",register)
   }
 }
