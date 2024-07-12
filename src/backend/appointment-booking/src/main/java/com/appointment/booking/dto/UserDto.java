@@ -6,16 +6,19 @@ import com.appointment.booking.entity.User;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.validation.constraints.Size;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
 public class UserDto extends BaseDto<Long> {
 
     @NotBlank
@@ -30,5 +33,7 @@ public class UserDto extends BaseDto<Long> {
     @NotBlank
     @NotNull
     private String email;
+
+    private Set<RoleDTO> roles ;
 
 }

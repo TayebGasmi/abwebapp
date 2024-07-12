@@ -1,12 +1,10 @@
 package com.appointment.booking.base;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.EntityListeners;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.*;
+
 import java.io.Serializable;
+import java.util.Date;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,13 +25,17 @@ public class BaseEntity<I extends Serializable> implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     @Column(name = "id")
     private I id;
 
     @CreatedDate
+    @Temporal(value = TemporalType.TIMESTAMP)
     @Column(updatable = false)
     private Long createdDate;
 
     @LastModifiedDate
+    @Temporal(value = TemporalType.TIMESTAMP)
+    @Column(updatable = false)
     private Long lastModifiedDate;
 }

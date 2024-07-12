@@ -2,7 +2,7 @@ package com.appointment.booking.controller;
 import com.appointment.booking.dto.JwtRequest;
 import com.appointment.booking.dto.JwtResponse;
 import com.appointment.booking.dto.UserDto;
-import com.appointment.booking.dto.UserMapper;
+import com.appointment.booking.mapper.UserMapper;
 import com.appointment.booking.enums.RoleName;
 import com.appointment.booking.entity.Role;
 import com.appointment.booking.entity.User;

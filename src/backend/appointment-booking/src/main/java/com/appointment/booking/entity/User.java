@@ -15,7 +15,7 @@ import java.util.Set;
 @Setter
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
-@Table(name = "user")
+@Table(name = "app-user")
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder
