@@ -25,16 +25,17 @@ public class EmailServiceImpl implements EmailService {
     private final TemplateEngine templateEngine;
 
 
-    private String generateEmailContent() {
+    private String generateEmailContent(String username, String confirmationCode) {
         var context = new Context();
+        context.setVariable("username", username);
+        context.setVariable("confirmationCode", confirmationCode);
         return templateEngine.process("email", context);
     }
 
 
-    @Override
-    public void sendEmail(@Valid @NotNull EmailDto emailDto) throws MessagingException {
+    public void sendEmail(@Valid @NotNull EmailDto emailDto,String user, String code) throws MessagingException {
         try {
-            MimeMessage mimeMessage = createMimeMessage(emailDto);
+            MimeMessage mimeMessage = createMimeMessage(emailDto,user,code);
             mailSender.send(mimeMessage);
             log.info("Email sent successfully");
         } catch (Exception e) {
@@ -45,11 +46,11 @@ public class EmailServiceImpl implements EmailService {
 
     }
 
-    private MimeMessage createMimeMessage(EmailDto emailDto) throws MessagingException {
+    private MimeMessage createMimeMessage(EmailDto emailDto,String username,String code) throws MessagingException {
         var message = mailSender.createMimeMessage();
 
         var helper = new MimeMessageHelper(message, true);
-        String emailContent = generateEmailContent();
+        String emailContent = generateEmailContent(username,code);
         helper.setTo(emailDto.getTo().toArray(new String[0]));
         helper.setFrom(emailDto.getFrom());
         helper.setSubject(emailDto.getSubject());

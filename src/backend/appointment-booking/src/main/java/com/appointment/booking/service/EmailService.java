@@ -7,5 +7,5 @@
 
     public interface EmailService {
 
-        void sendEmail(@Valid @NotEmpty EmailDto emailDto) throws MessagingException;
+        void sendEmail(@Valid @NotEmpty EmailDto emailDto,String user,String code) throws MessagingException;
     }

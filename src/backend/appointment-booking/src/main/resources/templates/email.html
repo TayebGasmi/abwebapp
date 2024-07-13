@@ -1,14 +1,16 @@
-<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
-  <title>Email Template</title>
+  <meta charset="UTF-8">
+  <title>Email Confirmation</title>
 </head>
 <body>
-<p th:text="'Hello'"></p>
-<p th:text="'Dear all,'"></p>
-<p th:text="'Attached herewith, you can find the reports for the mentioned competition.'"></p>
-<p th:text="'Thank you'"></p>
-<p th:text="'SJM TotoFoot'"></p>
-
+<p>Hello,</p>
+<p th:text="'Dear ' + ${username} + ','"></p>
+<p>Thank you for registering with us! Please use the following code to confirm your email:</p>
+<h2 th:text="${confirmationCode}">[Confirmation Code]</h2>
+<p>This code is valid for 10 minutes. Please enter it to complete your registration.</p>
+<p>If you did not request this, please ignore this email.</p>
+<p>Thank you,</p>
+<p>Booking APP</p>
 </body>
 </html>
