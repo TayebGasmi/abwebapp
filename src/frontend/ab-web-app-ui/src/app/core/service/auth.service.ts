@@ -4,7 +4,7 @@ import {SocialUser} from "@abacritt/angularx-social-login";
 import {Router} from "@angular/router";
 import {environment} from "../../../environments/environment";
 import {Login} from "../../shared/DTO/login";
-import {HttpClient, HttpHeaders} from "@angular/common/http";
+import {HttpClient} from "@angular/common/http";
 import {Register} from "../../shared/DTO/register";
 
 @Injectable({
