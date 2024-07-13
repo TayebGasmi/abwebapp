@@ -13,6 +13,10 @@ import {Ripple} from "primeng/ripple";
 import {AppConfigComponent} from "../../../layout/config/app.config.component";
 import {InputTextModule} from "primeng/inputtext";
 import {DropdownModule} from "primeng/dropdown";
+import {MessageModule} from "primeng/message";
+import {FormComponent} from "../../../shared/components/form/form.component";
+import {loginForm} from "../../../core/forms/login.form";
+import {BackgroundComponent} from "../../../shared/components/background/background.component";
 
 @Component({
   selector: 'app-register',
@@ -26,7 +30,10 @@ import {DropdownModule} from "primeng/dropdown";
     Ripple,
     AppConfigComponent,
     InputTextModule,
-    DropdownModule
+    DropdownModule,
+    MessageModule,
+    FormComponent,
+    BackgroundComponent
   ],
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.scss']
@@ -85,4 +92,6 @@ export class RegisterComponent {
       });
     }
   }
+
+  protected readonly loginForm = loginForm;
 }
