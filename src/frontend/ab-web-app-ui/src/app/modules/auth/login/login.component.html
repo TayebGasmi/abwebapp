@@ -15,39 +15,34 @@
       <div class="text-900 text-xl font-bold mb-2">Log in</div>
       <span class="text-600 font-medium">Please enter your details</span>
     </div>
-    <form (ngSubmit)="loginUser">
-    <div class="flex flex-column">
-            <span class="p-input-icon-left w-full mb-4">
-                <i class="pi pi-envelope"></i>
-                <input name ="username" id="email" [(ngModel)]="username" type="text" pInputText class="w-full md:w-25rem" placeholder="Email">
-            </span>
-      <span class="p-input-icon-left w-full mb-4">
-                <i class="pi pi-lock"></i>
-                <input name ="password"  [(ngModel)]="password" id="password" type="password" pInputText class="w-full md:w-25rem" placeholder="Password">
-            </span>
-      <div class="mb-4 flex flex-wrap gap-3">
-        <div>
-          <p-checkbox name="checkbox" value="val" [(ngModel)]="rememberMe" styleClass="mr-2" [binary]="true"></p-checkbox>
-          <label for="checkbox" class="text-900 font-medium mr-8">Remember Me</label>
+    <form [formGroup]="loginForm" (ngSubmit)="loginUser()">
+      <div class="flex flex-column">
+        <span class="p-input-icon-left w-full mb-4">
+          <i class="pi pi-envelope"></i>
+          <input formControlName="email" id="email" type="email" pInputText class="w-full md:w-25rem" placeholder="Email">
+        </span>
+        <span class="p-input-icon-left w-full mb-4">
+          <i class="pi pi-lock"></i>
+          <input formControlName="password" id="password" type="password" pInputText class="w-full md:w-25rem" placeholder="Password">
+        </span>
+        <div class="mb-4 flex flex-wrap gap-3">
+          <div>
+            <p-checkbox formControlName="rememberMe" styleClass="mr-2" [binary]="true"></p-checkbox>
+            <label for="checkbox" class="text-900 font-medium mr-8">Remember Me</label>
+          </div>
+          <a class="text-600 cursor-pointer hover:text-primary cursor-pointer ml-auto transition-colors transition-duration-300">Reset password</a>
         </div>
-        <a class="text-600 cursor-pointer hover:text-primary cursor-pointer ml-auto transition-colors transition-duration-300">Reset password</a>
+        <button pButton pRipple label="Log In" type="submit" class="w-full"></button>
+        <p-divider align="center" layout="horizontal" type="solid"></p-divider>
+        <button pButton pRipple label="Sign up" class="w-full"></button>
+        <p-divider align="center" layout="horizontal" type="solid">
+          <b>or</b>
+        </p-divider>
+        <div class="flex flex-wrap align-items-center justify-content-center w-full">
+          <asl-google-signin-button data-use_fedcm_for_prompt="true" class="google-login" size="large" locale="en" type='standard'></asl-google-signin-button>
+        </div>
       </div>
-
-      <button pButton pRipple label="Log In" (click)="loginUser()" class="w-full"></button>
-      <p-divider align="center" layout="horizontal" type="solid">
-      </p-divider>
-      <button pButton pRipple label="Sign up"  class="w-full"></button>
-
-      <p-divider align="center" layout="horizontal" type="solid">
-        <b>or</b>
-      </p-divider>
-      <div class="flex flex-wrap align-items-center justify-content-center  w-full">
-        <asl-google-signin-button data-use_fedcm_for_prompt="true" class="google-login"  size="large" locale="en" type='standard'></asl-google-signin-button>
-      </div>
-    </div>
     </form>
   </div>
 </div>
-
 <app-config [minimal]="true"></app-config>
-

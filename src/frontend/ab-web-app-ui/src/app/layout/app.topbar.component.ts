@@ -14,7 +14,7 @@ export class AppTopbarComponent {
 
     @ViewChild('menubutton') menuButton!: ElementRef;
 
-     pic   =localStorage ? localStorage.getItem("pic") : "";
+    // pic   =localStorage ? localStorage.getItem("pic") : "";
     constructor(public layoutService: LayoutService) { }
 
     onMenuButtonClick() {

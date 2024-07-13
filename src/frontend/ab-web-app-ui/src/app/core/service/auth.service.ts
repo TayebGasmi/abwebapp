@@ -12,41 +12,43 @@ import {Register} from "../../shared/DTO/register";
 })
 export class AuthService {
 
-  private readonly APPOINTMENT_BOOKING_URL = environment.APPOINTMENT_BOOKING_URL;
+  private readonly AUTH_URL = `${environment.APPOINTMENT_BOOKING_URL}/auth`;
   private readonly currentUser: BehaviorSubject<any> = new BehaviorSubject<any>(null);
-  private readonly router=inject(Router);
-  private readonly httpClient :HttpClient =inject(HttpClient);
+  private readonly router = inject(Router);
+  private readonly httpClient: HttpClient = inject(HttpClient);
   currentUser$ = this.currentUser.asObservable();
 
   nextUser(user: any) {
     this.currentUser.next(user);
   }
 
-  login(user:SocialUser){
+  login(user: SocialUser) {
     if (user.provider == 'MICROSOFT') {
       this.signInWithOutlook(user);
 
     }
-    if(user.provider == 'GOOGLE'){
+    if (user.provider == 'GOOGLE') {
       this.googleLogin(user);
-      localStorage.setItem("token",user.idToken)
-      localStorage.setItem("pic",user.photoUrl)
-      localStorage.setItem("firaslastname",user.firstName+" "+user.lastName)
+      localStorage.setItem("token", user.idToken)
+      localStorage.setItem("pic", user.photoUrl)
+      localStorage.setItem("firaslastname", user.firstName + " " + user.lastName)
     }
     this.router.navigate(['']);
   }
 
-  googleLogin(user:SocialUser){
+  googleLogin(user: SocialUser) {
 
   }
 
   private signInWithOutlook(user: SocialUser) {
 
   }
-   signBack(login:Login): Observable<any>{
-    return this.httpClient.post<any>("http://localhost:8080//appointment-booking//authenticate",login)
+
+  signBack(login: Login): Observable<any> {
+    return this.httpClient.post<any>(this.AUTH_URL, login)
   }
-  signupBack(register:Register):Observable<any>{
-    return this.httpClient.post<any>(this.APPOINTMENT_BOOKING_URL+"/users",register)
+
+  signupBack(register: Register): Observable<any> {
+    return this.httpClient.post<any>(this.AUTH_URL, register)
   }
 }
