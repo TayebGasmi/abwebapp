@@ -51,7 +51,8 @@ public class JwtAuthenticationController {
     private UserDetailsServiceImpl userDetailsService;
     @Autowired
     PasswordEncoder passwordEncoder;
-    UserMapper userMapper;
+    @Autowired
+    private UserMapper userMapper;
     @RequestMapping(value = "/authenticate", method = RequestMethod.POST)
     public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
         try {

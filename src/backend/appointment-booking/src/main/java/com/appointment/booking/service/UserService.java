@@ -62,9 +62,10 @@ public class UserService extends BaseServiceImpl<User, Long, UserDto> {
             throw new ExistException("user already exists");
         }
     }
-    private boolean verifyCodeUser(User user,String code) throws Exception {
-        Optional<CodeGenerator> codeGenerator = codeGeneratorRepository.findCodeGeneratorByUserAndCode(user,code);
-        return codeGenerator.isPresent() && codeGenerator.get().getExpirationDate().isBefore(LocalDateTime.now());
+    public boolean verifyCodeUser(User user,String code) throws Exception {
+        Optional<User> userfinded=userRepository.findByEmail(user.getEmail());
+        Optional<CodeGenerator> codeGenerator = codeGeneratorRepository.findCodeGeneratorByUserAndCode(userfinded.get(),code);
+        return codeGenerator.isPresent() && codeGenerator.get().getExpirationDate().isAfter(LocalDateTime.now());
     }
     private String generate4DigitCode() {
         Random random = new Random();
@@ -72,11 +73,10 @@ public class UserService extends BaseServiceImpl<User, Long, UserDto> {
         return String.valueOf(code);
     }
 
-    private UserDto enableUser(UserDto userDto) throws Exception {
-        User user=userMapper.convertDtoToEntity(userDto);
-        user.setIsEnabled(true);
-        userRepository.save(user);
-        return userMapper.convertEntityToDto(user);
+    public void enableUser(UserDto userDto) throws Exception {
+        Optional<User> user=userRepository.findByEmail(userDto.getEmail());
+        user.get().setIsEnabled(true);
+        userRepository.save(user.get());
     }
 
 
