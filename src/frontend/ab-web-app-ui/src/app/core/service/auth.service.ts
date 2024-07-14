@@ -6,13 +6,16 @@ import {environment} from "../../../environments/environment";
 import {Login} from "../models/login";
 import {HttpClient} from "@angular/common/http";
 import {Register} from "../models/register";
+import {User} from "../models/User";
+import {RegisterComponent} from "../../modules/auth/register/register.component";
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  private readonly AUTH_URL = `${environment.APPOINTMENT_BOOKING_URL}/auth`;
+  private readonly AUTH_URL = `${environment.APPOINTMENT_BOOKING_URL}auth`;
+  private readonly USERS_URL: string = `${environment.APPOINTMENT_BOOKING_URL}users`;
   private readonly currentUser: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   currentUser$ = this.currentUser.asObservable();
   private readonly router = inject(Router);
@@ -45,9 +48,14 @@ export class AuthService {
   }
 
   signupBack(register: Register): Observable<any> {
-    return this.httpClient.post<any>(this.AUTH_URL, register)
+    console.log(register)
+    console.log(this.USERS_URL)
+    return this.httpClient.post<any>(this.USERS_URL, register)
   }
+  verifyUser(user:User,code:String):Observable<any>{
+    return this.httpClient.post<any>(this.AUTH_URL+'verify/'+code,user)
 
+  }
   private signInWithOutlook(user: SocialUser) {
 
   }

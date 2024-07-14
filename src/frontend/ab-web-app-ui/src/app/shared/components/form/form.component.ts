@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnInit, Output,EventEmitter} from '@angular/core';
 import {FormControl, FormGroup, ReactiveFormsModule} from "@angular/forms";
 import {NgClass} from "@angular/common";
 import {InputNumberModule} from "primeng/inputnumber";
@@ -42,7 +42,6 @@ export class FormComponent implements OnInit {
   fields: FormField[] = [];
   form: FormGroup = new FormGroup({}, {updateOn: 'blur'});
   @Input() formData: any = {};
-
   ngOnInit(): void {
     this.initForm();
 

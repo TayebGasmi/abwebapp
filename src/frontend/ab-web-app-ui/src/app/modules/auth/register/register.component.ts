@@ -27,7 +27,7 @@ import {registerForm} from "../../../core/forms/register.form";
 })
 export class RegisterComponent {
 
-  checkUser: string = '';
+  checkUser!: string ;
   role: any[] = ["TEACHER", "STUDENT"];
   form = registerForm;
   dark: boolean = false;
@@ -39,7 +39,7 @@ export class RegisterComponent {
     const signup: Register = {
       email: userData.email,
       password: userData.password,
-      roles: [userData.selectedRole]
+      roles: [userData.role]
     };
 
     this.authService.signupBack(signup).pipe(
@@ -55,4 +55,6 @@ export class RegisterComponent {
       });
     });
   }
+
+  protected readonly registerForm = registerForm;
 }

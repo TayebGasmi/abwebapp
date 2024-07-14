@@ -33,5 +33,20 @@ export const registerForm: FormField[] = [
       }
     ],
     icon: 'pi pi-lock'
+  },
+  {
+    type: 'dropdown',
+    label: 'Role',
+    name: 'role',
+    placeholder: 'Enter your Role',
+    validators: [Validators.required],
+    options: [{label:"teacher",value:"TEACHER"},{label:"student",value:"STUDENT"}],
+    errors: [
+      {
+        type: 'required',
+        message: 'Role is required'
+      }
+    ],
+    icon: 'pi pi-lock'
   }
 ];
