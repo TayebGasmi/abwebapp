@@ -51,6 +51,19 @@
             ></p-password>
           </span>
         }
+        @case ('confirm-password') {
+          <span class="p-input-icon-left w-full mb-2">
+            <i class="pi pi-lock z-2"></i>
+            <p-password [formControlName]="field.name"
+                        [id]="field.name"
+                        [ngClass]="{'ng-invalid ng-dirty': fieldHasError(field.name)}"
+                        [placeholder]="field.placeholder || ''"
+                        [toggleMask]="true"
+                        inputStyleClass="w-full md:w-25rem"
+                        [inputStyle]="{paddingLeft: '2.5rem'}"
+            ></p-password>
+          </span>
+        }
         @case ('date') {
           <p-calendar
             [formControlName]="field.name"
@@ -113,7 +126,7 @@
         }
       }
       @if (fieldHasError(field.name)) {
-        <div class="ng-invalid p-error">{{ getFieldErrorMessage(field.name) }}</div>
+        <div class="mb-2 ng-invalid p-error">{{ getFieldErrorMessage(field.name) }}</div>
       }
     </div>
   }

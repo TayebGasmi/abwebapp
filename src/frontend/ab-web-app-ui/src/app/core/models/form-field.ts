@@ -28,3 +28,4 @@ type formType =
   | 'textarea'
   | 'file'
   | 'dropdown'
+  | 'confirm-password'
