@@ -5,15 +5,16 @@
       <div class="text-900 text-xl font-bold mb-2">Register</div>
       <span class="text-600 font-medium">Let's get started</span>
     </div>
-    <app-form [fields]="form"></app-form>
+    <app-form #registerForm [fields]="form"></app-form>
     <div class="mb-4 flex flex-wrap">
-      <p-checkbox [binary]="true" name="checkbox" styleClass="mr-2" value="val"></p-checkbox>
-      <label class="text-900 font-medium mr-2" for="checkbox">I have read the</label>
+      <p-checkbox id="confirm-check-box" [binary]="true" name="checkbox" styleClass="mr-2" value="val"></p-checkbox>
+      <label class="text-900 font-medium mr-2" for="confirm-check-box">I have read the</label>
       <a class="text-600 cursor-pointer hover:text-primary cursor-pointer">Terms and Conditions</a>
     </div>
-    <button [routerLink]="['/']" class="w-full mb-4" label="Sign Up" pButton pRipple></button>
-    <span class="font-medium text-600">Already have an account? <a class="font-semibold cursor-pointer text-900 hover:text-primary transition-colors transition-duration-300"
-                                                                   routerLink="/auth/login">Login</a></span>
+    <button (click)="signupUser(registerForm.form)" class="w-full mb-4" label="Sign Up" pButton pRipple></button>
+    <span class="font-medium text-600">Already have an account? <a
+      class="font-semibold cursor-pointer text-900 hover:text-primary transition-colors transition-duration-300"
+      routerLink="/auth/login">Login</a></span>
   </div>
 </div>
 

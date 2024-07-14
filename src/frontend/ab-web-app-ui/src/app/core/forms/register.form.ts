@@ -33,5 +33,19 @@ export const registerForm: FormField[] = [
       }
     ],
     icon: 'pi pi-lock'
+  },
+  {
+    type: 'password',
+    label: 'Confirm Password',
+    name: 'confirmPassword',
+    placeholder: 'Confirm your password',
+    validators: [Validators.required],
+    errors: [
+      {
+        type: 'required',
+        message: 'Password is required'
+      }
+    ],
+    icon: 'pi pi-lock'
   }
 ];
