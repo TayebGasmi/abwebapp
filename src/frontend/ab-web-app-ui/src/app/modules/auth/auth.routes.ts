@@ -22,7 +22,7 @@ export const routes: Routes = [
     loadComponent: () => import('./new-password/new-password.component').then(m => m.NewPasswordComponent)
   }
   , {
-    path: 'verification'
+    path: 'verification/:email'
     , loadComponent: () => import('./verification/verification.component').then(m => m.VerificationComponent)
   }
 ];

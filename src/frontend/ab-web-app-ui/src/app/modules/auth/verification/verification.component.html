@@ -10,21 +10,11 @@
       </div>
     </div>
     <div class="flex flex-column">
-      <div class="flex justify-content-between w-full align-items-center mb-4 gap-3">
-        <input (keyup)="onDigitInput($event)" class="w-3rem text-center " maxlength="1" pInputText
-               pKeyFilter="num">
-        <input (keyup)="onDigitInput($event)" class="w-3rem text-center " maxlength="1" pInputText
-               pKeyFilter="num">
-        <input (keyup)="onDigitInput($event)" class="w-3rem text-center" maxlength="1" pInputText
-               pKeyFilter="num">
-        <input (keyup)="onDigitInput($event)" class="w-3rem text-center " maxlength="1" pInputText
-               pKeyFilter="num">
-      </div>
-
+        <p-inputOtp [(ngModel)]="verificationCode" [mask]="true" />
       <div class="flex flex-wrap gap-2 justify-content-between">
         <button [routerLink]="['/']" class="flex-auto p-button-outlined" label="Cancel" pButton
                 pRipple></button>
-        <button [routerLink]="['/']" class="flex-auto" label="Verify" pButton pRipple></button>
+        <button (click)="verify()" class="flex-auto" label="Verify" pButton pRipple></button>
       </div>
     </div>
   </div>

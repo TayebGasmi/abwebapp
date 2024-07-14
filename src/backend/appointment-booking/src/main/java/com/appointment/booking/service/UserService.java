@@ -10,6 +10,7 @@ import com.appointment.booking.entity.CodeGenerator;
 import com.appointment.booking.entity.Role;
 import com.appointment.booking.entity.User;
 import com.appointment.booking.exceptions.ExistException;
+import com.appointment.booking.exceptions.NotFoundException;
 import com.appointment.booking.mapper.RoleMapper;
 import com.appointment.booking.mapper.UserMapper;
 import com.appointment.booking.repository.CodeGeneratorRepository;
@@ -63,9 +64,9 @@ public class UserService extends BaseServiceImpl<User, Long, UserDto> {
             throw new ExistException("user already exists");
         }
     }
-    public boolean verifyCodeUser(User user,String code) throws Exception {
-        Optional<User> userfinded=userRepository.findByEmail(user.getEmail());
-        Optional<CodeGenerator> codeGenerator = codeGeneratorRepository.findCodeGeneratorByUserAndCode(userfinded.get(),code);
+    public boolean verifyCodeUser(String email,String code) throws Exception {
+        User userfinded=userRepository.findByEmail(email).orElseThrow(()-> new NotFoundException("User not found"));
+        Optional<CodeGenerator> codeGenerator = codeGeneratorRepository.findCodeGeneratorByUserAndCode(userfinded,code);
         return codeGenerator.isPresent() && codeGenerator.get().getExpirationDate().isAfter(LocalDateTime.now());
     }
     private String generate4DigitCode() {
@@ -74,8 +75,8 @@ public class UserService extends BaseServiceImpl<User, Long, UserDto> {
         return String.valueOf(code);
     }
 
-    public void enableUser(UserDto userDto) throws Exception {
-        Optional<User> user=userRepository.findByEmail(userDto.getEmail());
+    public void enableUser(String email) throws Exception {
+        Optional<User> user=userRepository.findByEmail(email);
         user.get().setIsEnabled(true);
         userRepository.save(user.get());
     }

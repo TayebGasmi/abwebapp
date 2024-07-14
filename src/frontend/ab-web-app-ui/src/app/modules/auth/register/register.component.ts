@@ -62,6 +62,7 @@ export class RegisterComponent {
 
   signupUser(): void {
     if (this.form.invalid) {
+      console.log("invalid")
       this.form.markAllAsTouched();
       return;
     }
@@ -86,7 +87,7 @@ export class RegisterComponent {
         return throwError(error);
       })
     ).subscribe(() => {
-      this.router.navigate(['/auth/verification']).then(() => {
+      this.router.navigate(['/auth/verification/'+userData.email]).then(() => {
         console.log('User registered successfully');
       });
     });

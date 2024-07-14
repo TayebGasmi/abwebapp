@@ -1,10 +1,13 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {InputTextModule} from "primeng/inputtext";
 import {KeyFilterModule} from "primeng/keyfilter";
-import {RouterLink} from "@angular/router";
+import {ActivatedRoute, Router, RouterLink} from "@angular/router";
 import {ButtonDirective} from "primeng/button";
 import {Ripple} from "primeng/ripple";
 import {BackgroundComponent} from "../../../shared/components/background/background.component";
+import {AuthService} from "../../../core/service/auth.service";
+import {FormsModule} from "@angular/forms";
+import {InputOtpModule} from "primeng/inputotp";
 
 @Component({
   templateUrl: './verification.component.html',
@@ -16,28 +19,38 @@ import {BackgroundComponent} from "../../../shared/components/background/backgro
     RouterLink,
     ButtonDirective,
     Ripple,
-    BackgroundComponent
+    BackgroundComponent,
+    FormsModule,
+    InputOtpModule
   ]
 })
-export class VerificationComponent {
+export class VerificationComponent implements OnInit{
+  email: string | null = null;
+  verificationCode: string='';
 
-
-  constructor() {
+  constructor(private route: ActivatedRoute,
+              private authService: AuthService,
+              private router: Router) {
   }
 
-  onDigitInput(event: any) {
-    let element;
-    if (event.code !== 'Backspace')
-      if (event.code.includes('Numpad') || event.code.includes('Digit')) {
-        element = event.srcElement.nextElementSibling;
-      }
-    if (event.code === 'Backspace')
-      element = event.srcElement.previousElementSibling;
 
-    if (element == null)
-      return;
-    else
-      element.focus();
+  ngOnInit(): void {
+    this.route.params.subscribe(params => {
+      this.email = params['email'];
+    });
+  }
+  verify() {
+    console.log('Verification Code:', this.verificationCode);
+    console.log('Email:', this.email);
+
+    if (this.email) {
+      this.authService.verifyUser(this.email, this.verificationCode).subscribe(response => {
+        console.log('Verification response:', response);
+        this.router.navigate(['/auth/login']).then();
+      }, error => {
+        console.error('Verification error:', error);
+      });
+    }
   }
 
 }
