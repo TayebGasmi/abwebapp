@@ -6,8 +6,6 @@ import {environment} from "../../../environments/environment";
 import {Login} from "../models/login";
 import {HttpClient} from "@angular/common/http";
 import {Register} from "../models/register";
-import {User} from "../models/User";
-import {RegisterComponent} from "../../modules/auth/register/register.component";
 
 @Injectable({
   providedIn: 'root'
@@ -51,10 +49,8 @@ export class AuthService {
 
     return this.httpClient.post<any>(this.USERS_URL, register)
   }
-  verifyUser(user:User,code:String):Observable<any>{
-    return this.httpClient.post<any>(this.AUTH_URL+'verify/'+code,user)
 
-  }
+
   private signInWithOutlook(user: SocialUser) {
 
   }

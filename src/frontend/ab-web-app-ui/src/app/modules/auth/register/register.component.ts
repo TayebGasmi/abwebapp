@@ -4,13 +4,13 @@ import {AuthService} from "../../../core/service/auth.service";
 import {Register} from "../../../core/models/register";
 import {ButtonDirective} from "primeng/button";
 import {BackgroundComponent} from "../../../shared/components/background/background.component";
-import {FormComponent} from "../../../shared/components/form/form.component";
 import {CheckboxModule} from "primeng/checkbox";
 import {Ripple} from "primeng/ripple";
-import {registerForm} from "../../../core/forms/register.form";
-import {FormGroup} from "@angular/forms";
+import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 import {catchError, throwError} from "rxjs";
-import {formatIsoMonthStr} from "@fullcalendar/core/internal";
+import {InputTextModule} from "primeng/inputtext";
+import {PasswordModule} from "primeng/password";
+import {DropdownModule} from "primeng/dropdown";
 
 @Component({
   selector: 'app-register',
@@ -19,53 +19,107 @@ import {formatIsoMonthStr} from "@fullcalendar/core/internal";
     RouterLink,
     ButtonDirective,
     BackgroundComponent,
-    FormComponent,
     CheckboxModule,
-    Ripple
+    Ripple,
+    ReactiveFormsModule,
+    InputTextModule,
+    PasswordModule,
+    DropdownModule
   ],
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.scss']
 })
 export class RegisterComponent {
 
-  role: any[] = ["TEACHER", "STUDENT"];
-  form = registerForm;
+  role: any[] = [
+    {label: 'Teacher', value: 'TEACHER'},
+    {label: 'Student', value: 'STUDENT'}
+  ];
+  form!: FormGroup;
   dark: boolean = false;
 
-
-  constructor(private authService: AuthService, private router: Router) {
+  constructor(private authService: AuthService, private router: Router, private fb: FormBuilder) {
+    this.initForm();
   }
 
-  signupUser(form: FormGroup): void {
-    console.log(form.value);
-    console.log(form.valid);
-    console.log(form);
+  private initForm() {
+    this.form = this.fb.group({
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(8)]],
+      confirmPassword: ['', Validators.required],
+      role: ['', Validators.required],
+      terms: [false, Validators.requiredTrue]
+    }, {
+      validators: this.passwordMatchValidator,
+      updateOn: 'blur'
+    });
+  }
 
-    const userData = form.value;
-    console.log(userData.role)
+  private passwordMatchValidator(form: FormGroup) {
+    return form.get('password')?.value === form.get('confirmPassword')?.value
+      ? null : {'mismatch': true};
+  }
+
+  signupUser(): void {
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
+
+    const userData = this.form.value;
     const signup: Register = {
-      firstName:' TEST',
-      lastName:' TEST',
+      firstName: 'TEST',
+      lastName: 'TEST',
       email: userData.email,
       password: userData.password,
       roles: [{
-        roleName:userData.role
+        roleName: userData.role
       }]
     };
 
-     this.authService.signupBack(signup).pipe(
-       catchError((error) => {
-         if(error.error.keyMessage=="error.entity.exist"){
-           const mail=form.get("email")
-           mail?.setErrors({ user_exist: true })
-           console.log(mail)
-         }
-         return throwError(error)
-       })
-     ).subscribe(() => {
-       this.router.navigate(['/auth/verification']).then(() => {
-         console.log('User registered successfully');
-       });
-     });
+    this.authService.signupBack(signup).pipe(
+      catchError((error) => {
+        if (error.error.keyMessage == "error.entity.exist") {
+          const emailControl = this.form.get("email");
+          emailControl?.setErrors({user_exist: true});
+        }
+        return throwError(error);
+      })
+    ).subscribe(() => {
+      this.router.navigate(['/auth/verification']).then(() => {
+        console.log('User registered successfully');
+      });
+    });
+  }
+
+  fieldHasError(fieldName: string): boolean {
+    const control = this.form.get(fieldName);
+    return control ? control.invalid && (control.dirty || control.touched) : false;
+  }
+
+  getFieldErrorMessage(fieldName: string): string {
+    const control = this.form.get(fieldName);
+    if (control?.errors) {
+      if (control.errors["required"]) {
+        if (fieldName === 'terms') {
+          return `You must accept the terms and conditions`;
+        }
+        if (fieldName === 'confirmPassword') {
+          return `Confirm password is required`;
+        }
+        return `${fieldName} is required`;
+      } else if (control.errors["minlength"]) {
+        return `${fieldName} must be at least ${control.errors["minlength"].requiredLength} characters`;
+      } else if (control.errors["user_exist"]) {
+        return `This ${fieldName} already exists`;
+      } else if (control.errors["email"]) {
+        return `Please enter a valid email address`;
+      } else if (control.errors["pattern"]) {
+        return `${fieldName} must contain at least one uppercase letter, one lowercase letter, and one number`;
+      } else if (control.errors["mismatch"]) {
+        return `Passwords do not match`;
+      }
+    }
+    return '';
   }
 }
