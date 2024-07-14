@@ -1,0 +1,120 @@
+<form [formGroup]="form">
+  @for (field of fields; track field.name) {
+    <div class="flex flex-column">
+      @switch (field.type) {
+        @default {
+          @if (field.icon) {
+            <span class="p-input-icon-left w-full mb-2">
+              <i [ngClass]="field.icon"></i>
+              <input [formControlName]="field.name"
+                     [id]="field.name"
+                     [ngClass]="{'ng-invalid ng-dirty': fieldHasError(field.name)}"
+                     [placeholder]="field.placeholder || ''"
+                     [type]="field.type"
+                     pInputText
+                     class="w-full md:w-25rem"
+              />
+            </span>
+          } @else {
+            <input [formControlName]="field.name"
+                   [id]="field.name"
+                   [ngClass]="{'ng-invalid ng-dirty': fieldHasError(field.name)}"
+                   [placeholder]="field.placeholder || ''"
+                   [type]="field.type"
+                   pInputText
+                   class="w-full md:w-25rem"
+            />
+          }
+        }
+        @case ('number') {
+          <p-inputNumber
+            [formControlName]="field.name"
+            [id]="field.name"
+            [max]="field.max || 1000000"
+            [min]="field.min || 0"
+            [ngClass]="{'ng-invalid ng-dirty': fieldHasError(field.name)}"
+            [placeholder]="field.placeholder || ''"
+            [step]="field.step || 1"
+            styleClass="w-full md:w-25rem mb-2"
+          ></p-inputNumber>
+        }
+        @case ('password') {
+          <span class="p-input-icon-left w-full mb-2">
+            <i class="pi pi-lock z-2"></i>
+            <p-password [formControlName]="field.name"
+                        [id]="field.name"
+                        [ngClass]="{'ng-invalid ng-dirty': fieldHasError(field.name)}"
+                        [placeholder]="field.placeholder || ''"
+                        [toggleMask]="true"
+                        inputStyleClass="w-full md:w-25rem"
+                        [inputStyle]="{paddingLeft: '2.5rem'}"
+            ></p-password>
+          </span>
+        }
+        @case ('date') {
+          <p-calendar
+            [formControlName]="field.name"
+            [id]="field.name"
+            [ngClass]="{'ng-invalid ng-dirty': fieldHasError(field.name)}"
+            [placeholder]="field.placeholder || ''"
+            styleClass="w-full md:w-25rem mb-2"
+          ></p-calendar>
+        }
+        @case ('textarea') {
+          <textarea [formControlName]="field.name"
+                    [id]="field.name"
+                    [ngClass]="{'ng-invalid ng-dirty': fieldHasError(field.name)}"
+                    [placeholder]="field.placeholder || ''"
+                    pInputTextarea
+                    class="w-full md:w-25rem mb-2"
+          ></textarea>
+        }
+        @case ('checkbox') {
+          <p-checkbox [binary]="true"
+                      [formControlName]="field.name"
+                      [id]="field.name"
+                      [label]="field.label"
+                      [ngClass]="{'ng-invalid ng-dirty': fieldHasError(field.name)}"
+                      styleClass="mb-2"
+          ></p-checkbox>
+        }
+        @case ('select') {
+          <p-multiSelect
+            [formControlName]="field.name"
+            [id]="field.name"
+            [ngClass]="{'ng-invalid ng-dirty': fieldHasError(field.name)}"
+            [optionLabel]="field.placeholder || ''"
+            [options]="field.options"
+            display="chip"
+            styleClass="w-full md:w-25rem mb-2"
+          ></p-multiSelect>
+        }
+        @case ('dropdown') {
+          <p-dropdown [filter]="true" [formControlName]="field.name" [options]="field.options"
+                      [placeholder]="field.placeholder || ''"
+                      [showClear]="true"
+                      styleClass="w-full md:w-25rem mb-2"
+          >
+          </p-dropdown>
+        }
+        @case ('radio') {
+          @for (option of field.options; track option; let index = $index) {
+            <div class="mb-2">
+              <p-radioButton [formControlName]="field.name"
+                             [id]="field.name + index"
+                             [name]="field.name"
+                             [ngClass]="{'ng-invalid ng-dirty': fieldHasError(field.name)}"
+                             [value]="option.value"
+                             class="mt-1"
+              ></p-radioButton>
+              <label [for]="field.name + index" class="form-check-label">{{ option.label }}</label>
+            </div>
+          }
+        }
+      }
+      @if (fieldHasError(field.name)) {
+        <div class="ng-invalid p-error">{{ getFieldErrorMessage(field.name) }}</div>
+      }
+    </div>
+  }
+</form>

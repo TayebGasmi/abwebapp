@@ -3,9 +3,9 @@ import {BehaviorSubject, Observable} from "rxjs";
 import {SocialUser} from "@abacritt/angularx-social-login";
 import {Router} from "@angular/router";
 import {environment} from "../../../environments/environment";
-import {Login} from "../../shared/DTO/login";
+import {Login} from "../models/login";
 import {HttpClient} from "@angular/common/http";
-import {Register} from "../../shared/DTO/register";
+import {Register} from "../models/register";
 
 @Injectable({
   providedIn: 'root'
@@ -14,9 +14,9 @@ export class AuthService {
 
   private readonly AUTH_URL = `${environment.APPOINTMENT_BOOKING_URL}/auth`;
   private readonly currentUser: BehaviorSubject<any> = new BehaviorSubject<any>(null);
+  currentUser$ = this.currentUser.asObservable();
   private readonly router = inject(Router);
   private readonly httpClient: HttpClient = inject(HttpClient);
-  currentUser$ = this.currentUser.asObservable();
 
   nextUser(user: any) {
     this.currentUser.next(user);
@@ -40,15 +40,15 @@ export class AuthService {
 
   }
 
-  private signInWithOutlook(user: SocialUser) {
-
-  }
-
   signBack(login: Login): Observable<any> {
     return this.httpClient.post<any>(this.AUTH_URL, login)
   }
 
   signupBack(register: Register): Observable<any> {
     return this.httpClient.post<any>(this.AUTH_URL, register)
+  }
+
+  private signInWithOutlook(user: SocialUser) {
+
   }
 }

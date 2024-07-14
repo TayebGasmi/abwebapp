@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { TableEntityComponent } from './table-entity.component';
+import {TableEntityComponent} from './table-entity.component';
 
 describe('TableEntityComponent', () => {
   let component: TableEntityComponent;
@@ -8,8 +8,8 @@ describe('TableEntityComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-    imports: [TableEntityComponent]
-});
+      imports: [TableEntityComponent]
+    });
     fixture = TestBed.createComponent(TableEntityComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

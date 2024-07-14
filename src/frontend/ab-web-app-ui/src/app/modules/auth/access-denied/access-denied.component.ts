@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 import {RouterLink} from "@angular/router";
 import {Button} from "primeng/button";
 
@@ -12,4 +12,5 @@ import {Button} from "primeng/button";
   ],
   standalone: true
 })
-export class AccessDeniedComponent { }
+export class AccessDeniedComponent {
+}

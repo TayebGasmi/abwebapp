@@ -4,6 +4,6 @@ export interface TableColumnHeader {
   displayName?: string,
   dataKey: string
   template?: TemplateRef<any> | null
-  object?:boolean,
-  objectKey?:string
+  object?: boolean,
+  objectKey?: string
 }

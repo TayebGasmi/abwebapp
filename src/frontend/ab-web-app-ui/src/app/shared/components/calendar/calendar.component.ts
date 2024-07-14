@@ -15,15 +15,15 @@ import {CalendarOptions} from "@fullcalendar/core";
 })
 export class CalendarComponent implements OnInit {
   calendarOptions: CalendarOptions = {};
-  
+
   ngOnInit(): void {
     this.calendarOptions = {
       initialView: 'dayGridMonth',
       plugins: [dayGridPlugin, interactionPlugin],
       dateClick: (arg: any) => this.handleDateClick(arg),
       events: [
-        { title: 'event 1', date: '2024-04-01' },
-        { title: 'event 2', date: '2024-04-02' }
+        {title: 'event 1', date: '2024-04-01'},
+        {title: 'event 2', date: '2024-04-02'}
       ]
     };
   }
