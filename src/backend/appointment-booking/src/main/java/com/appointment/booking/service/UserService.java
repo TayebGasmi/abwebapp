@@ -3,6 +3,7 @@ package com.appointment.booking.service;
 
 import com.appointment.booking.base.BaseServiceImpl;
 import com.appointment.booking.dto.EmailDto;
+import com.appointment.booking.dto.RegisterDTO;
 import com.appointment.booking.dto.RoleDTO;
 import com.appointment.booking.dto.UserDto;
 import com.appointment.booking.entity.CodeGenerator;

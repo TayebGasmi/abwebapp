@@ -1,88 +1,71 @@
-import {Component, inject} from '@angular/core';
-import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import {LayoutService} from "../../../layout/service/app.layout.service";
+import {Component} from '@angular/core';
 import {Router, RouterLink} from "@angular/router";
 import {AuthService} from "../../../core/service/auth.service";
-import {Register} from "../../../shared/DTO/register";
-import {catchError, throwError} from "rxjs";
-import {HttpErrorResponse} from "@angular/common/http";
-import {PasswordModule} from "primeng/password";
-import {CheckboxModule} from "primeng/checkbox";
+import {Register} from "../../../core/models/register";
 import {ButtonDirective} from "primeng/button";
+import {BackgroundComponent} from "../../../shared/components/background/background.component";
+import {FormComponent} from "../../../shared/components/form/form.component";
+import {CheckboxModule} from "primeng/checkbox";
 import {Ripple} from "primeng/ripple";
-import {AppConfigComponent} from "../../../layout/config/app.config.component";
-import {InputTextModule} from "primeng/inputtext";
-import {DropdownModule} from "primeng/dropdown";
+import {registerForm} from "../../../core/forms/register.form";
+import {FormGroup} from "@angular/forms";
+import {catchError, throwError} from "rxjs";
+import {formatIsoMonthStr} from "@fullcalendar/core/internal";
 
 @Component({
   selector: 'app-register',
   standalone: true,
   imports: [
-    PasswordModule,
-    CheckboxModule,
-    ReactiveFormsModule,
     RouterLink,
     ButtonDirective,
-    Ripple,
-    AppConfigComponent,
-    InputTextModule,
-    DropdownModule
+    BackgroundComponent,
+    FormComponent,
+    CheckboxModule,
+    Ripple
   ],
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.scss']
 })
 export class RegisterComponent {
 
-  registerForm: FormGroup;
-  checkUser: string = '';
   role: any[] = ["TEACHER", "STUDENT"];
-  router = inject(Router);
+  form = registerForm;
+  dark: boolean = false;
 
-  constructor(private fb: FormBuilder, private layoutService: LayoutService, private authService: AuthService) {
-    this.registerForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(5)]],
-      confirmPassword: ['', Validators.required],
-      selectedRole: ['', Validators.required],
-      confirmed: [false, Validators.requiredTrue]
-    }, {
-      validator: this.passwordMatchValidator
-    });
+
+  constructor(private authService: AuthService, private router: Router) {
   }
 
+  signupUser(form: FormGroup): void {
+    console.log(form.value);
+    console.log(form.valid);
+    console.log(form);
 
-  get dark(): boolean {
-    return this.layoutService.config.colorScheme !== 'light';
-  }
+    const userData = form.value;
+    console.log(userData.role)
+    const signup: Register = {
+      firstName:' TEST',
+      lastName:' TEST',
+      email: userData.email,
+      password: userData.password,
+      roles: [{
+        roleName:userData.role
+      }]
+    };
 
-  passwordMatchValidator(form: FormGroup) {
-    const password = form.get('password');
-    const confirmPassword = form.get('confirmPassword');
-    return password && confirmPassword && password.value === confirmPassword.value ? null : {passwordMismatch: true};
-  }
-
-  signupUser(): void {
-    if (this.registerForm.valid) {
-      const signup: Register = {
-        username: this.registerForm.value.username,
-        email: this.registerForm.value.email,
-        password: this.registerForm.value.password,
-        roles: [this.registerForm.value.selectedRole]
-      };
-
-      this.authService.signupBack(signup).pipe(
-        catchError((error: HttpErrorResponse) => {
-          if (error.status === 405) {
-            this.checkUser = "user " + this.registerForm.value.username + " already exists!";
-          }
-          return throwError(() => error);
-        })
-      ).subscribe(() => {
-        this.router.navigate(['/auth/login']).then(() => {
-          console.log('User registered successfully');
-        }
-      );
-      });
-    }
+     this.authService.signupBack(signup).pipe(
+       catchError((error) => {
+         if(error.error.keyMessage=="error.entity.exist"){
+           const mail=form.get("email")
+           mail?.setErrors({ user_exist: true })
+           console.log(mail)
+         }
+         return throwError(error)
+       })
+     ).subscribe(() => {
+       this.router.navigate(['/auth/verification']).then(() => {
+         console.log('User registered successfully');
+       });
+     });
   }
 }
