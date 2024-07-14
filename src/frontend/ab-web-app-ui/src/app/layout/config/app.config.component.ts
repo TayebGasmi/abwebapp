@@ -1,156 +1,157 @@
-  import { Component, Input, OnInit } from '@angular/core';
-import { MenuService } from '../app.menu.service';
-import { ColorScheme, LayoutService, MenuColorScheme, MenuMode } from '../service/app.layout.service';
-import { InputSwitchModule } from 'primeng/inputswitch';
-import { FormsModule } from '@angular/forms';
-import { RadioButtonModule } from 'primeng/radiobutton';
-import { ButtonDirective } from 'primeng/button';
-import { NgStyle, NgClass } from '@angular/common';
-import { SidebarModule } from 'primeng/sidebar';
+import {Component, Input, OnInit} from '@angular/core';
+import {MenuService} from '../app.menu.service';
+import {ColorScheme, LayoutService, MenuColorScheme, MenuMode} from '../service/app.layout.service';
+import {InputSwitchModule} from 'primeng/inputswitch';
+import {FormsModule} from '@angular/forms';
+import {RadioButtonModule} from 'primeng/radiobutton';
+import {ButtonDirective} from 'primeng/button';
+import {NgClass, NgStyle} from '@angular/common';
+import {SidebarModule} from 'primeng/sidebar';
 
 @Component({
-    selector: 'app-config',
-    templateUrl: './app.config.component.html',
-    standalone: true,
-    imports: [SidebarModule, NgStyle, ButtonDirective, NgClass, RadioButtonModule, FormsModule, InputSwitchModule]
+  selector: 'app-config',
+  templateUrl: './app.config.component.html',
+  standalone: true,
+  imports: [SidebarModule, NgStyle, ButtonDirective, NgClass, RadioButtonModule, FormsModule, InputSwitchModule]
 })
 export class AppConfigComponent implements OnInit {
 
-    @Input() minimal: boolean = false;
+  @Input() minimal: boolean = false;
 
-    componentThemes: any[] = [];
+  componentThemes: any[] = [];
 
-    scales: number[] = [12,13,14,15,16];
+  scales: number[] = [12, 13, 14, 15, 16];
 
-    constructor(public layoutService: LayoutService, public menuService: MenuService) { }
+  constructor(public layoutService: LayoutService, public menuService: MenuService) {
+  }
 
-    get visible(): boolean {
-        return this.layoutService.state.configSidebarVisible;
+  get visible(): boolean {
+    return this.layoutService.state.configSidebarVisible;
+  }
+
+  set visible(_val: boolean) {
+    this.layoutService.state.configSidebarVisible = _val;
+  }
+
+  get scale(): number {
+    return this.layoutService.config.scale;
+  }
+
+  set scale(_val: number) {
+    this.layoutService.config.scale = _val;
+  }
+
+  get menuMode(): MenuMode {
+    return this.layoutService.config.menuMode;
+  }
+
+  set menuMode(_val: MenuMode) {
+    this.layoutService.config.menuMode = _val;
+    if (this.layoutService.isSlimPlus() || this.layoutService.isSlim() || this.layoutService.isHorizontal()) {
+      this.menuService.reset();
     }
+  }
 
-    set visible(_val: boolean) {
-        this.layoutService.state.configSidebarVisible = _val;
-    }
+  get colorScheme(): ColorScheme {
+    return this.layoutService.config.colorScheme;
+  }
 
-    get scale(): number {
-        return this.layoutService.config.scale;
-    }
+  set colorScheme(_val: ColorScheme) {
+    this.changeColorScheme(_val);
+  }
 
-    set scale(_val: number) {
-        this.layoutService.config.scale = _val;
-    }
+  get inputStyle(): string {
+    return this.layoutService.config.inputStyle;
+  }
 
-    get menuMode(): MenuMode {
-        return this.layoutService.config.menuMode;
-    }
+  set inputStyle(_val: string) {
+    this.layoutService.config.inputStyle = _val;
+  }
 
-    set menuMode(_val: MenuMode) {
-        this.layoutService.config.menuMode = _val;
-        if (this.layoutService.isSlimPlus() || this.layoutService.isSlim() || this.layoutService.isHorizontal()) {
-            this.menuService.reset();
-        }
-    }
+  get ripple(): boolean {
+    return this.layoutService.config.ripple;
+  }
 
-    get colorScheme(): ColorScheme {
-        return this.layoutService.config.colorScheme;
-    }
+  set ripple(_val: boolean) {
+    this.layoutService.config.ripple = _val;
+  }
 
-    set colorScheme(_val: ColorScheme) {
-        this.changeColorScheme(_val);
-    }
+  get menuTheme(): MenuColorScheme {
+    return this.layoutService.config.menuTheme;
+  }
 
-    get inputStyle(): string {
-        return this.layoutService.config.inputStyle;
-    }
+  set menuTheme(_val: MenuColorScheme) {
+    this.layoutService.config.menuTheme = _val;
+  }
 
-    set inputStyle(_val: string) {
-        this.layoutService.config.inputStyle = _val;
-    }
+  ngOnInit() {
+    this.componentThemes = [
+      {name: 'indigo', color: '#6366F1'},
+      {name: 'blue', color: '#3B82F6'},
+      {name: 'purple', color: '#8B5CF6'},
+      {name: 'teal', color: '#14B8A6'},
+      {name: 'cyan', color: '#06b6d4'},
+      {name: 'green', color: '#10b981'},
+      {name: 'orange', color: '#f59e0b'},
+      {name: 'pink', color: '#d946ef'},
+      {name: 'doowi', color: '#1a276d'}
+    ];
+  }
 
-    get ripple(): boolean {
-        return this.layoutService.config.ripple;
-    }
+  onConfigButtonClick() {
+    this.layoutService.showConfigSidebar();
+  }
 
-    set ripple(_val: boolean) {
-        this.layoutService.config.ripple = _val;
-    }
+  changeColorScheme(colorScheme: ColorScheme) {
+    const themeLink = <HTMLLinkElement>document.getElementById('theme-link');
+    const themeLinkHref = themeLink.getAttribute('href');
+    const currentColorScheme = 'theme-' + this.layoutService.config.colorScheme;
+    const newColorScheme = 'theme-' + colorScheme;
+    const newHref = themeLinkHref!.replace(currentColorScheme, newColorScheme);
+    this.replaceThemeLink(newHref, () => {
+      this.layoutService.config.colorScheme = colorScheme;
+      this.layoutService.onConfigUpdate();
+    });
+  }
 
-    get menuTheme(): MenuColorScheme {
-        return this.layoutService.config.menuTheme;
-    }
+  changeTheme(theme: string) {
+    const themeLink = <HTMLLinkElement>document.getElementById('theme-link');
+    const newHref = themeLink.getAttribute('href')!.replace(this.layoutService.config.theme, theme);
+    this.replaceThemeLink(newHref, () => {
+      this.layoutService.config.theme = theme;
+      this.layoutService.onConfigUpdate();
+    });
+  }
 
-    set menuTheme(_val: MenuColorScheme) {
-        this.layoutService.config.menuTheme = _val;
-    }
+  replaceThemeLink(href: string, onComplete: Function) {
+    const id = 'theme-link';
+    const themeLink = <HTMLLinkElement>document.getElementById(id);
+    const cloneLinkElement = <HTMLLinkElement>themeLink.cloneNode(true);
 
-    ngOnInit() {
-        this.componentThemes = [
-            { name: 'indigo', color: '#6366F1' },
-            { name: 'blue', color: '#3B82F6' },
-            { name: 'purple', color: '#8B5CF6' },
-            { name: 'teal', color: '#14B8A6' },
-            { name: 'cyan', color: '#06b6d4' },
-            { name: 'green', color: '#10b981' },
-            { name: 'orange', color: '#f59e0b' },
-            { name: 'pink', color: '#d946ef' },
-            {name: 'doowi', color: '#1a276d'}
-        ];
-    }
+    cloneLinkElement.setAttribute('href', href);
+    cloneLinkElement.setAttribute('id', id + '-clone');
 
-    onConfigButtonClick() {
-        this.layoutService.showConfigSidebar();
-    }
+    themeLink.parentNode!.insertBefore(cloneLinkElement, themeLink.nextSibling);
 
-    changeColorScheme(colorScheme: ColorScheme) {
-        const themeLink = <HTMLLinkElement>document.getElementById('theme-link');
-        const themeLinkHref = themeLink.getAttribute('href');
-        const currentColorScheme = 'theme-' + this.layoutService.config.colorScheme;
-        const newColorScheme = 'theme-' + colorScheme;
-        const newHref = themeLinkHref!.replace(currentColorScheme, newColorScheme);
-        this.replaceThemeLink(newHref, () => {
-            this.layoutService.config.colorScheme = colorScheme;
-            this.layoutService.onConfigUpdate();
-        });
-    }
+    cloneLinkElement.addEventListener('load', () => {
+      themeLink.remove();
+      cloneLinkElement.setAttribute('id', id);
+      onComplete();
+    });
+  }
 
-    changeTheme(theme: string) {
-        const themeLink = <HTMLLinkElement>document.getElementById('theme-link');
-        const newHref = themeLink.getAttribute('href')!.replace(this.layoutService.config.theme, theme);
-        this.replaceThemeLink(newHref, () => {
-            this.layoutService.config.theme = theme;
-            this.layoutService.onConfigUpdate();
-        });
-    }
+  decrementScale() {
+    this.scale--;
+    this.applyScale();
+  }
 
-    replaceThemeLink(href: string, onComplete: Function) {
-        const id = 'theme-link';
-        const themeLink = <HTMLLinkElement>document.getElementById(id);
-        const cloneLinkElement = <HTMLLinkElement>themeLink.cloneNode(true);
+  incrementScale() {
+    this.scale++;
+    this.applyScale();
+  }
 
-        cloneLinkElement.setAttribute('href', href);
-        cloneLinkElement.setAttribute('id', id + '-clone');
-
-        themeLink.parentNode!.insertBefore(cloneLinkElement, themeLink.nextSibling);
-
-        cloneLinkElement.addEventListener('load', () => {
-            themeLink.remove();
-            cloneLinkElement.setAttribute('id', id);
-            onComplete();
-        });
-    }
-
-    decrementScale() {
-        this.scale--;
-        this.applyScale();
-    }
-
-    incrementScale() {
-        this.scale++;
-        this.applyScale();
-    }
-
-    applyScale() {
-        document.documentElement.style.fontSize = this.scale + 'px';
-    }
+  applyScale() {
+    document.documentElement.style.fontSize = this.scale + 'px';
+  }
 
 }

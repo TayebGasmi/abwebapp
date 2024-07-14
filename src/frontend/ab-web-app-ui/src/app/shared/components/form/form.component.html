@@ -8,7 +8,7 @@
               <i [ngClass]="field.icon"></i>
               <input [formControlName]="field.name"
                      [id]="field.name"
-                     [ngClass]="{'ng-invalid ng-dirty': showFieldErrors(field.name)}"
+                     [ngClass]="{'ng-invalid ng-dirty': fieldHasError(field.name)}"
                      [placeholder]="field.placeholder || ''"
                      [type]="field.type"
                      pInputText
@@ -18,7 +18,7 @@
           } @else {
             <input [formControlName]="field.name"
                    [id]="field.name"
-                   [ngClass]="{'ng-invalid ng-dirty': showFieldErrors(field.name)}"
+                   [ngClass]="{'ng-invalid ng-dirty': fieldHasError(field.name)}"
                    [placeholder]="field.placeholder || ''"
                    [type]="field.type"
                    pInputText
@@ -32,7 +32,7 @@
             [id]="field.name"
             [max]="field.max || 1000000"
             [min]="field.min || 0"
-            [ngClass]="{'ng-invalid ng-dirty': showFieldErrors(field.name)}"
+            [ngClass]="{'ng-invalid ng-dirty': fieldHasError(field.name)}"
             [placeholder]="field.placeholder || ''"
             [step]="field.step || 1"
             styleClass="w-full md:w-25rem mb-2"
@@ -40,22 +40,22 @@
         }
         @case ('password') {
           <span class="p-input-icon-left w-full mb-2">
-            <i class="pi pi-lock z-2" ></i>
-          <p-password [formControlName]="field.name"
-                      [id]="field.name"
-                      [ngClass]="{'ng-invalid ng-dirty': showFieldErrors(field.name)}"
-                      [placeholder]="field.placeholder || ''"
-                      [toggleMask]="true"
-                      inputStyleClass=" w-full md:w-25rem"
-                      [inputStyle]="{paddingLeft: '2.5rem'}"
-          ></p-password>
+            <i class="pi pi-lock z-2"></i>
+            <p-password [formControlName]="field.name"
+                        [id]="field.name"
+                        [ngClass]="{'ng-invalid ng-dirty': fieldHasError(field.name)}"
+                        [placeholder]="field.placeholder || ''"
+                        [toggleMask]="true"
+                        inputStyleClass="w-full md:w-25rem"
+                        [inputStyle]="{paddingLeft: '2.5rem'}"
+            ></p-password>
           </span>
         }
         @case ('date') {
           <p-calendar
             [formControlName]="field.name"
             [id]="field.name"
-            [ngClass]="{'ng-invalid ng-dirty': showFieldErrors(field.name)}"
+            [ngClass]="{'ng-invalid ng-dirty': fieldHasError(field.name)}"
             [placeholder]="field.placeholder || ''"
             styleClass="w-full md:w-25rem mb-2"
           ></p-calendar>
@@ -63,11 +63,10 @@
         @case ('textarea') {
           <textarea [formControlName]="field.name"
                     [id]="field.name"
-                    [ngClass]="{'ng-invalid ng-dirty': showFieldErrors(field.name)}"
+                    [ngClass]="{'ng-invalid ng-dirty': fieldHasError(field.name)}"
                     [placeholder]="field.placeholder || ''"
                     pInputTextarea
                     class="w-full md:w-25rem mb-2"
-
           ></textarea>
         }
         @case ('checkbox') {
@@ -75,16 +74,15 @@
                       [formControlName]="field.name"
                       [id]="field.name"
                       [label]="field.label"
-                      [ngClass]="{'ng-invalid ng-dirty': showFieldErrors(field.name)}"
+                      [ngClass]="{'ng-invalid ng-dirty': fieldHasError(field.name)}"
                       styleClass="mb-2"
-
           ></p-checkbox>
         }
         @case ('select') {
           <p-multiSelect
             [formControlName]="field.name"
             [id]="field.name"
-            [ngClass]="{'ng-invalid ng-dirty': showFieldErrors(field.name)}"
+            [ngClass]="{'ng-invalid ng-dirty': fieldHasError(field.name)}"
             [optionLabel]="field.placeholder || ''"
             [options]="field.options"
             display="chip"
@@ -103,21 +101,19 @@
           @for (option of field.options; track option; let index = $index) {
             <div class="mb-2">
               <p-radioButton [formControlName]="field.name"
-                             [id]="field.name+index"
+                             [id]="field.name + index"
                              [name]="field.name"
-                             [ngClass]="{'ng-invalid ng-dirty': showFieldErrors(field.name)}"
+                             [ngClass]="{'ng-invalid ng-dirty': fieldHasError(field.name)}"
                              [value]="option.value"
                              class="mt-1"
               ></p-radioButton>
-              <label [for]="field.name+index" class="form-check-label"> {{ option.label }}</label>
+              <label [for]="field.name + index" class="form-check-label">{{ option.label }}</label>
             </div>
           }
         }
       }
-      @if (showFieldErrors(field.name)) {
-        <div class="w-full md:w-25rem mt-2 p-2 p-error p-message-error p-message">
-          {{ field.errorMessage }}
-        </div>
+      @if (fieldHasError(field.name)) {
+        <div class="ng-invalid p-error">{{ getFieldErrorMessage(field.name) }}</div>
       }
     </div>
   }

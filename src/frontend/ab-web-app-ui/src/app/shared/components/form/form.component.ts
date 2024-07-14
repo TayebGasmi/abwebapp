@@ -1,4 +1,4 @@
-import {Component, ContentChild, Input, OnInit, TemplateRef} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {FormControl, FormGroup, ReactiveFormsModule} from "@angular/forms";
 import {NgClass} from "@angular/common";
 import {InputNumberModule} from "primeng/inputnumber";
@@ -37,14 +37,11 @@ import {MessageModule} from "primeng/message";
   templateUrl: './form.component.html',
   styleUrl: './form.component.scss'
 })
-export class FormComponent implements OnInit{
+export class FormComponent implements OnInit {
   @Input()
   fields: FormField[] = [];
-  form: FormGroup = new FormGroup({});
-  @Input()
-  formData: any = {};
-  @ContentChild('formButtons')
-  formButtons?: TemplateRef<any>;
+  form: FormGroup = new FormGroup({}, {updateOn: 'blur'});
+  @Input() formData: any = {};
 
   ngOnInit(): void {
     this.initForm();
@@ -54,17 +51,32 @@ export class FormComponent implements OnInit{
   initForm() {
     this.fields.forEach(field => {
       let fieldValue = this.formData.hasOwnProperty(field.name) ? this.formData[field.name] : '';
-      if(field.type=="dropdown") {
-        fieldValue =fieldValue[0];
+      if (field.type == "dropdown") {
+        fieldValue = fieldValue[0];
       }
 
-      const formControl = new FormControl(fieldValue, field.validators, field.asyncValidators);
+      const formControl = new FormControl(fieldValue, field.validators || null, field.asyncValidators || null);
       this.form.addControl(field.name, formControl);
     });
   }
 
-  showFieldErrors(fieldName: string): boolean | undefined {
+  fieldHasError(fieldName: string): boolean {
     const control = this.form.get(fieldName);
-    return control?.invalid && (control?.dirty || control?.touched);
+    return !!(control?.invalid && (control?.dirty || control?.touched));
+  }
+
+  getFieldErrorMessage(fieldName: string): string | undefined {
+    const control = this.form.get(fieldName);
+    if (control?.invalid && (control?.dirty || control?.touched)) {
+      const field = this.fields.find(f => f.name === fieldName);
+      if (field?.errors) {
+        for (const error of field.errors) {
+          if (control.hasError(error.type)) {
+            return error.message;
+          }
+        }
+      }
+    }
+    return undefined;
   }
 }

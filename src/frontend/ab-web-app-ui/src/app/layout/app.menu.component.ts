@@ -1,7 +1,5 @@
-import {OnInit} from '@angular/core';
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {AppMenuitemComponent} from './app.menuitem.component';
-import {MenuMode} from "./service/app.layout.service";
 import {MenuModel} from "../core/models/MenuModel";
 
 
@@ -13,13 +11,13 @@ import {MenuModel} from "../core/models/MenuModel";
 })
 export class AppMenuComponent implements OnInit {
 
-  model: MenuModel[]= [];
+  model: MenuModel[] = [];
 
   ngOnInit() {
     this.model = [
       {
-        label:"booking",
-        items:[
+        label: "booking",
+        items: [
           {
             label: "calendar",
             icon: "pi pi-fw pi-calendar",
@@ -27,6 +25,6 @@ export class AppMenuComponent implements OnInit {
           }
         ]
       }
-      ]
+    ]
   }
 }
