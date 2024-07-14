@@ -48,8 +48,7 @@ export class AuthService {
   }
 
   signupBack(register: Register): Observable<any> {
-    console.log(register)
-    console.log(this.USERS_URL)
+
     return this.httpClient.post<any>(this.USERS_URL, register)
   }
   verifyUser(user:User,code:String):Observable<any>{

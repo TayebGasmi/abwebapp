@@ -9,6 +9,8 @@ import {CheckboxModule} from "primeng/checkbox";
 import {Ripple} from "primeng/ripple";
 import {registerForm} from "../../../core/forms/register.form";
 import {FormGroup} from "@angular/forms";
+import {catchError, throwError} from "rxjs";
+import {formatIsoMonthStr} from "@fullcalendar/core/internal";
 
 @Component({
   selector: 'app-register',
@@ -38,17 +40,32 @@ export class RegisterComponent {
     console.log(form.value);
     console.log(form.valid);
     console.log(form);
+
     const userData = form.value;
+    console.log(userData.role)
     const signup: Register = {
+      firstName:' TEST',
+      lastName:' TEST',
       email: userData.email,
       password: userData.password,
-      roles: [userData.selectedRole]
+      roles: [{
+        roleName:userData.role
+      }]
     };
 
-    /* this.authService.signupBack(signup).subscribe(() => {
+     this.authService.signupBack(signup).pipe(
+       catchError((error) => {
+         if(error.error.keyMessage=="error.entity.exist"){
+           const mail=form.get("email")
+           mail?.setErrors({ user_exist: true })
+           console.log(mail)
+         }
+         return throwError(error)
+       })
+     ).subscribe(() => {
        this.router.navigate(['/auth/verification']).then(() => {
          console.log('User registered successfully');
        });
-     });*/
+     });
   }
 }

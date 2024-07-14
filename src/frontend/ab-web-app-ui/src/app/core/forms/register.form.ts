@@ -16,6 +16,10 @@ export const registerForm: FormField[] = [
       {
         type: 'email',
         message: 'Email is invalid'
+      },
+      {
+        type:'user_exist',
+        message: 'user already exist'
       }
     ],
     icon: 'pi pi-envelope'
@@ -40,6 +44,21 @@ export const registerForm: FormField[] = [
     name: 'confirmPassword',
     placeholder: 'Confirm your password',
     validators: [Validators.required],
+    errors: [
+      {
+        type: 'required',
+        message: 'Password is required'
+      }
+    ],
+    icon: 'pi pi-lock'
+  },
+  {
+    type: 'dropdown',
+    label: 'Role',
+    name: 'role',
+    placeholder: 'Select Role',
+    validators: [Validators.required],
+    options:[{label:"teacher",value:"TEACHER"},{label:"student",value:"STUDENT"}],
     errors: [
       {
         type: 'required',
