@@ -50,6 +50,13 @@ export class AuthService {
     return this.httpClient.post<any>(this.USERS_URL, register)
   }
 
+  verifyUser(mail:string,code:string){
+    const encodedMail = encodeURIComponent(mail);
+    const encodedCode = encodeURIComponent(code);
+    const url = `${this.USERS_URL}/${encodedMail}/${encodedCode}`;
+    return this.httpClient.get<any>(url)
+
+  }
 
   private signInWithOutlook(user: SocialUser) {
 

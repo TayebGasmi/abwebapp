@@ -21,12 +21,12 @@ public class UserController extends BaseController<User,Long, UserDto> {
 
     private final UserService userService;
     private final UserMapper userMapper;
-    @PostMapping("/verify/{code}")
-    public ResponseEntity<String> verifyCode(@Valid @NotNull @RequestBody UserDto userDto,@PathVariable String code) throws Exception {
-        boolean isVerified = userService.verifyCodeUser(userMapper.convertDtoToEntity(userDto),code);
+    @GetMapping("/verify/{email}/{code}")
+    public ResponseEntity<String> verifyCode(@PathVariable String email,@PathVariable String code) throws Exception {
+        boolean isVerified = userService.verifyCodeUser(email,code);
 
         if (isVerified) {
-            userService.enableUser(userDto);
+            userService.enableUser(email);
             return ResponseEntity.ok("Verification successful");
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid verification code or expired");
