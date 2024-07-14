@@ -1,56 +1,72 @@
-import {Component, OnInit} from '@angular/core';
-import {InputTextModule} from "primeng/inputtext";
-import {KeyFilterModule} from "primeng/keyfilter";
-import {ActivatedRoute, Router, RouterLink} from "@angular/router";
+import {Component} from '@angular/core';
+import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import {BackgroundComponent} from "../../../shared/components/background/background.component";
 import {ButtonDirective} from "primeng/button";
 import {Ripple} from "primeng/ripple";
-import {BackgroundComponent} from "../../../shared/components/background/background.component";
+import {ActivatedRoute, Router, RouterLink} from "@angular/router";
+import {InputTextModule} from "primeng/inputtext";
+import {KeyFilterModule} from "primeng/keyfilter";
 import {AuthService} from "../../../core/service/auth.service";
-import {FormsModule} from "@angular/forms";
-import {InputOtpModule} from "primeng/inputotp";
 
 @Component({
   templateUrl: './verification.component.html',
-  standalone: true,
-
   imports: [
-    InputTextModule,
-    KeyFilterModule,
-    RouterLink,
+    ReactiveFormsModule,
+    BackgroundComponent,
     ButtonDirective,
     Ripple,
-    BackgroundComponent,
-    FormsModule,
-    InputOtpModule
-  ]
+    RouterLink,
+    InputTextModule,
+    KeyFilterModule
+  ],
+  standalone: true
 })
-export class VerificationComponent implements OnInit{
+export class VerificationComponent {
+
+  verificationForm: FormGroup;
   email: string | null = null;
-  verificationCode: string='';
 
-  constructor(private route: ActivatedRoute,
-              private authService: AuthService,
-              private router: Router) {
-  }
-
-
-  ngOnInit(): void {
+  constructor(
+    private fb: FormBuilder,
+    private route: ActivatedRoute,
+    private authService: AuthService,
+    private router: Router
+  ) {
+    this.verificationForm = this.fb.group({
+      digit1: ['', Validators.required],
+      digit2: ['', Validators.required],
+      digit3: ['', Validators.required],
+      digit4: ['', Validators.required]
+    });
     this.route.params.subscribe(params => {
       this.email = params['email'];
     });
   }
-  verify() {
-    console.log('Verification Code:', this.verificationCode);
-    console.log('Email:', this.email);
 
-    if (this.email) {
-      this.authService.verifyUser(this.email, this.verificationCode).subscribe(response => {
-        console.log('Verification response:', response);
-        this.router.navigate(['/auth/login']).then();
-      }, error => {
-        console.error('Verification error:', error);
-      });
+
+  verifyCode() {
+    if (this.verificationForm.valid) {
+      const code = this.verificationForm.value.digit1 + this.verificationForm.value.digit2 + this.verificationForm.value.digit3 + this.verificationForm.value.digit4;
+      if (this.email) {
+        this.authService.verifyUser(this.email, code).subscribe(response => {
+          this.router.navigate(['/auth/login']).then();
+        });
+      }
     }
   }
 
+  onDigitInput(event: any) {
+    let element;
+    if (event.code !== 'Backspace')
+      if (event.code.includes('Numpad') || event.code.includes('Digit')) {
+        element = event.srcElement.nextElementSibling;
+      }
+    if (event.code === 'Backspace')
+      element = event.srcElement.previousElementSibling;
+
+    if (element == null)
+      return;
+    else
+      element.focus();
+  }
 }
