@@ -1,13 +1,12 @@
 package com.appointment.booking.audit;
 
+import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.AuditorAware;
-import org.springframework.security.core.context.SecurityContextHolder;
-
-import java.util.Optional;
 
 @Slf4j
 public class AuditorAwareImpl implements AuditorAware<Long> {
+
     @Override
     public Optional<Long> getCurrentAuditor() {
         return Optional.empty();

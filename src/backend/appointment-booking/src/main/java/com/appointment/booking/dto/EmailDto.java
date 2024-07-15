@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class EmailDto {
+
     @NotNull
     @NotEmpty
     private Set<String> to;

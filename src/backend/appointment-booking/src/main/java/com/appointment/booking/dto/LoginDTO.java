@@ -1,6 +1,5 @@
 package com.appointment.booking.dto;
 
-import com.appointment.booking.enums.RoleType;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -13,9 +12,10 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @NoArgsConstructor
 public class LoginDTO {
+
     @NotBlank
     @NotNull
-    private  String email;
+    private String email;
     @NotBlank
     @NotNull
     private String password;

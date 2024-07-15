@@ -30,8 +30,8 @@ public class EmailServiceImpl implements EmailService {
 
     public void sendEmail(@Valid @NotNull EmailDto emailDto, Map<String, Object> variables, String template) throws MessagingException {
 
-            MimeMessage mimeMessage = createMimeMessage(emailDto, variables, template);
-            mailSender.send(mimeMessage);
+        MimeMessage mimeMessage = createMimeMessage(emailDto, variables, template);
+        mailSender.send(mimeMessage);
 
     }
 

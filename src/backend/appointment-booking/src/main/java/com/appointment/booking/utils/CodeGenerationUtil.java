@@ -6,11 +6,11 @@ public class CodeGenerationUtil {
 
     private static final Random random = new Random();
 
+    private CodeGenerationUtil() {
+    }
+
     public static String generate4DigitCode() {
         int code = 1000 + random.nextInt(9000);
         return String.valueOf(code);
-    }
-
-    private CodeGenerationUtil() {
     }
 }

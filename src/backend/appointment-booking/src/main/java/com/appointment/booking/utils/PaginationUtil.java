@@ -1,9 +1,8 @@
 package com.appointment.booking.utils;
 
 
-
-import com.appointment.booking.enums.SortOrder;
 import com.appointment.booking.base.BaseMapper;
+import com.appointment.booking.enums.SortOrder;
 import com.appointment.booking.model.PageData;
 import com.appointment.booking.model.PageLink;
 import java.util.List;

@@ -1,7 +1,6 @@
 package com.appointment.booking.model;
 
 
-
 import com.appointment.booking.enums.SortOrder;
 import java.util.List;
 import java.util.Map;

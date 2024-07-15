@@ -27,6 +27,7 @@ public class CodeVerificationService {
             .code(code)
             .build());
     }
+
     @Transactional
     public void sendVerificationCode(User user) throws MessagingException {
         String code = CodeGenerationUtil.generate4DigitCode();
@@ -43,12 +44,14 @@ public class CodeVerificationService {
             "code-verification"
         );
     }
+
     @Transactional
     @Async
     public void deletePreviousVerification(User user) {
         codeVerificationRepository.deleteByUserEmail(user.getEmail());
     }
-   @Transactional
+
+    @Transactional
     public void verifyCode(User user, String code) {
         codeVerificationRepository.findByUserEmailAndCode(user.getEmail(), code)
             .orElseThrow(() -> new EntityNotFoundException("Invalid code"));

@@ -1,7 +1,6 @@
 package com.appointment.booking.base;
 
 
-
 import com.appointment.booking.model.PageData;
 import com.appointment.booking.model.PageLink;
 import io.swagger.v3.oas.annotations.Operation;
@@ -85,7 +84,6 @@ public abstract class BaseController<E extends BaseEntity<I>, I extends Serializ
     public ResponseEntity<PageData<D>> findAll(@RequestBody PageLink pageLink) {
         return new ResponseEntity<>(baseService.findAll(pageLink), HttpStatus.OK);
     }
-
 
 
 }

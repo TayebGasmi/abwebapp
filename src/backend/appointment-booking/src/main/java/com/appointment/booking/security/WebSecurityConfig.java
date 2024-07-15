@@ -23,8 +23,6 @@ import org.springframework.security.web.SecurityFilterChain;
 @RequiredArgsConstructor
 public class WebSecurityConfig {
 
-    private final UserDetailsService userDetailsService;
-
     private static final String[] WHITE_LIST = {
         "/swagger-ui/**",
         "/swagger-ui.html",
@@ -34,7 +32,7 @@ public class WebSecurityConfig {
         "webjars/**",
         "/auth"
     };
-
+    private final UserDetailsService userDetailsService;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
