@@ -1,7 +1,6 @@
 package com.appointment.booking.utils;
 
 
-
 import com.appointment.booking.enums.MatchMode;
 import com.appointment.booking.enums.Operator;
 import com.appointment.booking.model.FilterModel;
@@ -174,7 +173,7 @@ public class FilterUtil {
 
     private static boolean isDateMatchMode(MatchMode matchMode) {
         return matchMode == MatchMode.DATE_AFTER || matchMode == MatchMode.DATE_BEFORE
-            || matchMode == MatchMode.DATE_IS || matchMode == MatchMode.DATE_IS_NOT;
+               || matchMode == MatchMode.DATE_IS || matchMode == MatchMode.DATE_IS_NOT;
     }
 
     private static LocalDate convertDateFormat(MatchMode textFilterMatchMode, String filterValue) {

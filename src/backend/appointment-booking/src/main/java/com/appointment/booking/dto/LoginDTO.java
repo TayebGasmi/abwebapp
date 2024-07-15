@@ -1,29 +1,23 @@
 package com.appointment.booking.dto;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
-import java.util.Set;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 @Data
-@Builder
+@SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
-public class EmailDto {
+public class LoginDTO {
 
-    @NotNull
-    @NotEmpty
-    private Set<String> to;
-    @NotNull
     @NotBlank
-    private String from;
     @NotNull
+    private String email;
     @NotBlank
-    private String subject;
-    private String body;
+    @NotNull
+    private String password;
 
 }

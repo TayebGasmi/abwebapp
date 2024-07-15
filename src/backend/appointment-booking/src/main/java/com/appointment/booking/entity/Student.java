@@ -1,15 +1,18 @@
 package com.appointment.booking.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
-
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -26,6 +29,6 @@ public class Student extends User {
     @JoinColumn(name = "school_id", referencedColumnName = "id")
     private School school;
 
-    @ManyToMany (mappedBy = "students")
+    @ManyToMany(mappedBy = "students")
     private Set<Session> sessions = new HashSet<>();
 }

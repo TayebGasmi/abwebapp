@@ -119,6 +119,11 @@ public class ControllerAdvice {
         return ResponseEntity.status(errorResponse.getStatus()).body(errorResponse);
     }
 
+    @ExceptionHandler(UserAlreadyVerifiedException.class)
+    public ResponseEntity<ErrorResponse> handleUserAlreadyVerifiedException(UserAlreadyVerifiedException ex) {
+        return createErrorResponse(HttpStatus.BAD_REQUEST, ex, KeyExceptionMessageConstants.USER_ALREADY_VERIFIED);
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleException(Exception ex) {
         log.error("error {}", ex.getMessage(), ex);

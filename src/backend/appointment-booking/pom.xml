@@ -16,12 +16,11 @@
   <properties>
     <java.version>17</java.version>
     <jjwt-api.version>0.11.5</jjwt-api.version>
-    <google-api-client.version>1.30.9</google-api-client.version>
-    <google-http-client-gson.version>1.40.0</google-http-client-gson.version>
     <springdoc-openapi-starter-webmvc-ui.version>2.5.0</springdoc-openapi-starter-webmvc-ui.version>
     <lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
     <mapstruct.version>1.5.5.Final</mapstruct.version>
     <projectlombok.version>1.18.30</projectlombok.version>
+    <nimbus-jose-jwt.version>9.22</nimbus-jose-jwt.version>
   </properties>
   <dependencies>
     <dependency>
@@ -77,18 +76,9 @@
       <optional>true</optional>
     </dependency>
     <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-oauth2-client</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.google.api-client</groupId>
-      <artifactId>google-api-client</artifactId>
-      <version>${google-api-client.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>com.google.http-client</groupId>
-      <artifactId>google-http-client-gson</artifactId>
-      <version>${google-http-client-gson.version}</version>
+      <groupId>com.nimbusds</groupId>
+      <artifactId>nimbus-jose-jwt</artifactId>
+      <version>${nimbus-jose-jwt.version}</version>
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>

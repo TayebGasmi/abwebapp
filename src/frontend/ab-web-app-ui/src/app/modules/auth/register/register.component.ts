@@ -11,6 +11,7 @@ import {catchError, throwError} from "rxjs";
 import {InputTextModule} from "primeng/inputtext";
 import {PasswordModule} from "primeng/password";
 import {DropdownModule} from "primeng/dropdown";
+import {Role} from "../../../core/models/Role";
 
 @Component({
   selector: 'app-register',
@@ -32,8 +33,8 @@ import {DropdownModule} from "primeng/dropdown";
 export class RegisterComponent {
 
   role: any[] = [
-    {label: 'Teacher', value: 'TEACHER'},
-    {label: 'Student', value: 'STUDENT'}
+    {label: 'Teacher', value: Role.TEACHER},
+    {label: 'Student', value: Role.STUDENT}
   ];
   form!: FormGroup;
   dark: boolean = false;
@@ -62,23 +63,17 @@ export class RegisterComponent {
 
   signupUser(): void {
     if (this.form.invalid) {
-      console.log("invalid")
       this.form.markAllAsTouched();
       return;
     }
 
-    const userData = this.form.value;
-    const signup: Register = {
-      firstName: 'TEST',
-      lastName: 'TEST',
-      email: userData.email,
-      password: userData.password,
-      roles: [{
-        roleName: userData.role
-      }]
+    const formValue = this.form.value;
+    const registerRequest: Register = {
+      email: formValue.email,
+      password: formValue.password,
+      role: formValue.role
     };
-
-    this.authService.signupBack(signup).pipe(
+    this.authService.signUp(registerRequest).pipe(
       catchError((error) => {
         if (error.error.keyMessage == "error.entity.exist") {
           const emailControl = this.form.get("email");
@@ -87,8 +82,7 @@ export class RegisterComponent {
         return throwError(error);
       })
     ).subscribe(() => {
-      this.router.navigate(['/auth/verification/'+userData.email]).then(() => {
-        console.log('User registered successfully');
+      this.router.navigate(['/auth/verification/' + registerRequest.email]).then(() => {
       });
     });
   }

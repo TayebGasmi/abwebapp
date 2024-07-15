@@ -2,7 +2,6 @@ package com.appointment.booking.base;
 
 import static org.mapstruct.NullValuePropertyMappingStrategy.IGNORE;
 
-
 import java.util.List;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.MappingTarget;
