@@ -1,4 +1,4 @@
-package com.appointment.booking.security.jwt;
+package com.appointment.booking.utils;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.function.Function;
 
 @Component
-public class JwtProvider {
+public class JwtUTil {
 
     @Value("${jwt.secret}")
     private String secret;
@@ -58,7 +58,12 @@ public class JwtProvider {
     }
 
     private Claims extractAllClaims(String token) {
-        return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
+        return Jwts
+            .parserBuilder()
+            .setSigningKey(getSignKey())
+            .build()
+            .parseClaimsJws(token)
+            .getBody();
     }
 
 }

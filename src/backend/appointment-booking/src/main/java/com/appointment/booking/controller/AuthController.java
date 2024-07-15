@@ -1,6 +1,8 @@
 package com.appointment.booking.controller;
 
+import com.appointment.booking.dto.LoginDTO;
 import com.appointment.booking.dto.RegisterDTO;
+import com.appointment.booking.dto.TokenDtoResponse;
 import com.appointment.booking.exceptions.ExistException;
 import com.appointment.booking.service.AuthService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -27,5 +29,9 @@ public class AuthController {
         authService.register(registerDTO);
         return ResponseEntity.status(HttpStatus.CREATED).build();
 
+    }
+    @PostMapping("/login")
+    public ResponseEntity<TokenDtoResponse> login(@RequestBody @Valid LoginDTO loginDTO) {
+        return ResponseEntity.ok(authService.login(loginDTO));
     }
 }

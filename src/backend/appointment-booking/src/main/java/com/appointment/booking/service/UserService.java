@@ -8,11 +8,13 @@ import com.appointment.booking.exceptions.NotFoundException;
 import com.appointment.booking.exceptions.UserAlreadyVerifiedException;
 import com.appointment.booking.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class UserService extends BaseServiceImpl<User, Long, UserDto> {
+public class UserService extends BaseServiceImpl<User, Long, UserDto> implements UserDetailsService {
 
     private final UserRepository userRepository;
     private final CodeVerificationService codeVerificationService;
@@ -29,4 +31,9 @@ public class UserService extends BaseServiceImpl<User, Long, UserDto> {
     }
 
 
+    @Override
+    public UserDetails loadUserByUsername(String username) {
+        return userRepository.findByEmail(username)
+            .orElseThrow(() -> new NotFoundException("User not found"));
+    }
 }
