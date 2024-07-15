@@ -65,10 +65,10 @@ public class AuthService {
             .build();
 
     }
-
-    TokenDtoResponse google(String token) {
+    //todo: add oauth2 dto string provider and id token
+    TokenDtoResponse SigInWithGoogle(String idToken) {
         try {
-            JWTClaimsSet claims = googleTokenVerifier.verify(token);
+            JWTClaimsSet claims = googleTokenVerifier.verify(idToken);
             log.info("Google claims: {}", claims);
             String email = claims.getSubject();
             Optional<User> userOptional = userRepository.findByEmail(email);

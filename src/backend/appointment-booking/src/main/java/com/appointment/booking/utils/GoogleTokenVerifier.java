@@ -34,8 +34,8 @@ public class GoogleTokenVerifier {
         }
     }
 
-    public JWTClaimsSet verify(String token) throws ParseException, JOSEException {
-        var jwsObject = JWSObject.parse(token);
+    public JWTClaimsSet verify(String idToken) throws ParseException, JOSEException {
+        var jwsObject = JWSObject.parse(idToken);
         var key = publicKeys.get(jwsObject.getHeader().getKeyID());
 
         if (key == null) {
@@ -47,6 +47,6 @@ public class GoogleTokenVerifier {
             throw new IllegalArgumentException("Token verification failed");
         }
 
-        return SignedJWT.parse(token).getJWTClaimsSet();
+        return SignedJWT.parse(idToken).getJWTClaimsSet();
     }
 }

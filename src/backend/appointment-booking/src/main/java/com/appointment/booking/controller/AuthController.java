@@ -35,4 +35,5 @@ public class AuthController {
     public ResponseEntity<TokenDtoResponse> login(@RequestBody @Valid LoginDTO loginDTO) {
         return ResponseEntity.ok(authService.login(loginDTO));
     }
+    //todo: add google login
 }
