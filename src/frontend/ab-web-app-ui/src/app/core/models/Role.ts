@@ -1,5 +1,6 @@
-export interface Role {
+export enum Role {
 
-  roleName: string;
+  TEACHER = 'TEACHER',
+  STUDENT = 'STUDENT'
 
 }

@@ -8,7 +8,7 @@ public class KeyExceptionMessageConstants {
     static final String UNKNOWN_ERROR = "error.unknown";
 
     static final String UNIQUE_CONSTRAINT_VIOLATION = "error.unique.constraint.violation";
-
+    static final String USER_ALREADY_VERIFIED = "error.user.already.verified";
 
     private KeyExceptionMessageConstants() {
     }

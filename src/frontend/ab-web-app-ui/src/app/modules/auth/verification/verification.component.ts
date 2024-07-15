@@ -6,7 +6,7 @@ import {Ripple} from "primeng/ripple";
 import {ActivatedRoute, Router, RouterLink} from "@angular/router";
 import {InputTextModule} from "primeng/inputtext";
 import {KeyFilterModule} from "primeng/keyfilter";
-import {AuthService} from "../../../core/service/auth.service";
+import {UserService} from "../../../core/service/user.service";
 
 @Component({
   templateUrl: './verification.component.html',
@@ -29,7 +29,7 @@ export class VerificationComponent {
   constructor(
     private fb: FormBuilder,
     private route: ActivatedRoute,
-    private authService: AuthService,
+    private userService: UserService,
     private router: Router
   ) {
     this.verificationForm = this.fb.group({
@@ -48,9 +48,11 @@ export class VerificationComponent {
     if (this.verificationForm.valid) {
       const code = this.verificationForm.value.digit1 + this.verificationForm.value.digit2 + this.verificationForm.value.digit3 + this.verificationForm.value.digit4;
       if (this.email) {
-        this.authService.verifyUser(this.email, code).subscribe(response => {
-          this.router.navigate(['/auth/login']).then();
-        });
+        this.userService.verifyUserEmail(this.email, code).subscribe(
+          () => {
+            this.router.navigate(['/auth/login']).then();
+          }
+        );
       }
     }
   }

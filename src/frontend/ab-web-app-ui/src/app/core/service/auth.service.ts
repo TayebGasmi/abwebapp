@@ -12,8 +12,7 @@ import {Register} from "../models/register";
 })
 export class AuthService {
 
-  private readonly AUTH_URL = `${environment.APPOINTMENT_BOOKING_URL}auth`;
-  private readonly USERS_URL: string = `${environment.APPOINTMENT_BOOKING_URL}users`;
+  private readonly AUTH_URL = `${environment.APPOINTMENT_BOOKING_URL}/auth`;
   private readonly currentUser: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   currentUser$ = this.currentUser.asObservable();
   private readonly router = inject(Router);
@@ -45,17 +44,8 @@ export class AuthService {
     return this.httpClient.post<any>(this.AUTH_URL, login)
   }
 
-  signupBack(register: Register): Observable<any> {
-
-    return this.httpClient.post<any>(this.USERS_URL, register)
-  }
-
-  verifyUser(mail:string,code:string){
-    const encodedMail = encodeURIComponent(mail);
-    const encodedCode = encodeURIComponent(code);
-    const url = `${this.USERS_URL}/${encodedMail}/${encodedCode}`;
-    return this.httpClient.get<any>(url)
-
+  signUp(register: Register): Observable<any> {
+    return this.httpClient.post<any>(`${this.AUTH_URL}/register`, register)
   }
 
   private signInWithOutlook(user: SocialUser) {
