@@ -33,9 +33,8 @@ public class AuthController {
     public ResponseEntity<TokenDtoResponse> login(@RequestBody @Valid LoginDTO loginDTO) {
         return ResponseEntity.ok(authService.login(loginDTO));
     }
-    //todo: add google login
-    @PostMapping("/googlelogin")
+    @PostMapping("/social")
     public ResponseEntity<TokenDtoResponse> loginGoogle(@RequestBody @Valid Oauth2Dto oauth2Dto) {
-        return ResponseEntity.ok(authService.SigInWithGoogle(oauth2Dto));
+        return ResponseEntity.ok(authService.oauthSignIn(oauth2Dto));
     }
 }

@@ -17,22 +17,21 @@
         </span>
         <div class="mb-4 flex flex-wrap gap-3">
           <div>
-            <p-checkbox [binary]="true" formControlName="rememberMe" styleClass="mr-2"></p-checkbox>
-            <label class="text-900 font-medium mr-8" for="checkbox">Remember Me</label>
+            <p-checkbox id="rememberMe" [binary]="true" formControlName="rememberMe" styleClass="mr-2"></p-checkbox>
+            <label class="text-900 font-medium mr-8" for="rememberMe">Remember Me</label>
           </div>
-          <a routerLink="/auth/new-password" class="text-600 cursor-pointer hover:text-primary cursor-pointer ml-auto transition-colors transition-duration-300">Reset password</a>
+          <a routerLink="/auth/new-password" class="text-600 hover:text-primary cursor-pointer ml-auto transition-colors transition-duration-300">Reset password</a>
         </div>
-        <button class="w-full" label="Log In" pButton pRipple type="submit"></button>
-        <p-divider align="center" layout="horizontal" type="solid"></p-divider>
-        <button class="w-full" label="Sign up" pButton pRipple></button>
-        <p-divider align="center" layout="horizontal" type="solid">
-          <b>or</b>
-        </p-divider>
+        <button class="w-full mb-4" label="Log In" pButton pRipple type="submit"></button>
+        <p-divider align="center" layout="horizontal" type="solid">Other log in options</p-divider>
         <div class="flex flex-wrap align-items-center justify-content-center w-full">
           <asl-google-signin-button class="google-login" data-use_fedcm_for_prompt="true" locale="en" size="large" type='standard'></asl-google-signin-button>
+        </div>
+        <div class="text-center mt-4">
+          <span class="text-600">Don't have an account?</span>
+          <a routerLink="/auth/register" class="text-primary cursor-pointer ml-2">Sign up</a>
         </div>
       </div>
     </form>
   </div>
 </div>
-
