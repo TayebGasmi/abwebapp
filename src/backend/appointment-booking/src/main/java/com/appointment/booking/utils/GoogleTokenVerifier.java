@@ -12,20 +12,24 @@ import java.security.interfaces.RSAPublicKey;
 import java.text.ParseException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.PostMapping;
 
 @Component
 public class GoogleTokenVerifier {
 
     @Value("${google.jwk.url}")
-    private static String GOOGLE_JWK_URL;
+    private String GOOGLE_JWK_URL;
+
     private final Map<String, RSAPublicKey> publicKeys = new ConcurrentHashMap<>();
 
-    public GoogleTokenVerifier() throws IOException, ParseException, JOSEException {
-        loadPublicKeys();
+    public GoogleTokenVerifier() {
     }
 
+    @PostConstruct
     private void loadPublicKeys() throws IOException, ParseException, JOSEException {
         var jwkSet = JWKSet.load(new URL(GOOGLE_JWK_URL));
         for (var key : jwkSet.getKeys()) {

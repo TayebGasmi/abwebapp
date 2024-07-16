@@ -1,6 +1,7 @@
 package com.appointment.booking.controller;
 
 import com.appointment.booking.dto.LoginDTO;
+import com.appointment.booking.dto.Oauth2Dto;
 import com.appointment.booking.dto.RegisterDTO;
 import com.appointment.booking.dto.TokenDtoResponse;
 import com.appointment.booking.exceptions.ExistException;
@@ -28,7 +29,6 @@ public class AuthController {
     public ResponseEntity register(@RequestBody @Valid RegisterDTO registerDTO) throws MessagingException, ExistException {
         authService.register(registerDTO);
         return ResponseEntity.status(HttpStatus.CREATED).build();
-
     }
 
     @PostMapping("/login")
@@ -36,4 +36,8 @@ public class AuthController {
         return ResponseEntity.ok(authService.login(loginDTO));
     }
     //todo: add google login
+    @PostMapping("/googlelogin")
+    public ResponseEntity<TokenDtoResponse> loginGoogle(@RequestBody @Valid Oauth2Dto oauth2Dto) {
+        return ResponseEntity.ok(authService.SigInWithGoogle(oauth2Dto));
+    }
 }

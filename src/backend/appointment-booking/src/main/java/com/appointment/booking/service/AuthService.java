@@ -1,6 +1,7 @@
 package com.appointment.booking.service;
 
 import com.appointment.booking.dto.LoginDTO;
+import com.appointment.booking.dto.Oauth2Dto;
 import com.appointment.booking.dto.RegisterDTO;
 import com.appointment.booking.dto.TokenDtoResponse;
 import com.appointment.booking.entity.Role;
@@ -9,6 +10,7 @@ import com.appointment.booking.exceptions.ExistException;
 import com.appointment.booking.exceptions.NotFoundException;
 import com.appointment.booking.repository.UserRepository;
 import com.appointment.booking.utils.GoogleTokenVerifier;
+import com.appointment.booking.utils.JwtUTil;
 import com.nimbusds.jwt.JWTClaimsSet;
 import jakarta.mail.MessagingException;
 import java.util.Optional;
@@ -34,7 +36,7 @@ public class AuthService {
     private final CodeVerificationService codeVerificationService;
     private final AuthenticationManager authenticationManager;
     private final GoogleTokenVerifier googleTokenVerifier;
-
+    private final JwtUTil jwtUTil;
     public void register(RegisterDTO registerDTO) throws ExistException, MessagingException {
         if (userRepository.existsByEmail(registerDTO.getEmail())) {
             throw new ExistException("Email already exists");
@@ -61,14 +63,13 @@ public class AuthService {
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         return TokenDtoResponse.builder()
-            .accessToken("jwt")
+            .accessToken(jwtUTil.generateToken(loginDTO.getEmail(),userRepository.findRoleByEmail(loginDTO.getEmail()).getName().toString()))
             .build();
 
     }
-    //todo: add oauth2 dto string provider and id token
-    TokenDtoResponse SigInWithGoogle(String idToken) {
+    public TokenDtoResponse SigInWithGoogle(Oauth2Dto oauth2Dto) {
         try {
-            JWTClaimsSet claims = googleTokenVerifier.verify(idToken);
+            JWTClaimsSet claims = googleTokenVerifier.verify(oauth2Dto.getIdToken());
             log.info("Google claims: {}", claims);
             String email = claims.getSubject();
             Optional<User> userOptional = userRepository.findByEmail(email);
@@ -77,9 +78,12 @@ public class AuthService {
                     .email(email)
                     .build();
                 userRepository.save(user);
+                return TokenDtoResponse.builder()
+                        .accessToken(jwtUTil.generateToken(user.getEmail(),""))
+                        .build();
             }
             return TokenDtoResponse.builder()
-                .accessToken("jwt")
+                .accessToken(jwtUTil.generateToken(userOptional.get().getEmail(),userOptional.get().getRole().getName().toString()))
                 .build();
         } catch (Exception e) {
             throw new UsernameNotFoundException("Invalid Google token");
