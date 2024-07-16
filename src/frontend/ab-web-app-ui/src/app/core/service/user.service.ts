@@ -1,6 +1,7 @@
 import {inject, Injectable} from '@angular/core';
 import {environment} from "../../../environments/environment";
-import {HttpClient} from "@angular/common/http";
+import {HttpClient, HttpResponse} from "@angular/common/http";
+import {Observable} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,7 @@ export class UserService {
 
   constructor() { }
 
-  verifyUserEmail(mail:string,code:string){
+  verifyUserEmail(mail:string,code:string):Observable<any>{
     const encodedMail = encodeURIComponent(mail);
     const encodedCode = encodeURIComponent(code);
     console.log(`${this.USER_URL}/verify?email=${encodedMail}&code=${encodedCode}`);
