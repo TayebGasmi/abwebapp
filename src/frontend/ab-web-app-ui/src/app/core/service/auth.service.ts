@@ -27,7 +27,7 @@ export class AuthService {
   }
 
   signIn(login: Login): Observable<TokenResponse> {
-    return this.httpClient.post<TokenResponse>(this.AUTH_URL, login);
+    return this.httpClient.post<TokenResponse>(`${this.AUTH_URL}/login`, login);
   }
 
   signUp(register: Register): Observable<void> {
