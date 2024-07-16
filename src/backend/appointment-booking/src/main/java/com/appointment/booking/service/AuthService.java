@@ -29,7 +29,6 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class AuthService {
 
-    private static final String USER_NOT_FOUND = "User not found";
     private final UserRepository userRepository;
     private final RoleService roleService;
     private final PasswordEncoder passwordEncoder;
@@ -67,15 +66,19 @@ public class AuthService {
             .build();
 
     }
-    public TokenDtoResponse SigInWithGoogle(Oauth2Dto oauth2Dto) {
+    public TokenDtoResponse oauthSignIn(Oauth2Dto oauth2Dto) {
         try {
             JWTClaimsSet claims = googleTokenVerifier.verify(oauth2Dto.getIdToken());
-            log.info("Google claims: {}", claims);
-            String email = claims.getSubject();
+            String email = claims.getStringClaim("email");
+            String firstName = claims.getStringClaim("given_name");
+            String lastName = claims.getStringClaim("family_name");
             Optional<User> userOptional = userRepository.findByEmail(email);
             if (userOptional.isEmpty()) {
                 User user = User.builder()
                     .email(email)
+                    .firstName(firstName)
+                    .lastName(lastName)
+                    .isVerified(true)
                     .build();
                 userRepository.save(user);
                 return TokenDtoResponse.builder()
