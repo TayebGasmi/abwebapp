@@ -5,12 +5,27 @@ import { authGuard } from "./core/guard/auth.guard";
 export const routes: Routes = [
   {
     path: '', component: AppLayoutComponent,
-    canActivate: [authGuard],
+    // canActivate: [authGuard],
     children: [
       {
         path: 'calendar',
         loadComponent: () => import('./shared/components/calendar/calendar.component').then(m => m.CalendarComponent),
-        canActivate: [authGuard] // Apply authGuard here as well
+        // canActivate: [authGuard] // Apply authGuard here as well
+      },
+      {
+        path: 'profile',
+        loadComponent: () => import('./Pages/profile/profile.component').then(m => m.ProfileComponent),
+        // canActivate: [authGuard] // Apply authGuard here as well
+      },
+      {
+        path: 'session',
+        loadComponent: () => import('./Pages/session/session/session.component').then(m => m.SessionComponent),
+        // canActivate: [authGuard] // Apply authGuard here as well
+      },
+      {
+        path: 'sessionlist',
+        loadComponent: () => import('./Pages/session/sessionlist/sessionlist.component').then(m => m.SessionlistComponent),
+        // canActivate: [authGuard] // Apply authGuard here as well
       },
     ],
   },

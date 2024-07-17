@@ -15,6 +15,17 @@ export class AppMenuComponent implements OnInit {
 
   ngOnInit() {
     this.model = [
+
+      {
+        label: "profile",
+        items: [
+          {
+            label: "Profile",
+            icon: "pi pi-fw pi-calendar",
+            routerLink: "profile"
+          }
+        ]
+      },
       {
         label: "booking",
         items: [
@@ -22,6 +33,20 @@ export class AppMenuComponent implements OnInit {
             label: "calendar",
             icon: "pi pi-fw pi-calendar",
             routerLink: "calendar"
+          }
+        ]
+      },
+      {
+        label: "session",
+        items: [
+          {
+            label: "Session",
+            icon: "pi pi-fw pi-calendar",
+            routerLink: "session"
+          },{
+            label: "Display Sessions",
+            icon: "pi pi-fw pi-calendar",
+            routerLink: "sessionlist"
           }
         ]
       }

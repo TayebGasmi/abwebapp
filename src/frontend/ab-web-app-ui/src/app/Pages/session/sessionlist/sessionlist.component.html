@@ -1,0 +1,56 @@
+<div class="col-12">
+  <div class="card">
+    <h5>Session Listing</h5>
+    <p-table [value]="sessions" [paginator]="true" [rows]="10" [responsiveLayout]="'scroll'">
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Session ID</th>
+          <th>Title</th>
+          <th>Description</th>
+          <th>Start Time</th>
+          <th>End Time</th>
+          <th>Duration</th>
+          <th>Instructor Name</th>
+          <th>Course Name</th>
+          <th>Session Type</th>
+          <th>Location</th>
+          <th>Session Link</th>
+          <th>Materials</th>
+          <th>Capacity</th>
+          <th>Registered Participants</th>
+          <th>Session Status</th>
+          <th>Recording Link</th>
+          <th>Feedback</th>
+          <th>Tags</th>
+          <th>Action</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-session>
+        <tr>
+          <td>{{ session.sessionId }}</td>
+          <td>{{ session.title }}</td>
+          <td>{{ session.description }}</td>
+          <td>{{ session.startTime | date:'short' }}</td>
+          <td>{{ session.endTime | date:'short' }}</td>
+          <td>{{ session.duration }}</td>
+          <td>{{ session.instructorName }}</td>
+          <td>{{ session.courseName }}</td>
+          <td>{{ session.sessionType }}</td>
+          <td>{{ session.location }}</td>
+          <td><a [href]="session.sessionLink" target="_blank">Link</a></td>
+          <td>{{ session.materials }}</td>
+          <td>{{ session.capacity }}</td>
+          <td>{{ session.registeredParticipants }}</td>
+          <td>{{ session.sessionStatus }}</td>
+          <td><a [href]="session.recordingLink" target="_blank">Recording</a></td>
+          <td>{{ session.feedback }}</td>
+          <td>{{ session.tags }}</td>
+          <td>
+            <button pButton type="button" icon="pi pi-pencil" (click)="editSession(session)"></button>
+            <button pButton type="button" icon="pi pi-trash" (click)="deleteSession(session.sessionId)"></button>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>
