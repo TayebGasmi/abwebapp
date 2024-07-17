@@ -7,12 +7,12 @@ import {AppConfigComponent} from '../../../layout/config/app.config.component';
 import {LayoutService} from '../../../layout/service/app.layout.service';
 import {ButtonDirective} from 'primeng/button';
 import {Ripple} from 'primeng/ripple';
-import {GoogleSigninButtonModule, MicrosoftLoginProvider, SocialAuthService} from '@abacritt/angularx-social-login';
+import {GoogleSigninButtonModule, SocialAuthService} from '@abacritt/angularx-social-login';
 import {DividerModule} from 'primeng/divider';
 import {AuthService} from '../../../core/service/auth.service';
 import {Login} from '../../../core/models/login';
 import {BackgroundComponent} from "../../../shared/components/background/background.component";
-import {switchMap} from "rxjs";
+import {map, switchMap} from "rxjs";
 
 @Component({
   selector: 'app-login',
@@ -54,44 +54,30 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.socialAuthService.authState
-      .pipe(
-        switchMap(user => {
-          return this.authService.loginSocial({
+    this.socialAuthService.authState.pipe(
+      map((user) => {
+          return {
+            oauthProvider: user.provider,
             idToken: user.idToken,
-            oauthProvider: 'google'
-          });
-        })
-      )
-      .subscribe({
-        next: (response) => {
-
-          console.log('Login successful:', response);
-          this.router.navigate(['/'])
-          // Handle successful login response
-        },
-        error: (error) => {
-          console.error('Login failed:', error);
+          }
         }
-      });
-  }
-
-  loginUser(): void {
-    const login: Login = this.loginForm.value;
-    this.authService.signBack(login).subscribe({
+      ),
+      switchMap(user => this.authService.socialLogin(user)))
+    .subscribe({
       next: response => {
-        console.log('Login successful', response);
-        localStorage.clear();
+        this.authService.addToken(response.accessToken);
         this.router.navigate(['']);
-      },
-      error: error => {
-        this.router.navigate(['auth/register']);
-        console.error('Login failed', error);
       }
     });
   }
 
-  signInWithOutlook(): void {
-    this.socialAuthService.signIn(MicrosoftLoginProvider.PROVIDER_ID).then(r => console.log(r))
+  loginUser(): void {
+    const login: Login = this.loginForm.value;
+    this.authService.signIn(login).subscribe({
+      next: response => {
+        this.authService.addToken(response.accessToken);
+        this.router.navigate(['']);
+      }
+    });
   }
 }

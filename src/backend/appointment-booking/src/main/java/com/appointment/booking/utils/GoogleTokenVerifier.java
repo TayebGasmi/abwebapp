@@ -16,22 +16,18 @@ import java.util.concurrent.ConcurrentHashMap;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.PostMapping;
 
 @Component
 public class GoogleTokenVerifier {
 
     @Value("${google.jwk.url}")
-    private String GOOGLE_JWK_URL;
+    private String googleJwkUrl;
 
     private final Map<String, RSAPublicKey> publicKeys = new ConcurrentHashMap<>();
 
-    public GoogleTokenVerifier() {
-    }
-
     @PostConstruct
     private void loadPublicKeys() throws IOException, ParseException, JOSEException {
-        var jwkSet = JWKSet.load(new URL(GOOGLE_JWK_URL));
+        var jwkSet = JWKSet.load(new URL(googleJwkUrl));
         for (var key : jwkSet.getKeys()) {
             var rsaKey = key.toRSAKey();
             publicKeys.put(key.getKeyID(), rsaKey.toRSAPublicKey());
