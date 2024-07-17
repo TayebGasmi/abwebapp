@@ -12,6 +12,7 @@ import {DividerModule} from 'primeng/divider';
 import {AuthService} from '../../../core/service/auth.service';
 import {Login} from '../../../core/models/login';
 import {BackgroundComponent} from "../../../shared/components/background/background.component";
+import {switchMap} from "rxjs";
 
 @Component({
   selector: 'app-login',
@@ -53,10 +54,26 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.socialAuthService.authState.subscribe((user) => {
-      this.authService.login(user);
-      console.log(user.idToken);
-    });
+    this.socialAuthService.authState
+      .pipe(
+        switchMap(user => {
+          return this.authService.loginSocial({
+            idToken: user.idToken,
+            oauthProvider: 'google'
+          });
+        })
+      )
+      .subscribe({
+        next: (response) => {
+
+          console.log('Login successful:', response);
+          this.router.navigate(['/'])
+          // Handle successful login response
+        },
+        error: (error) => {
+          console.error('Login failed:', error);
+        }
+      });
   }
 
   loginUser(): void {

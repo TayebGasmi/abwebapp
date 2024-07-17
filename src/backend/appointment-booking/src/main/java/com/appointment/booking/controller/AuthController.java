@@ -6,6 +6,7 @@ import com.appointment.booking.dto.RegisterDTO;
 import com.appointment.booking.dto.TokenDtoResponse;
 import com.appointment.booking.exceptions.ExistException;
 import com.appointment.booking.service.AuthService;
+import com.nimbusds.jose.JOSEException;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
@@ -13,6 +14,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.text.ParseException;
 
 @RestController
 @RequestMapping("/auth")
@@ -35,7 +38,7 @@ public class AuthController {
     }
     //todo: add google login
     @PostMapping("/googlelogin")
-    public ResponseEntity<TokenDtoResponse> loginGoogle(@RequestBody @Valid Oauth2Dto oauth2Dto) {
+    public ResponseEntity<TokenDtoResponse> loginGoogle(@RequestBody @Valid Oauth2Dto oauth2Dto) throws ParseException, JOSEException {
         return ResponseEntity.ok(authService.SigInWithGoogle(oauth2Dto));
     }
 }

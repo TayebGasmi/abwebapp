@@ -1,11 +1,13 @@
 import {inject, Injectable} from "@angular/core";
-import {BehaviorSubject, Observable} from "rxjs";
+import {BehaviorSubject, Observable, tap} from "rxjs";
 import {SocialUser} from "@abacritt/angularx-social-login";
 import {Router} from "@angular/router";
 import {environment} from "../../../environments/environment";
 import {Login} from "../models/login";
 import {HttpClient} from "@angular/common/http";
 import {Register} from "../models/register";
+import {SocialLogin} from "../models/SocialLogin";
+import {TokenResponse} from "../models/TokenResponse";
 
 @Injectable({
   providedIn: 'root'
@@ -21,24 +23,14 @@ export class AuthService {
   nextUser(user: any) {
     this.currentUser.next(user);
   }
-
-  login(user: SocialUser) {
-    if (user.provider == 'MICROSOFT') {
-      this.signInWithOutlook(user);
-
-    }
-    if (user.provider == 'GOOGLE') {
-      this.googleLogin(user);
-      localStorage.setItem("token", user.idToken)
-      localStorage.setItem("pic", user.photoUrl)
-      localStorage.setItem("firaslastname", user.firstName + " " + user.lastName)
-    }
-    this.router.navigate(['']);
+  loginSocial(socialAccount:SocialLogin):Observable<TokenResponse>{
+    return this.httpClient.post<TokenResponse>(`${this.AUTH_URL}/googlelogin`,socialAccount).pipe(
+      tap ((tokenResponse)=>{
+        localStorage.setItem('token',JSON.stringify(tokenResponse))
+      })
+    )
   }
 
-  googleLogin(user: SocialUser) {
-
-  }
 
   signBack(login: Login): Observable<any> {
     return this.httpClient.post<any>(this.AUTH_URL, login)
@@ -48,7 +40,5 @@ export class AuthService {
     return this.httpClient.post<any>(`${this.AUTH_URL}/register`, register)
   }
 
-  private signInWithOutlook(user: SocialUser) {
 
-  }
 }

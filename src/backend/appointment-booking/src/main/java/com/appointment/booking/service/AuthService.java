@@ -11,8 +11,11 @@ import com.appointment.booking.exceptions.NotFoundException;
 import com.appointment.booking.repository.UserRepository;
 import com.appointment.booking.utils.GoogleTokenVerifier;
 import com.appointment.booking.utils.JwtUTil;
+import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jwt.JWTClaimsSet;
 import jakarta.mail.MessagingException;
+
+import java.text.ParseException;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -67,15 +70,20 @@ public class AuthService {
             .build();
 
     }
-    public TokenDtoResponse SigInWithGoogle(Oauth2Dto oauth2Dto) {
-        try {
+    public TokenDtoResponse SigInWithGoogle(Oauth2Dto oauth2Dto) throws ParseException, JOSEException {
+
             JWTClaimsSet claims = googleTokenVerifier.verify(oauth2Dto.getIdToken());
             log.info("Google claims: {}", claims);
-            String email = claims.getSubject();
+            String email = claims.getStringClaim("email");
+            String firstName= claims.getStringClaim("given_name");
+            String lastName= claims.getStringClaim("family_name");
             Optional<User> userOptional = userRepository.findByEmail(email);
             if (userOptional.isEmpty()) {
                 User user = User.builder()
-                    .email(email)
+                        .email(email)
+                        .firstName(firstName)
+                        .lastName(lastName)
+                        .isVerified(true)
                     .build();
                 userRepository.save(user);
                 return TokenDtoResponse.builder()
@@ -83,11 +91,9 @@ public class AuthService {
                         .build();
             }
             return TokenDtoResponse.builder()
-                .accessToken(jwtUTil.generateToken(userOptional.get().getEmail(),userOptional.get().getRole().getName().toString()))
+                .accessToken(jwtUTil.generateToken(userOptional.get().getEmail(),""))
                 .build();
-        } catch (Exception e) {
-            throw new UsernameNotFoundException("Invalid Google token");
         }
-    }
+
 
 }
