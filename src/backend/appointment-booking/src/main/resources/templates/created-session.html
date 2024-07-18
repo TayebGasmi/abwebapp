@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Session Confirmation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        h2 {
+            color: #2E86C1;
+        }
+        p {
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>Session Created Successfully</h2>
+    <p>Dear <span th:text="${teacherName}">Teacher</span>,</p>
+    <p>We are pleased to inform you that a new session has been created with the following details:</p>
+    <ul>
+        <li><strong>Title:</strong> <span th:text="${sessionTitle}">Session Title</span></li>
+        <li><strong>Description:</strong> <span th:text="${sessionDescription}">Session Description</span></li>
+        <li><strong>Start Time:</strong> <span th:text="${StartDate}">Start Time</span></li>
+        <li><strong>End Time:</strong> <span th:text="${EndDate}">End Time</span></li>
+    </ul>
+    <p>Thank you for using Doowi.</p>
+    <p>Best regards,<br>Doowi Team</p>
+</div>
+</body>
+</html>

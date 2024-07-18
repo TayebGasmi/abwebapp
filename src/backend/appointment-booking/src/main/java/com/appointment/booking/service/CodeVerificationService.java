@@ -1,6 +1,7 @@
 package com.appointment.booking.service;
 
 import com.appointment.booking.dto.EmailDto;
+import com.appointment.booking.dto.SessionDto;
 import com.appointment.booking.entity.User;
 import com.appointment.booking.entity.VerificationCode;
 import com.appointment.booking.repository.CodeVerificationRepository;
@@ -42,6 +43,20 @@ public class CodeVerificationService {
                 .build(),
             mailVariables,
             "code-verification"
+        );
+    }
+    @Transactional
+    public void sendSessionCreationConfirmation(SessionDto sessionDto, String email, String teacherName) throws MessagingException {
+
+        Map<String, Object> mailVariables = Map.of("teacherName",teacherName,"sessionTitle",sessionDto.getTitle(),"sessionDescription",sessionDto.getDescription(),"StartDate", sessionDto.getStartTime(),"EndDate",sessionDto.getEndTime(), "email", email);
+        emailService.sendEmail(
+                EmailDto.builder()
+                        .to(Set.of(email))
+                        .from("doowi@gmail.com")
+                        .subject("Session Creation")
+                        .build(),
+                mailVariables,
+                "created-session"
         );
     }
 
