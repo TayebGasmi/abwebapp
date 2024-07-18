@@ -32,6 +32,9 @@ public class SessionService extends BaseServiceImpl<Session,Long, SessionDto> {
     public SessionDto add(SessionDto dto) throws Exception {
         Teacher teacher = new Teacher();
         teacher.setId(dto.getTeacherId());
+        if(!sessionRepository.findConflictingSessions(dto.getTeacherId(),dto.getStartTime(),dto.getEndTime()).isEmpty()){
+            throw new IllegalStateException("There are conflicting session at this mentioned time.");
+        }
         Session session = sessionMapper.convertDtoToEntity(dto);
         session.setTeacher(teacher);
         return sessionMapper.convertEntityToDto(sessionRepository.save(session));
