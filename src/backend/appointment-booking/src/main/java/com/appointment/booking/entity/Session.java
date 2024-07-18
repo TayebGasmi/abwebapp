@@ -1,16 +1,11 @@
 package com.appointment.booking.entity;
 
 import com.appointment.booking.base.BaseEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,6 +20,21 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @SuperBuilder
 public class Session extends BaseEntity<Long> {
+    @Column(nullable = false)
+    private String title;
+    @Column(nullable = false)
+    private String description;
+    @Column(name = "session_start_date", nullable = false)
+    private LocalDateTime startTime;
+    @Column(name = "session_ending_date", nullable = false)
+    private LocalDateTime endTime;
+    @Column(nullable = false)
+    private String sessionLink;
+    @Column(nullable = false)
+    private int capacity;
+
+    @ElementCollection
+    private List<String> tags;
 
     @ManyToOne
     @JoinColumn(name = "lesson_id", nullable = false)
@@ -41,9 +51,6 @@ public class Session extends BaseEntity<Long> {
     @ManyToOne
     @JoinColumn(name = "teacher_id", nullable = false)
     private Teacher teacher;
-
-    @Column(name = "session_date", nullable = false)
-    private LocalDateTime sessionDate;
 
     @Column(nullable = false)
     private String status;
