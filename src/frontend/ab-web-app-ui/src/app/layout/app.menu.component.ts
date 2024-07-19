@@ -43,10 +43,20 @@ export class AppMenuComponent implements OnInit {
             label: "Session",
             icon: "pi pi-fw pi-calendar",
             routerLink: "session"
-          },{
+          }, {
             label: "Display Sessions",
             icon: "pi pi-fw pi-calendar",
             routerLink: "sessionlist"
+          }
+        ]
+      },
+      {
+        label: "settings",
+        items: [
+          {
+            label: "Subject",
+            icon: "",
+            routerLink: "/setting/subject"
           }
         ]
       }
