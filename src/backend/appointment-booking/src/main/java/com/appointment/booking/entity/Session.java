@@ -15,7 +15,6 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @Setter
 @Entity
-@Table(name = "session")
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder

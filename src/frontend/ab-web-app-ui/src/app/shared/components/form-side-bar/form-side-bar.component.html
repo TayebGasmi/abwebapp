@@ -1,14 +1,12 @@
 <p-sidebar
-  [visible]="sidebarVisible"
+  [(visible)]="sidebarVisible"
   position="right"
   styleClass="w-30rem"
-
 >
-
   <ng-template pTemplate="header">
     <div class="flex align
     -items-center justify-content-between p-3">
-      <span class="text-900 font-bold text-xl">{{title}}</span>
+      <span class="text-900 font-bold text-xl">{{ title }}</span>
     </div>
   </ng-template>
   <ng-template pTemplate="content">

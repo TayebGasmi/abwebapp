@@ -17,7 +17,6 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "lesson")
 @SuperBuilder
 public class Lesson extends BaseEntity<Long> {
 

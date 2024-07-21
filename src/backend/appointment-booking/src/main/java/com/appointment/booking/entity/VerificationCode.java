@@ -19,7 +19,6 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @Setter
 @Entity
-@Table(name = "verification_code")
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder
