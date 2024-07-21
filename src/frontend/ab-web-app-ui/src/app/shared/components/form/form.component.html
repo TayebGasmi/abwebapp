@@ -3,6 +3,7 @@
     <div class="flex flex-column">
       @switch (field.type) {
         @default {
+          <label class="mb-2" [for]="field.name">{{ field.label }}</label>
           @if (field.icon) {
             <span class="p-input-icon-left w-full mb-2">
               <i [ngClass]="field.icon"></i>
@@ -12,21 +13,23 @@
                      [placeholder]="field.placeholder || ''"
                      [type]="field.type"
                      pInputText
-                     class="w-full md:w-25rem"
+                     class="w-full "
               />
             </span>
           } @else {
+
             <input [formControlName]="field.name"
                    [id]="field.name"
                    [ngClass]="{'ng-invalid ng-dirty': fieldHasError(field.name)}"
                    [placeholder]="field.placeholder || ''"
                    [type]="field.type"
                    pInputText
-                   class="w-full md:w-25rem"
+                   class="w-full "
             />
           }
         }
         @case ('number') {
+          <label class="mb-2" [for]="field.name">{{ field.label }}</label>
           <p-inputNumber
             [formControlName]="field.name"
             [id]="field.name"
@@ -35,10 +38,11 @@
             [ngClass]="{'ng-invalid ng-dirty': fieldHasError(field.name)}"
             [placeholder]="field.placeholder || ''"
             [step]="field.step || 1"
-            styleClass="w-full md:w-25rem mb-2"
+            styleClass="w-full  mb-2"
           ></p-inputNumber>
         }
         @case ('password') {
+          <label class="mb-2" [for]="field.name">{{ field.label }}</label>
           <span class="p-input-icon-left w-full mb-2">
             <i class="pi pi-lock z-2"></i>
             <p-password [formControlName]="field.name"
@@ -46,40 +50,29 @@
                         [ngClass]="{'ng-invalid ng-dirty': fieldHasError(field.name)}"
                         [placeholder]="field.placeholder || ''"
                         [toggleMask]="true"
-                        inputStyleClass="w-full md:w-25rem"
-                        [inputStyle]="{paddingLeft: '2.5rem'}"
-            ></p-password>
-          </span>
-        }
-        @case ('confirm-password') {
-          <span class="p-input-icon-left w-full mb-2">
-            <i class="pi pi-lock z-2"></i>
-            <p-password [formControlName]="field.name"
-                        [id]="field.name"
-                        [ngClass]="{'ng-invalid ng-dirty': fieldHasError(field.name)}"
-                        [placeholder]="field.placeholder || ''"
-                        [toggleMask]="true"
-                        inputStyleClass="w-full md:w-25rem"
-                        [inputStyle]="{paddingLeft: '2.5rem'}"
+                        styleClass="w-full p-password p-component p-inputwrapper p-input-icon-right"
+                        [inputStyle]="{paddingLeft: '2.5rem',width: '100%'}"
             ></p-password>
           </span>
         }
         @case ('date') {
+          <label class="mb-2" [for]="field.name">{{ field.label }}</label>
           <p-calendar
             [formControlName]="field.name"
             [id]="field.name"
             [ngClass]="{'ng-invalid ng-dirty': fieldHasError(field.name)}"
             [placeholder]="field.placeholder || ''"
-            styleClass="w-full md:w-25rem mb-2"
+            styleClass="w-full  mb-2"
           ></p-calendar>
         }
         @case ('textarea') {
+          <label class="mb-2" [for]="field.name">{{ field.label }}</label>
           <textarea [formControlName]="field.name"
                     [id]="field.name"
                     [ngClass]="{'ng-invalid ng-dirty': fieldHasError(field.name)}"
                     [placeholder]="field.placeholder || ''"
                     pInputTextarea
-                    class="w-full md:w-25rem mb-2"
+                    class="w-full  mb-2"
           ></textarea>
         }
         @case ('checkbox') {
@@ -92,6 +85,7 @@
           ></p-checkbox>
         }
         @case ('select') {
+          <label class="mb-2" [for]="field.name">{{ field.label }}</label>
           <p-multiSelect
             [formControlName]="field.name"
             [id]="field.name"
@@ -99,18 +93,20 @@
             [optionLabel]="field.placeholder || ''"
             [options]="field.options"
             display="chip"
-            styleClass="w-full md:w-25rem mb-2"
+            styleClass="w-full  mb-2"
           ></p-multiSelect>
         }
         @case ('dropdown') {
+          <label class="mb-2" [for]="field.name">{{ field.label }}</label>
           <p-dropdown [filter]="true" [formControlName]="field.name" [options]="field.options"
                       [placeholder]="field.placeholder || ''"
                       [showClear]="true"
-                      styleClass="w-full md:w-25rem mb-2"
+                      styleClass="w-full  mb-2"
           >
           </p-dropdown>
         }
         @case ('radio') {
+          <label class="mb-2" [for]="field.name">{{ field.label }}</label>
           @for (option of field.options; track option; let index = $index) {
             <div class="mb-2">
               <p-radioButton [formControlName]="field.name"

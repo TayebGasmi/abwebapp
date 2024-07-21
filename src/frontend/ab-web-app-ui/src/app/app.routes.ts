@@ -27,15 +27,16 @@ export const routes: Routes = [
         loadComponent: () => import('./Pages/session/sessionlist/sessionlist.component').then(m => m.SessionlistComponent),
         canActivate: [authGuard]
       },
+      {
+        path: 'settings',
+        loadChildren: () => import('./Pages/settings/settings.routes').then(m => m.routes),
+        canActivate: [authGuard]
+      }
     ],
   },
   {
     path: 'auth',
     loadChildren: () => import('./modules/auth/auth.routes').then(m => m.routes)
-  },
-  {
-    path: 'settings',
-    loadChildren: () => import('./Pages/settings/settings.routes').then(m => m.routes)
   },
   {
     path: '**', redirectTo: '/notfound'

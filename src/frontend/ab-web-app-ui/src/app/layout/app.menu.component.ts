@@ -56,7 +56,7 @@ export class AppMenuComponent implements OnInit {
           {
             label: "Subject",
             icon: "",
-            routerLink: "/setting/subject"
+            routerLink: "settings/subject"
           }
         ]
       }

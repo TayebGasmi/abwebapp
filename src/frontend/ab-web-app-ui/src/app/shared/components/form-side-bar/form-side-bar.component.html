@@ -1,0 +1,27 @@
+<p-sidebar
+  [visible]="sidebarVisible"
+  position="right"
+  styleClass="w-30rem"
+
+>
+
+  <ng-template pTemplate="header">
+    <div class="flex align
+    -items-center justify-content-between p-3">
+      <span class="text-900 font-bold text-xl">{{title}}</span>
+    </div>
+  </ng-template>
+  <ng-template pTemplate="content">
+    <div class="w-full border-top-2 mb-3 surface-border">
+
+    </div>
+    <div class="w-full p-3">
+      <ng-content select="content"></ng-content>
+    </div>
+  </ng-template>
+  <ng-template pTemplate="footer">
+    <div class="w-full border-top-2 mb-3 surface-border">
+    </div>
+    <ng-content select="footer"></ng-content>
+  </ng-template>
+</p-sidebar>

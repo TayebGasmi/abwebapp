@@ -1,1 +1,10 @@
-<p>subject works!</p>
+<app-form-side-bar [title]="formTitle" [sidebarVisible]="sidebarVisible">
+  <div ngProjectAs="content">
+      <app-form [fields]="registerForm"></app-form>
+  </div>
+  <footer class="flex justify-content-end p-3 gap-2" >
+      <button pRipple pButton type="button" label="Cancel" class="p-button-outlined" icon="pi pi-times" (click)="sidebarVisible = false"></button>
+      <button pRipple pButton type="button" label="Save"  icon="pi pi-save" (click)="sidebarVisible = false"></button>
+  </footer>
+
+</app-form-side-bar>
