@@ -1,6 +1,7 @@
 package com.appointment.booking.dto;
 
 import com.appointment.booking.base.BaseDto;
+import com.appointment.booking.entity.Student;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
@@ -24,6 +25,6 @@ public class SessionDto extends BaseDto<Long> {
     private List<String> tags;
     private long lessonId;
     private long teacherId;
-    private Set<Long> listStudentIds;
+    private Set<Student> students;
 
 }

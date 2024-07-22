@@ -1,20 +1,14 @@
-export interface Session {
-  sessionId: number;
+export interface SessionDto {
+  id: number;
   title: string;
   description: string;
-  startTime: Date;
-  endTime: Date;
-  duration: string;
-  instructorName: string;
-  courseName: string;
-  sessionType: string;
-  location: string;
+  startTime: string;  // ISO 8601 format string for LocalDateTime
+  endTime: string;    // ISO 8601 format string for LocalDateTime
   sessionLink: string;
-  materials: string;
   capacity: number;
-  registeredParticipants: number;
-  sessionStatus: string;
-  recordingLink: string;
-  feedback: string;
+  status: string;
   tags: string[];
+  lessonId: number;
+  teacherId: number;
+  students: number[];
 }

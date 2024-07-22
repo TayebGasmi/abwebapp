@@ -1,56 +1,84 @@
-<div class="col-12">
-  <div class="card">
-    <h5>Session Listing</h5>
-    <p-table [value]="sessions" [paginator]="true" [rows]="10" [responsiveLayout]="'scroll'">
-      <ng-template pTemplate="header">
-        <tr>
-          <th>Session ID</th>
-          <th>Title</th>
-          <th>Description</th>
-          <th>Start Time</th>
-          <th>End Time</th>
-          <th>Duration</th>
-          <th>Instructor Name</th>
-          <th>Course Name</th>
-          <th>Session Type</th>
-          <th>Location</th>
-          <th>Session Link</th>
-          <th>Materials</th>
-          <th>Capacity</th>
-          <th>Registered Participants</th>
-          <th>Session Status</th>
-          <th>Recording Link</th>
-          <th>Feedback</th>
-          <th>Tags</th>
-          <th>Action</th>
-        </tr>
-      </ng-template>
-      <ng-template pTemplate="body" let-session>
-        <tr>
-          <td>{{ session.sessionId }}</td>
-          <td>{{ session.title }}</td>
-          <td>{{ session.description }}</td>
-          <td>{{ session.startTime | date:'short' }}</td>
-          <td>{{ session.endTime | date:'short' }}</td>
-          <td>{{ session.duration }}</td>
-          <td>{{ session.instructorName }}</td>
-          <td>{{ session.courseName }}</td>
-          <td>{{ session.sessionType }}</td>
-          <td>{{ session.location }}</td>
-          <td><a [href]="session.sessionLink" target="_blank">Link</a></td>
-          <td>{{ session.materials }}</td>
-          <td>{{ session.capacity }}</td>
-          <td>{{ session.registeredParticipants }}</td>
-          <td>{{ session.sessionStatus }}</td>
-          <td><a [href]="session.recordingLink" target="_blank">Recording</a></td>
-          <td>{{ session.feedback }}</td>
-          <td>{{ session.tags }}</td>
-          <td>
-            <button pButton type="button" icon="pi pi-pencil" (click)="editSession(session)"></button>
-            <button pButton type="button" icon="pi pi-trash" (click)="deleteSession(session.sessionId)"></button>
-          </td>
-        </tr>
-      </ng-template>
-    </p-table>
-  </div>
+<div class="container">
+  <p-table [value]="sessions"
+           [paginator]="true"
+           [totalRecords]="totalItems"
+           [rows]="pageSize"
+           [lazy]="true"
+           [showCurrentPageReport]="true"
+           (onLazyLoad)="onPageChange($event)">
+    <ng-template pTemplate="header">
+      <tr>
+        <th pSortableColumn="title">
+          Title
+          <p-sortIcon field="title"></p-sortIcon>
+          <p-columnFilter [field]="'title'" [matchMode]="'contains'" placeholder="Filter Title"></p-columnFilter>
+        </th>
+        <th pSortableColumn="description">
+          Description
+          <p-sortIcon field="description"></p-sortIcon>
+          <p-columnFilter [field]="'description'" [matchMode]="'contains'" placeholder="Filter Description"></p-columnFilter>
+        </th>
+        <th pSortableColumn="startTime">
+          Start Time
+          <p-sortIcon field="startTime"></p-sortIcon>
+          <p-columnFilter [field]="'startTime'" [matchMode]="'contains'" placeholder="Filter Start Time"></p-columnFilter>
+        </th>
+        <th pSortableColumn="endTime">
+          End Time
+          <p-sortIcon field="endTime"></p-sortIcon>
+          <p-columnFilter [field]="'endTime'" [matchMode]="'contains'" placeholder="Filter End Time"></p-columnFilter>
+        </th>
+        <th pSortableColumn="sessionLink">
+          Session Link
+          <p-sortIcon field="sessionLink"></p-sortIcon>
+          <p-columnFilter [field]="'sessionLink'" [matchMode]="'contains'" placeholder="Filter Session Link"></p-columnFilter>
+        </th>
+        <th pSortableColumn="capacity">
+          Capacity
+          <p-sortIcon field="capacity"></p-sortIcon>
+          <p-columnFilter [field]="'capacity'" [matchMode]="'contains'" placeholder="Filter Capacity"></p-columnFilter>
+        </th>
+        <th pSortableColumn="status">
+          Status
+          <p-sortIcon field="status"></p-sortIcon>
+          <p-columnFilter [field]="'status'" [matchMode]="'contains'" placeholder="Filter Status"></p-columnFilter>
+        </th>
+        <th pSortableColumn="tags">
+          Tags
+          <p-sortIcon field="tags"></p-sortIcon>
+          <p-columnFilter [field]="'tags'" [matchMode]="'contains'" placeholder="Filter Tags"></p-columnFilter>
+        </th>
+        <th pSortableColumn="lessonId">
+          Lesson ID
+          <p-sortIcon field="lessonId"></p-sortIcon>
+          <p-columnFilter [field]="'lessonId'" [matchMode]="'contains'" placeholder="Filter Lesson ID"></p-columnFilter>
+        </th>
+        <th pSortableColumn="teacherId">
+          Teacher ID
+          <p-sortIcon field="teacherId"></p-sortIcon>
+          <p-columnFilter [field]="'teacherId'" [matchMode]="'contains'" placeholder="Filter Teacher ID"></p-columnFilter>
+        </th>
+        <th pSortableColumn="students">
+          Student IDs
+          <p-sortIcon field="students"></p-sortIcon>
+          <p-columnFilter [field]="'students'" [matchMode]="'contains'" placeholder="Filter Student IDs"></p-columnFilter>
+        </th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-session>
+      <tr>
+        <td>{{ session.title }}</td>
+        <td>{{ session.description }}</td>
+        <td>{{ session.startTime }}</td>
+        <td>{{ session.endTime  }}</td>
+        <td><a [href]="session.sessionLink" target="_blank">{{ session.sessionLink }}</a></td>
+        <td>{{ session.capacity }}</td>
+        <td>{{ session.status }}</td>
+        <td>{{ session.tags.join(', ') }}</td>
+        <td>{{ session.lessonId }}</td>
+        <td>{{ session.teacherId }}</td>
+        <td>{{ session.students.join(', ') }}</td>
+      </tr>
+    </ng-template>
+  </p-table>
 </div>
