@@ -4,7 +4,11 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Collections;
 import java.util.List;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 public class PageData<T> {
 
     private final List<T> data;
@@ -24,21 +28,6 @@ public class PageData<T> {
         this.hasNext = hasNext;
     }
 
-    public List<T> getData() {
-        return data;
-    }
 
-    public int getTotalPages() {
-        return totalPages;
-    }
-
-    public int getTotalElements() {
-        return totalElements;
-    }
-
-    @JsonProperty("hasNext")
-    public boolean hasNext() {
-        return hasNext;
-    }
 }
 

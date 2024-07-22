@@ -2,10 +2,7 @@ package com.appointment.booking.entity;
 
 import com.appointment.booking.base.BaseEntity;
 import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
-import java.util.HashSet;
-import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,15 +11,11 @@ import lombok.experimental.SuperBuilder;
 
 @Getter
 @Setter
+@Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
 @SuperBuilder
-public class Lesson extends BaseEntity<Long> {
-
-    private String title;
+public class Subject extends BaseEntity<Long> {
+    private String name;
     private String description;
-    @ManyToMany(mappedBy = "lessons")
-    private Set<Teacher> teachers = new HashSet<>();
-
 }
