@@ -12,7 +12,6 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @Setter
 @Entity
-@Table(name = "school")
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder

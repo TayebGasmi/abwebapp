@@ -8,6 +8,7 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "serve:ssr:abWebAppUI": "node dist/ab-web-app-ui/server/server.mjs"
+
   },
   "private": true,
   "dependencies": {
@@ -49,6 +50,7 @@
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
+    "sass": "^1.77.8",
     "typescript": "~5.4.2"
   }
 }

@@ -20,7 +20,6 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @Setter
 @Entity
-@Table(name = "role")
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder
