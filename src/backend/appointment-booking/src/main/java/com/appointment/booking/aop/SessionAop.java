@@ -29,7 +29,7 @@ public class SessionAop {
     }
 
     @AfterReturning(value = "afterSavingSession()",returning = "result")
-    public void afterAdvice(JoinPoint jp,SessionDto result){
+    public void afterAdvice(JoinPoint jp,SessionDto result) {
         System.out.println("Method Signature: "  + jp.getSignature());
         Optional<Session> sessionentity= sessionRepository.findById(result.getId());
         Optional<User> teacher = userRepository.findById(sessionentity.get().getTeacher().getId());
@@ -40,7 +40,6 @@ public class SessionAop {
         } catch (MessagingException e) {
             throw new RuntimeException(e);
         }
-
     }
 
 }

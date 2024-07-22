@@ -34,7 +34,8 @@ public class WebSecurityConfig {
         "/swagger-resources/**",
         "/actuator/**",
         "webjars/**",
-        "/auth"
+        "/auth",
+        "/session/**"
     };
     private final UserDetailsService userDetailsService;
     private final JwtTokenFilter jwtTokenFilter;

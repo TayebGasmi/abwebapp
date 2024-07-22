@@ -37,7 +37,9 @@ public class SessionService extends BaseServiceImpl<Session,Long, SessionDto> {
         }
         Session session = sessionMapper.convertDtoToEntity(dto);
         session.setTeacher(teacher);
-        return sessionMapper.convertEntityToDto(sessionRepository.save(session));
+        SessionDto sessionDto=sessionMapper.convertEntityToDto(sessionRepository.save(session));
+        sessionDto.setTeacherId(dto.getTeacherId());
+        return sessionDto;
     }
 
     public SessionDto bookSession(Long studentId, SessionDto sessionDTO) throws Exception{
