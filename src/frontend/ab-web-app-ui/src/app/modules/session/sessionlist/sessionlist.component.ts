@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import {SessionDto} from "../../../core/models/session";
-import {CommonModule, DatePipe} from "@angular/common";
+import { DatePipe } from "@angular/common";
 import {FormsModule} from "@angular/forms";
 import {TableLazyLoadEvent, TableModule} from "primeng/table";
 import {RatingModule} from "primeng/rating";
@@ -22,7 +22,6 @@ import {LazyLoadEvent} from "primeng/api";
   standalone: true,
   imports: [
     DatePipe,
-    CommonModule,
     FormsModule,
     TableModule,
     RatingModule,
@@ -34,9 +33,8 @@ import {LazyLoadEvent} from "primeng/api";
     MultiSelectModule,
     DropdownModule,
     ProgressBarModule,
-
     ToastModule
-  ],
+],
   templateUrl: './sessionlist.component.html',
   styleUrl: './sessionlist.component.scss'
 })
