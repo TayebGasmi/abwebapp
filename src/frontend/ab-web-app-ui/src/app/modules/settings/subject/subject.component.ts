@@ -127,4 +127,10 @@ export class SubjectComponent implements OnInit {
     this.pageLink.globalFilter = {keys: ['name', 'description'], value};
     this.loadSubjects();
   }
+
+  addSubject() {
+    this.sidebarVisible = true;
+    this.formTitle = 'Add new Subject';
+    this.selectedSubject = null;
+  }
 }

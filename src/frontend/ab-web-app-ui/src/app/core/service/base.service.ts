@@ -1,24 +1,24 @@
 import {HttpClient} from "@angular/common/http";
-import {BehaviorSubject, Observable} from "rxjs";
+import {Observable} from "rxjs";
 import {IBaseService} from "./base.service.interface";
 import {PageData} from "../models/page-data";
 import {PageLink} from "../models/page-link";
+import {NotificationService} from "./notification.service";
 
 export class BaseService<T, I> implements IBaseService<T, I> {
 
-  dataSubject$: BehaviorSubject<T | null> = new BehaviorSubject<T | null>(null);
-  data$: Observable<T | null> = this.dataSubject$.asObservable();
 
-  constructor(private httpClient: HttpClient, private url: string) {
+  constructor(private httpClient: HttpClient, private url: string, private notif: NotificationService) {
 
   }
 
   updateById(t: T, id: I): Observable<T> {
-    return this.httpClient.patch<T>(`${this.url}/${id}`, t);
-  }
-
-  updateData(t: T | null = null): void {
-    this.dataSubject$.next(t);
+    return this.httpClient.patch<T>(`${this.url}/${id}`, t).pipe(
+      (data) => {
+        this.notif.showSuccess('Updated successfully');
+        return data;
+      }
+    );
   }
 
   findById(id: I): Observable<T> {
@@ -30,7 +30,11 @@ export class BaseService<T, I> implements IBaseService<T, I> {
   }
 
   deleteById(id: I): Observable<void> {
-    return this.httpClient.delete<void>(`${this.url}/${id}`);
+    return this.httpClient.delete<void>(`${this.url}/${id}`).pipe((data) => {
+        this.notif.showSuccess('Deleted successfully');
+        return data;
+      }
+    );
   }
 
   findAll(pageLink: PageLink): Observable<PageData<T>> {
@@ -38,7 +42,11 @@ export class BaseService<T, I> implements IBaseService<T, I> {
   }
 
   save(t: T): Observable<T> {
-    return this.httpClient.post<T>(`${this.url}`, t);
+    return this.httpClient.post<T>(`${this.url}`, t).pipe((data) => {
+        this.notif.showSuccess('Saved successfully');
+        return data;
+      }
+    );
   }
 
 
