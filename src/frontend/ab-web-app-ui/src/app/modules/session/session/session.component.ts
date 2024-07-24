@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 import { AutoCompleteModule } from "primeng/autocomplete";
 import { CalendarModule } from "primeng/calendar";
@@ -28,30 +28,7 @@ import {SelectItem} from "primeng/api";
 @Component({
   selector: 'app-session',
   standalone: true,
-  imports: [CommonModule,
-    FormsModule,
-    AutoCompleteModule,
-    CalendarModule,
-    ChipsModule,
-    DropdownModule,
-    InputMaskModule,
-    InputNumberModule,
-    ColorPickerModule,
-    CascadeSelectModule,
-    MultiSelectModule,
-    ToggleButtonModule,
-    SliderModule,
-    InputTextareaModule,
-    RadioButtonModule,
-    InputTextModule,
-    RatingModule,
-    ChipModule,
-    KnobModule,
-    InputSwitchModule,
-    ListboxModule,
-    SelectButtonModule,
-    CheckboxModule,
-    ButtonModule],
+  imports: [FormsModule, AutoCompleteModule, CalendarModule, ChipsModule, DropdownModule, InputMaskModule, InputNumberModule, ColorPickerModule, CascadeSelectModule, MultiSelectModule, ToggleButtonModule, SliderModule, InputTextareaModule, RadioButtonModule, InputTextModule, RatingModule, ChipModule, KnobModule, InputSwitchModule, ListboxModule, SelectButtonModule, CheckboxModule, ButtonModule],
   templateUrl: './session.component.html',
   styleUrl: './session.component.scss'
 })

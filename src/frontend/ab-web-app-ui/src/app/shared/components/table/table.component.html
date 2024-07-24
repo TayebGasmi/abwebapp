@@ -1,0 +1,90 @@
+<p-table (onLazyLoad)="lazyLoad($event)"
+         [currentPageReportTemplate]="currentPageReportTemplate"
+         [lazy]="true"
+         [paginator]="true"
+         [rowsPerPageOptions]="rowsPerPageOptions"
+         [rows]="pageSize"
+         [showCurrentPageReport]="true"
+         [tableStyle]="{ 'min-width': '50rem' }"
+         [totalRecords]="totalRecords"
+         [value]="data"
+         [dataKey]="dataKeys"
+         [(selection)]="selectedItems"
+>
+  @if (withCaption) {
+    <ng-template pTemplate="caption">
+      @if (captionTemplate) {
+        <ng-container *ngTemplateOutlet="captionTemplate"></ng-container>
+      } @else {
+        <div class="table-header flex justify-content-between align-items-center">
+          <h5>{{ totalRecords }} {{ itemsType }}</h5>
+          <span class="p-input-icon-left">
+          <i class="pi pi-search"></i>
+          <input pInputText [formControl]="globalFilter" type="text" placeholder="Search">
+        </span>
+        </div>
+      }
+    </ng-template>
+  }
+  <ng-template pTemplate="header">
+    <tr>
+      @if (multiSelect) {
+        <th id="check-box" style="width: 4rem">
+          <p-tableHeaderCheckbox/>
+        </th>
+      }
+      @for (col of columns; track col) {
+        <th [id]="col.field" [pSortableColumn]="col.field">{{ col.header }}
+          @if (col.sortable) {
+            <p-sortIcon [field]="col.field"></p-sortIcon>
+          }
+          @if (col.filterable) {
+            @switch (col.type) {
+              @case ('text') {
+                <p-columnFilter type="text" [field]="col.field" display="menu" class="ml-auto"></p-columnFilter>
+              }
+              @case ('number') {
+                <p-columnFilter type="numeric" [field]="col.field" display="menu" class="ml-auto"></p-columnFilter>
+              }
+              @case ('date') {
+                <p-columnFilter type="date" [field]="col.field" display="menu" class="ml-auto"></p-columnFilter>
+              }
+              @case ('boolean') {
+                <p-columnFilter type="boolean" [field]="col.field" display="menu" class="ml-auto"></p-columnFilter>
+              }
+              @default {
+                <p-columnFilter type="text" [field]="col.field" display="menu" class="ml-auto"></p-columnFilter>
+              }
+            }
+          }
+        </th>
+      }
+      @if (actionTemplate) {
+        <th id="Actions">Actions</th>
+      }
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-item>
+    <tr>
+      @if (multiSelect) {
+        <td>
+          <p-tableCheckbox [value]="item"/>
+        </td>
+      }
+      @for (col of columns; track col) {
+        @if (getColumnTemplate(col.field)) {
+          <td>
+            <ng-container *ngTemplateOutlet="getColumnTemplate(col.field); context: { $implicit: item }"></ng-container>
+          </td>
+        } @else {
+          <td>{{ item[col.field] }}</td>
+        }
+      }
+      @if (actionTemplate) {
+        <td>
+          <ng-container *ngTemplateOutlet="actionTemplate; context: { $implicit: item }"></ng-container>
+        </td>
+      }
+    </tr>
+  </ng-template>
+</p-table>

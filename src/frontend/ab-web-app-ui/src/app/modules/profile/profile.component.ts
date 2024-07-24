@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import {DropdownModule} from "primeng/dropdown";
 import {FormsModule} from "@angular/forms";
-import {CommonModule} from "@angular/common";
+
 import {AutoCompleteModule} from "primeng/autocomplete";
 import {CalendarModule} from "primeng/calendar";
 import {ChipsModule} from "primeng/chips";
@@ -18,7 +18,6 @@ import {InputTextModule} from "primeng/inputtext";
   imports: [
     DropdownModule,
     FormsModule,
-    CommonModule,
     FormsModule,
     AutoCompleteModule,
     CalendarModule,
@@ -30,7 +29,7 @@ import {InputTextModule} from "primeng/inputtext";
     MultiSelectModule,
     InputTextareaModule,
     InputTextModule
-  ],
+],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss'
 })

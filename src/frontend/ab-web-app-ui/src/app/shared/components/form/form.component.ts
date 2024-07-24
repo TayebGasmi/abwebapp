@@ -1,4 +1,4 @@
-import {Component, Input, OnInit, Output,EventEmitter} from '@angular/core';
+import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {FormControl, FormGroup, ReactiveFormsModule} from "@angular/forms";
 import {NgClass} from "@angular/common";
 import {InputNumberModule} from "primeng/inputnumber";
@@ -37,11 +37,35 @@ import {MessageModule} from "primeng/message";
   templateUrl: './form.component.html',
   styleUrl: './form.component.scss'
 })
-export class FormComponent implements OnInit {
+export class FormComponent implements OnInit, OnChanges {
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['formData']) {
+      this.updateFormData(changes['formData'].currentValue);
+    }
+  }
+
+  updateFormData(newFormData: any) {
+    if (newFormData) {
+      this.formData = newFormData;
+      this.fields.forEach(field => {
+        let fieldValue = newFormData.hasOwnProperty(field.name) ? newFormData[field.name] : '';
+        if (field.type === "dropdown") {
+          fieldValue = fieldValue[0];
+        }
+
+        const control = this.form.get(field.name);
+        if (control) {
+          control.setValue(fieldValue);
+        }
+      });
+    }
+  }
+
   @Input()
   fields: FormField[] = [];
   form: FormGroup = new FormGroup({}, {updateOn: 'blur'});
   @Input() formData: any = {};
+
   ngOnInit(): void {
     this.initForm();
 
@@ -49,6 +73,9 @@ export class FormComponent implements OnInit {
 
   initForm() {
     this.fields.forEach(field => {
+      if (this.formData == null) {
+        this.formData = {};
+      }
       let fieldValue = this.formData.hasOwnProperty(field.name) ? this.formData[field.name] : '';
       if (field.type == "dropdown") {
         fieldValue = fieldValue[0];
