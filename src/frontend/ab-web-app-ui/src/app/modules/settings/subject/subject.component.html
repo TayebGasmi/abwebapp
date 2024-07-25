@@ -21,7 +21,7 @@
     </ng-template>
   </app-table>
 
-  <app-form-side-bar [title]="formTitle" [sidebarVisible]="sidebarVisible">
+  <app-form-side-bar [title]="formTitle" [(sidebarVisible)]="sidebarVisible">
     <div ngProjectAs="content">
       <app-form #form [fields]="formFields" [formData]="selectedSubject"></app-form>
     </div>
