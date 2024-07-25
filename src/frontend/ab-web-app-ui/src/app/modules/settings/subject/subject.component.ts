@@ -14,6 +14,7 @@ import {TableColumn} from "../../../core/models/table-cloumn";
 import {ColumnDefDirective} from "../../../shared/directives/column-def.directive";
 import {FormGroup} from "@angular/forms";
 import {NotificationService} from "../../../core/service/notification.service";
+import {DeleteConfirmationComponent} from "../../../shared/components/delete-confirmation/delete-confirmation.component";
 
 @Component({
   selector: 'app-subject',
@@ -26,7 +27,8 @@ import {NotificationService} from "../../../core/service/notification.service";
     ButtonDirective,
     Ripple,
     TableComponent,
-    ColumnDefDirective
+    ColumnDefDirective,
+    DeleteConfirmationComponent
   ],
   standalone: true
 })
@@ -39,6 +41,7 @@ export class SubjectComponent  {
   pageLink: PageLink = {page: 0, pageSize: this.pageSize};
   selectedSubject: Subject | null = null;
   protected readonly formFields = subjectForm;
+  subjectToDelete: Subject | null = null;
 
   columns: TableColumn[] = [
     {field: 'name', header: 'Name', type: 'text', sortable: true, filterable: true},
@@ -47,6 +50,7 @@ export class SubjectComponent  {
 
   currentPageReportTemplate = "Showing {first} to {last} of {totalRecords} entries";
   rowsPerPageOptions = [10, 25, 50];
+  showDeleteConfirmation=false;
 
   constructor(private subjectService: SubjectService, private notificationService: NotificationService) {
   }
@@ -81,9 +85,11 @@ export class SubjectComponent  {
     this.formTitle = 'Edit Subject';
   }
 
-  delete(subject: Subject): void {
-    this.subjectService.deleteById(subject.id).subscribe(() => {
+  delete(): void {
+    this.subjectService.deleteById((this.subjectToDelete?.id) as number).subscribe(() => {
       this.loadSubjects();
+      this.showDeleteConfirmation = false;
+      this.notificationService.showSuccess('Subject deleted successfully');
     });
   }
 
@@ -127,5 +133,10 @@ export class SubjectComponent  {
 
   deleteAll(selectedItems: any[]) {
     console.log(selectedItems)
+  }
+
+  confirmDelete(item: any) {
+    this.showDeleteConfirmation = true;
+    this.subjectToDelete = item;
   }
 }
