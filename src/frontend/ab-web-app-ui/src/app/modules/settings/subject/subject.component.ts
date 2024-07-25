@@ -30,7 +30,7 @@ import {NotificationService} from "../../../core/service/notification.service";
   ],
   standalone: true
 })
-export class SubjectComponent implements OnInit {
+export class SubjectComponent  {
   sidebarVisible = false;
   formTitle = 'Add new Subject';
   data: Subject[] = [];
@@ -49,10 +49,6 @@ export class SubjectComponent implements OnInit {
   rowsPerPageOptions = [10, 25, 50];
 
   constructor(private subjectService: SubjectService, private notificationService: NotificationService) {
-  }
-
-  ngOnInit(): void {
-    this.loadSubjects();
   }
 
   loadSubjects(): void {
