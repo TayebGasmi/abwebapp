@@ -1,4 +1,5 @@
 import {FormField} from "../models/form-field";
+import {Validators} from "@angular/forms";
 
 export const subjectForm: FormField[] = [
   {
@@ -9,6 +10,8 @@ export const subjectForm: FormField[] = [
     errors: [
       {type: 'required', message: 'Name is required'}
     ]
+    ,
+    validators: [Validators.required]
 
   },
   {
@@ -18,7 +21,8 @@ export const subjectForm: FormField[] = [
     placeholder: 'Enter description',
     errors: [
       {type: 'required', message: 'Description is required'}
-    ]
+    ],
+    validators: [Validators.required]
 
   }
 ];
