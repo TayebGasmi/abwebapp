@@ -133,4 +133,8 @@ export class SubjectComponent implements OnInit {
     this.formTitle = 'Add new Subject';
     this.selectedSubject = null;
   }
+
+  deleteAllSubjects(selectedItems: any[]) {
+    console.log(selectedItems)
+  }
 }
