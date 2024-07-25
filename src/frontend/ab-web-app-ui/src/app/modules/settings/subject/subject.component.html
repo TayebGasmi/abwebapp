@@ -1,7 +1,7 @@
 <div class="card">
   <div class="mb-4 flex align-items-center justify-content-start gap-2">
-    <button pRipple pButton type="button" label="New" icon="pi pi-plus" (click)="addSubject()"></button>
-    <button pRipple pButton type="button" label="Delete" icon="pi pi-trash" class="p-button-danger" (click)="deleteAllSubjects(table.selectedItems)"></button>
+    <button pRipple pButton type="button" label="New" icon="pi pi-plus" (click)="add()"></button>
+    <button pRipple pButton type="button" label="Delete" icon="pi pi-trash" class="p-button-danger" (click)="deleteAll(table.selectedItems)"></button>
   </div>
   <app-table
     [columns]="columns"
@@ -17,7 +17,7 @@
     <ng-template #actions let-item>
       <button pRipple pButton type="button" icon="pi pi-pencil" class="mr-2 p-button-rounded p-button-outlined" (click)="editSubject(item)"></button>
       <button pRipple pButton type="button" icon="pi pi-trash" class="p-button-rounded p-button-outlined p-button-danger"
-              (click)="deleteSubject(item)"></button>
+              (click)="delete(item)"></button>
     </ng-template>
   </app-table>
 
@@ -26,8 +26,8 @@
       <app-form #form [fields]="formFields" [formData]="selectedSubject"></app-form>
     </div>
     <footer class="flex justify-content-end p-3 gap-2">
-      <button pRipple pButton type="button" label="Cancel" class="p-button-outlined" icon="pi pi-times" (click)="onCancel()"></button>
-      <button pRipple pButton type="button" label="Save" icon="pi pi-check" (click)="saveSubject(form.form)"></button>
+      <button pRipple pButton type="button" label="Cancel" class="p-button-outlined" icon="pi pi-times" (click)="onCancel(form.form)"></button>
+      <button pRipple pButton type="button" label="Save" icon="pi pi-check" (click)="save(form.form)" [disabled]="form.form.invalid" ></button>
     </footer>
   </app-form-side-bar>
 </div>

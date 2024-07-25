@@ -7,15 +7,13 @@ import {FormSideBarComponent} from "../../../shared/components/form-side-bar/for
 import {FormComponent} from "../../../shared/components/form/form.component";
 import {ButtonDirective} from "primeng/button";
 import {SortOrder} from "../../../core/enum/sort-order.enum";
-import {InputTextModule} from "primeng/inputtext";
 import {subjectForm} from "../../../core/forms/subject.form";
-import {ToolbarModule} from "primeng/toolbar";
 import {Ripple} from "primeng/ripple";
-import {FileUploadModule} from "primeng/fileupload";
 import {TableComponent} from "../../../shared/components/table/table.component";
 import {TableColumn} from "../../../core/models/table-cloumn";
 import {ColumnDefDirective} from "../../../shared/directives/column-def.directive";
 import {FormGroup} from "@angular/forms";
+import {NotificationService} from "../../../core/service/notification.service";
 
 @Component({
   selector: 'app-subject',
@@ -26,10 +24,7 @@ import {FormGroup} from "@angular/forms";
     FormSideBarComponent,
     FormComponent,
     ButtonDirective,
-    InputTextModule,
-    ToolbarModule,
     Ripple,
-    FileUploadModule,
     TableComponent,
     ColumnDefDirective
   ],
@@ -46,14 +41,14 @@ export class SubjectComponent implements OnInit {
   protected readonly formFields = subjectForm;
 
   columns: TableColumn[] = [
-    {field: 'name', header: 'Name', type: 'date', sortable: true, filterable: true},
-    {field: 'description', header: 'Description', type: 'boolean', sortable: true, filterable: true},
+    {field: 'name', header: 'Name', type: 'text', sortable: true, filterable: true},
+    {field: 'description', header: 'Description', type: 'text', sortable: true, filterable: true},
   ];
 
   currentPageReportTemplate = "Showing {first} to {last} of {totalRecords} entries";
   rowsPerPageOptions = [10, 25, 50];
 
-  constructor(private subjectService: SubjectService) {
+  constructor(private subjectService: SubjectService, private notificationService: NotificationService) {
   }
 
   ngOnInit(): void {
@@ -77,7 +72,6 @@ export class SubjectComponent implements OnInit {
     if (event.filters) {
       this.pageLink.filters = event.filters;
     }
-    console.log(event)
 
     if (event.globalFilter) {
       this.pageLink.globalFilter = {keys: ['name', 'description'], value: event.globalFilter};
@@ -91,35 +85,36 @@ export class SubjectComponent implements OnInit {
     this.formTitle = 'Edit Subject';
   }
 
-  deleteSubject(subject: Subject): void {
+  delete(subject: Subject): void {
     this.subjectService.deleteById(subject.id).subscribe(() => {
       this.loadSubjects();
     });
   }
 
-  saveSubject(form: FormGroup): void {
+  save(form: FormGroup): void {
     if (form.invalid) {
       return;
     }
-    const next = () => {
-      this.loadSubjects();
-      this.sidebarVisible = false;
-      form.reset();
-    }
     if (this.selectedSubject) {
       this.subjectService.updateById(form.value, this.selectedSubject.id).subscribe(() => {
-        next();
+        this.loadSubjects();
+        this.sidebarVisible = false;
+        form.reset();
+        this.notificationService.showSuccess('Subject updated successfully');
       })
       return;
     }
     this.subjectService.save(form.value).subscribe(() => {
-      next();
+      this.loadSubjects();
+      this.sidebarVisible = false;
+      form.reset();
+      this.notificationService.showSuccess('Subject saved successfully');
     });
 
   }
 
-  onCancel(): void {
-
+  onCancel(form: FormGroup): void {
+    form.reset();
     this.sidebarVisible = false;
   }
 
@@ -128,13 +123,13 @@ export class SubjectComponent implements OnInit {
     this.loadSubjects();
   }
 
-  addSubject() {
+  add() {
     this.sidebarVisible = true;
     this.formTitle = 'Add new Subject';
-    this.selectedSubject = null;
+    this.selectedSubject = {} as Subject;
   }
 
-  deleteAllSubjects(selectedItems: any[]) {
+  deleteAll(selectedItems: any[]) {
     console.log(selectedItems)
   }
 }
