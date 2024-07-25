@@ -1,5 +1,5 @@
-import {Component, Input} from '@angular/core';
-import {SidebarModule} from "primeng/sidebar";
+import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { SidebarModule } from 'primeng/sidebar';
 
 @Component({
   selector: 'app-form-side-bar',
@@ -8,13 +8,20 @@ import {SidebarModule} from "primeng/sidebar";
     SidebarModule,
   ],
   templateUrl: './form-side-bar.component.html',
-  styleUrl: './form-side-bar.component.scss',
+  styleUrls: ['./form-side-bar.component.scss'],
 })
 export class FormSideBarComponent {
+  @Input() title!: string;
 
+  private _sidebarVisible: boolean = false;
   @Input()
-  title!: string
-  @Input()
-  sidebarVisible: boolean = false
+  get sidebarVisible(): boolean {
+    return this._sidebarVisible;
+  }
+  set sidebarVisible(value: boolean) {
+    this._sidebarVisible = value;
+    this.sidebarVisibleChange.emit(this._sidebarVisible);
+  }
 
+  @Output() sidebarVisibleChange: EventEmitter<boolean> = new EventEmitter<boolean>();
 }

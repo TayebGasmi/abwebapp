@@ -55,7 +55,9 @@ export class FormComponent implements OnInit, OnChanges {
 
         const control = this.form.get(field.name);
         if (control) {
-          control.setValue(fieldValue);
+          control.setValue(fieldValue,);
+          control.setValidators(field.validators || null);
+          control.setAsyncValidators(field.asyncValidators || null);
         }
       });
     }

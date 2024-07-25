@@ -1,26 +1,28 @@
-import { Injectable } from '@angular/core';
-import { ToastrService } from 'ngx-toastr';
+import {Injectable} from '@angular/core';
+import {MessageService} from "primeng/api";
 
 @Injectable({
   providedIn: 'root'
 })
 export class NotificationService {
 
-  constructor(private toastr: ToastrService) { }
+  constructor(private messageService: MessageService) {
+  }
 
   showSuccess(message: string, title: string = 'Success'): void {
-    this.toastr.success(message, title);
+    this.messageService.add({severity: 'success', summary: title, detail: message});
   }
 
   showError(message: string, title: string = 'Error'): void {
-    this.toastr.error(message, title);
-  }
-
-  showWarning(message: string, title: string = 'Warning'): void {
-    this.toastr.warning(message, title);
+    this.messageService.add({severity: 'error', summary: title, detail: message});
   }
 
   showInfo(message: string, title: string = 'Info'): void {
-    this.toastr.info(message, title);
+    this.messageService.add({severity: 'info', summary: title, detail: message});
   }
+
+  showWarn(message: string, title: string = 'Warning'): void {
+    this.messageService.add({severity: 'warn', summary: title, detail: message});
+  }
+
 }
