@@ -36,7 +36,7 @@ public class Session extends BaseEntity<Long> {
     private List<String> tags;
 
     @ManyToOne
-    @JoinColumn(name = "lesson_id", nullable = false)
+    @JoinColumn(name = "lesson_id"/*, nullable = false*/)
     private Lesson lesson;
 
     @ManyToMany
@@ -48,7 +48,7 @@ public class Session extends BaseEntity<Long> {
     private Set<Student> students = new HashSet<>();
 
     @ManyToOne
-    @JoinColumn(name = "teacher_id", nullable = false)
+    @JoinColumn(name = "teacher_id" /*nullable = false*/)
     private Teacher teacher;
 
     @Column(nullable = false)

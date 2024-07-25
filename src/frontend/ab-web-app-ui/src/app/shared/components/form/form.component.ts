@@ -14,6 +14,7 @@ import {FormField} from "../../../core/models/form-field";
 import {IconFieldModule} from "primeng/iconfield";
 import {InputIconModule} from "primeng/inputicon";
 import {MessageModule} from "primeng/message";
+import {ChipsModule} from "primeng/chips";
 
 @Component({
   selector: 'app-form',
@@ -32,7 +33,8 @@ import {MessageModule} from "primeng/message";
     InputTextModule,
     IconFieldModule,
     InputIconModule,
-    MessageModule
+    MessageModule,
+    ChipsModule
   ],
   templateUrl: './form.component.html',
   styleUrl: './form.component.scss'

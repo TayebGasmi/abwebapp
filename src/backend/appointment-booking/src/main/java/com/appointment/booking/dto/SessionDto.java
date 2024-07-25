@@ -5,6 +5,7 @@ import com.appointment.booking.entity.Student;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
@@ -14,7 +15,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Getter
 @Setter
-public class SessionDto extends BaseDto<Long> {
+public class SessionDto extends BaseDto<Long> implements Serializable {
     private String title;
     private String description;
     private LocalDateTime startTime;
@@ -23,8 +24,7 @@ public class SessionDto extends BaseDto<Long> {
     private int capacity;
     private String status;
     private List<String> tags;
-    private long lessonId;
-    private long teacherId;
-    private Set<Student> students;
+//    private TeacherDto teacherId;
+    private Set<StudentDto> students;
 
 }

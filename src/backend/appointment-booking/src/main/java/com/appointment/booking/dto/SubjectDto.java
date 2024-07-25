@@ -11,7 +11,7 @@ import lombok.Data;
  * DTO for {@link com.appointment.booking.entity.Subject}
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-        @Data
+@Data
 public class SubjectDto extends BaseDto<Long> implements Serializable {
 
     @NotNull

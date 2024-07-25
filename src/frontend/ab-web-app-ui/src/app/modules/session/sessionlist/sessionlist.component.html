@@ -1,84 +1,41 @@
-<div class="container">
-  <p-table [value]="sessions"
-           [paginator]="true"
-           [totalRecords]="totalItems"
-           [rows]="pageSize"
-           [lazy]="true"
-           [showCurrentPageReport]="true"
-           (onLazyLoad)="onPageChange($event)">
-    <ng-template pTemplate="header">
-      <tr>
-        <th pSortableColumn="title">
-          Title
-          <p-sortIcon field="title"></p-sortIcon>
-          <p-columnFilter [field]="'title'" [matchMode]="'contains'" placeholder="Filter Title"></p-columnFilter>
-        </th>
-        <th pSortableColumn="description">
-          Description
-          <p-sortIcon field="description"></p-sortIcon>
-          <p-columnFilter [field]="'description'" [matchMode]="'contains'" placeholder="Filter Description"></p-columnFilter>
-        </th>
-        <th pSortableColumn="startTime">
-          Start Time
-          <p-sortIcon field="startTime"></p-sortIcon>
-          <p-columnFilter [field]="'startTime'" [matchMode]="'contains'" placeholder="Filter Start Time"></p-columnFilter>
-        </th>
-        <th pSortableColumn="endTime">
-          End Time
-          <p-sortIcon field="endTime"></p-sortIcon>
-          <p-columnFilter [field]="'endTime'" [matchMode]="'contains'" placeholder="Filter End Time"></p-columnFilter>
-        </th>
-        <th pSortableColumn="sessionLink">
-          Session Link
-          <p-sortIcon field="sessionLink"></p-sortIcon>
-          <p-columnFilter [field]="'sessionLink'" [matchMode]="'contains'" placeholder="Filter Session Link"></p-columnFilter>
-        </th>
-        <th pSortableColumn="capacity">
-          Capacity
-          <p-sortIcon field="capacity"></p-sortIcon>
-          <p-columnFilter [field]="'capacity'" [matchMode]="'contains'" placeholder="Filter Capacity"></p-columnFilter>
-        </th>
-        <th pSortableColumn="status">
-          Status
-          <p-sortIcon field="status"></p-sortIcon>
-          <p-columnFilter [field]="'status'" [matchMode]="'contains'" placeholder="Filter Status"></p-columnFilter>
-        </th>
-        <th pSortableColumn="tags">
-          Tags
-          <p-sortIcon field="tags"></p-sortIcon>
-          <p-columnFilter [field]="'tags'" [matchMode]="'contains'" placeholder="Filter Tags"></p-columnFilter>
-        </th>
-        <th pSortableColumn="lessonId">
-          Lesson ID
-          <p-sortIcon field="lessonId"></p-sortIcon>
-          <p-columnFilter [field]="'lessonId'" [matchMode]="'contains'" placeholder="Filter Lesson ID"></p-columnFilter>
-        </th>
-        <th pSortableColumn="teacherId">
-          Teacher ID
-          <p-sortIcon field="teacherId"></p-sortIcon>
-          <p-columnFilter [field]="'teacherId'" [matchMode]="'contains'" placeholder="Filter Teacher ID"></p-columnFilter>
-        </th>
-        <th pSortableColumn="students">
-          Student IDs
-          <p-sortIcon field="students"></p-sortIcon>
-          <p-columnFilter [field]="'students'" [matchMode]="'contains'" placeholder="Filter Student IDs"></p-columnFilter>
-        </th>
-      </tr>
+<div class="card">
+  <div class="mb-4 flex align-items-center justify-content-start gap-2">
+    <button pRipple pButton type="button" label="New" icon="pi pi-plus" (click)="add()"></button>
+    <button pRipple pButton type="button" label="Delete" icon="pi pi-trash" class="p-button-danger" (click)="deleteAll(table.selectedItems)"
+            [disabled]="!table.selectedItems.length"
+    ></button>
+  </div>
+  <app-table
+    [columns]="columns"
+    [data]="data"
+    [totalRecords]="totalRecords"
+    [pageSize]="pageSize"
+    [currentPageReportTemplate]="currentPageReportTemplate"
+    [rowsPerPageOptions]="rowsPerPageOptions"
+    (onLazyLoad)="onLazyLoad($event)"
+    (onGlobalFilter)="onGlobalFilter($event)"
+    #table
+  >
+    <ng-template #actions let-item>
+      <button pRipple pButton type="button" icon="pi pi-pencil" class="mr-2 p-button-rounded p-button-outlined" (click)="editSubject(item)"></button>
+      <button pRipple pButton type="button" icon="pi pi-trash" class="p-button-rounded p-button-outlined p-button-danger"
+              (click)="confirmDelete(item)"></button>
     </ng-template>
-    <ng-template pTemplate="body" let-session>
-      <tr>
-        <td>{{ session.title }}</td>
-        <td>{{ session.description }}</td>
-        <td>{{ session.startTime }}</td>
-        <td>{{ session.endTime  }}</td>
-        <td><a [href]="session.sessionLink" target="_blank">{{ session.sessionLink }}</a></td>
-        <td>{{ session.capacity }}</td>
-        <td>{{ session.status }}</td>
-        <td>{{ session.tags.join(', ') }}</td>
-        <td>{{ session.lessonId }}</td>
-        <td>{{ session.teacherId }}</td>
-        <td>{{ session.students.join(', ') }}</td>
-      </tr>
+  </app-table>
+
+  <app-form-side-bar [title]="formTitle" [(sidebarVisible)]="sidebarVisible">
+    <div ngProjectAs="content">
+      <app-form #form [fields]="formFields" [formData]="selectedSession"></app-form>
+    </div>
+    <footer class="flex justify-content-end p-3 gap-2">
+      <button pRipple pButton type="button" label="Cancel" class="p-button-outlined" icon="pi pi-times" (click)="onCancel(form.form)"></button>
+      <button pRipple pButton type="button" label="Save" icon="pi pi-check" (click)="save(form.form)" [disabled]="form.form.invalid" ></button>
+    </footer>
+  </app-form-side-bar>
+  <app-delete-confirmation [(showDeleteConfirmation)]="showDeleteConfirmation" >
+    <ng-template #confirmButton>
+      <button pButton pRipple icon="pi pi-check" label="Yes" class="p-button-danger" (click)="delete()"></button>
     </ng-template>
-  </p-table>
+  </app-delete-confirmation>
 </div>
+

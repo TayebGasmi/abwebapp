@@ -3,17 +3,18 @@ import {environment} from "../../../environments/environment";
 import {GenericPaginationService} from "./generic-pagination.service";
 import {PaginationRequest} from "../models/pagination-request.model";
 import {Observable} from "rxjs";
-
+import {BaseService} from "./base.service";
+import {Subject} from "../models/subject";
+import {HttpClient} from "@angular/common/http";
+import {SessionDto} from "../models/session";
+const baseUrl = environment.APPOINTMENT_BOOKING_URL;
 @Injectable({
   providedIn: 'root'
 })
-export class SessionService {
+export class SessionService extends BaseService<SessionDto, number>{
 
-  private baseUrl: string = `${environment.APPOINTMENT_BOOKING_URL}/session`; // Adjust API URL
-
-  constructor(private genericPaginationService: GenericPaginationService) { }
-
-  getSessions(paginationRequest: PaginationRequest): Observable<any> {
-    return this.genericPaginationService.getPaginatedData<any>(`${this.baseUrl}/find`, paginationRequest);
+  constructor(private http: HttpClient) {
+    const url = `${baseUrl}/session`;
+    super(http, url);
   }
 }

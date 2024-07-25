@@ -26,21 +26,21 @@ import java.util.Set;
 public class SessionService extends BaseServiceImpl<Session,Long, SessionDto> {
     private final SessionRepository sessionRepository;
     private final SessionMapper sessionMapper;
-    private final EmailService emailService;
-    private final TeacherRepository teacherRepository;
-    @Override
-    public SessionDto add(SessionDto dto) throws Exception {
-        Teacher teacher = new Teacher();
-        teacher.setId(dto.getTeacherId());
-        if(!sessionRepository.findConflictingSessions(dto.getTeacherId(),dto.getStartTime(),dto.getEndTime()).isEmpty()){
-            throw new IllegalStateException("There are conflicting session at this mentioned time.");
-        }
-        Session session = sessionMapper.convertDtoToEntity(dto);
-        session.setTeacher(teacher);
-        SessionDto sessionDto=sessionMapper.convertEntityToDto(sessionRepository.save(session));
-        sessionDto.setTeacherId(dto.getTeacherId());
-        return sessionDto;
-    }
+//    private final EmailService emailService;
+//    private final TeacherRepository teacherRepository;
+//    @Override
+//    public SessionDto add(SessionDto dto) throws Exception {
+//        Teacher teacher = new Teacher();
+//        teacher.setId(dto.getTeacherId());
+//        if(!sessionRepository.findConflictingSessions(dto.getTeacherId(),dto.getStartTime(),dto.getEndTime()).isEmpty()){
+//            throw new IllegalStateException("There are conflicting session at this mentioned time.");
+//        }
+//        Session session = sessionMapper.convertDtoToEntity(dto);
+//        session.setTeacher(teacher);
+//        SessionDto sessionDto=sessionMapper.convertEntityToDto(sessionRepository.save(session));
+//        sessionDto.setTeacherId(dto.getTeacherId());
+//        return sessionDto;
+//    }
 
     public SessionDto bookSession(Long studentId, SessionDto sessionDTO) throws Exception{
         if (isDoubleBooked(sessionDTO, studentId)) {
