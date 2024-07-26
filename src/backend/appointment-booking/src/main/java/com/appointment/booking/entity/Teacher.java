@@ -1,11 +1,8 @@
 package com.appointment.booking.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import lombok.AllArgsConstructor;
@@ -22,6 +19,8 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 public class Teacher extends User {
 
+    @ElementCollection
+    private Set<Integer> teachingYears;
     @OneToOne
     @JoinColumn(name = "school_id", referencedColumnName = "id")
     private School school;

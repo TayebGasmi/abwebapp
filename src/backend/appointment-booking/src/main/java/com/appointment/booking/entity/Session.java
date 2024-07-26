@@ -34,7 +34,6 @@ public class Session extends BaseEntity<Long> {
 
     @ElementCollection
     private List<String> tags;
-
     @ManyToOne
     @JoinColumn(name = "lesson_id"/*, nullable = false*/)
     private Lesson lesson;

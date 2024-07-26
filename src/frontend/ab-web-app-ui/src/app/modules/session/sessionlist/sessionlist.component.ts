@@ -103,6 +103,7 @@ export class SessionlistComponent {
 
   editSubject(session: SessionDto): void {
     this.selectedSession = session;
+    console.log(session)
     this.sidebarVisible = true;
     this.formTitle = 'Edit session';
   }
@@ -120,7 +121,7 @@ export class SessionlistComponent {
       return;
     }
     if (this.selectedSession) {
-      this.sessionService.updateById({id: 0, ...form.value}, this.selectedSession.id).subscribe(() => {
+      this.sessionService.updateById({id:this.selectedSession.id,...form.value}, this.selectedSession.id).subscribe(() => {
         this.loadSessions();
         this.sidebarVisible = false;
         form.reset();

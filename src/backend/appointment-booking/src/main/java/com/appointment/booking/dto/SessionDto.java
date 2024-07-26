@@ -24,7 +24,7 @@ public class SessionDto extends BaseDto<Long> implements Serializable {
     private int capacity;
     private String status;
     private List<String> tags;
-//    private TeacherDto teacherId;
+    private TeacherDto teacher;
     private Set<StudentDto> students;
 
 }
