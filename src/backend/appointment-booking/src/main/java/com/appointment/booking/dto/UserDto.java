@@ -28,7 +28,6 @@ public class UserDto extends BaseDto<Long> {
     @NotBlank
     @NotNull
     private String email;
-
-    private Set<RoleDTO> roles;
+    private RoleDTO role;
 
 }
