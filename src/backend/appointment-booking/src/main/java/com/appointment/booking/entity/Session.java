@@ -1,11 +1,16 @@
 package com.appointment.booking.entity;
 
 import com.appointment.booking.base.BaseEntity;
-import jakarta.persistence.*;
-
+import com.appointment.booking.enums.SessionStatus;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.*;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,38 +24,36 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @SuperBuilder
 public class Session extends BaseEntity<Long> {
+
     @Column(nullable = false)
     private String title;
     @Column(nullable = false)
     private String description;
-    @Column(name = "session_start_date", nullable = false)
+    @Column(nullable = false)
     private LocalDateTime startTime;
-    @Column(name = "session_ending_date", nullable = false)
-    private LocalDateTime endTime;
     @Column(nullable = false)
-    private String sessionLink;
+    private String meetingLink;
+
+    @Column(name = "price", nullable = false, precision = 19, scale = 2)
+    private BigDecimal price;
+
+    @Column(name = "duration", nullable = false)
+    private Long duration;
+
     @Column(nullable = false)
-    private int capacity;
+    @Enumerated(EnumType.STRING)
+    private SessionStatus status;
 
-    @ElementCollection
-    private List<String> tags;
-    @ManyToOne
-    @JoinColumn(name = "lesson_id"/*, nullable = false*/)
-    private Lesson lesson;
-
-    @ManyToMany
-    @JoinTable(
-        name = "session_student",
-        joinColumns = @JoinColumn(name = "session_id"),
-        inverseJoinColumns = @JoinColumn(name = "student_id")
-    )
-    private Set<Student> students = new HashSet<>();
-
-    @ManyToOne
-    @JoinColumn(name = "teacher_id" /*nullable = false*/)
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "teacher_id", nullable = false)
     private Teacher teacher;
 
-    @Column(nullable = false)
-    private String status;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "student_id", nullable = false)
+    private Student student;
+
+
+    @OneToOne(mappedBy = "session", orphanRemoval = true)
+    private Payment payment;
 
 }

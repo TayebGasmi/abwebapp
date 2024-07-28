@@ -3,8 +3,8 @@ package com.appointment.booking.entity;
 import com.appointment.booking.base.BaseEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToMany;
-import jakarta.persistence.Table;
-import java.util.HashSet;
+import jakarta.persistence.OneToMany;
+import java.util.LinkedHashSet;
 import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,15 +14,18 @@ import lombok.experimental.SuperBuilder;
 
 @Getter
 @Setter
+@Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
 @SuperBuilder
-public class Lesson extends BaseEntity<Long> {
+public class SchoolType extends BaseEntity<Long> {
 
-    private String title;
+    private String name;
     private String description;
-    @ManyToMany(mappedBy = "lessons")
-    private Set<Teacher> teachers = new HashSet<>();
+    @ManyToMany(mappedBy = "schoolTypes")
+    private Set<Subject> subjects;
+
+    @OneToMany(mappedBy = "schoolType", orphanRemoval = true)
+    private Set<Student> students = new LinkedHashSet<>();
 
 }

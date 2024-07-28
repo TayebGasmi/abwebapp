@@ -121,15 +121,6 @@
             </div>
           }
         }
-        @case ('chips') {
-              <label class="mb-2" [for]="field.name">{{ field.label }}</label>
-              <p-chips [formControlName]="field.name"
-                       [id]="field.name"
-                       [ngClass]="{'ng-invalid ng-dirty': fieldHasError(field.name)}"
-                       [placeholder]="field.placeholder || ''"
-                       styleClass="w-full "
-              />
-        }
       }
       @if (fieldHasError(field.name)) {
         <div class="mb-2 ng-invalid p-error">{{ getFieldErrorMessage(field.name) }}</div>

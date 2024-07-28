@@ -16,7 +16,6 @@ import lombok.experimental.SuperBuilder;
 @Schema
 public class RoleDTO extends BaseDto<Long> {
 
-    @Schema(description = "Role name")
-    private RoleType name;
+    private String name;
 
 }

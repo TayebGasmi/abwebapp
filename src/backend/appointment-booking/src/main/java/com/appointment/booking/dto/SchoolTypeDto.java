@@ -1,23 +1,24 @@
 package com.appointment.booking.dto;
 
 import com.appointment.booking.base.BaseDto;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.Value;
 import lombok.experimental.SuperBuilder;
 
 import java.io.Serializable;
-import java.util.Set;
 
 /**
- * DTO for {@link com.appointment.booking.entity.Subject}
+ * DTO for {@link com.appointment.booking.entity.SchoolType}
  */
 @Data
 @SuperBuilder
-public class SubjectDto extends BaseDto<Long> {
-    String name;
-    String description;
+public class SchoolTypeDto extends BaseDto<Long> {
     @NotNull
-    Set<SchoolTypeDto> schoolTypes;
-    Set<SchoolYearDto> schoolYears;
+    @NotEmpty
+    String name;
+    @NotNull
+    @NotEmpty
+    String description;
 }

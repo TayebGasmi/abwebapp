@@ -28,4 +28,3 @@ type formType =
   | 'textarea'
   | 'file'
   | 'dropdown'
-  | 'chips'

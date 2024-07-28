@@ -15,9 +15,10 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder
-public class School extends BaseEntity<Long> {
+@Table(name = "config")
+public class Config extends BaseEntity<Long> {
 
-    private Long id;
-    private String name;
-    private String type;
+    private String key;
+    private String value;
+    private String description;
 }

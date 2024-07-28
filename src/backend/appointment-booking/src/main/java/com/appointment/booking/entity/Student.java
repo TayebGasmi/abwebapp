@@ -3,10 +3,12 @@ package com.appointment.booking.entity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,12 +24,15 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 public class Student extends User {
 
-    private Date yearOfStudy;
+    @ManyToOne
+    @JoinColumn(name = "school_type_id")
+    private SchoolType schoolType;
 
-    @OneToOne
-    @JoinColumn(name = "school_id", referencedColumnName = "id")
-    private School school;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "school_year_id", nullable = false)
+    private SchoolYear schoolYear;
 
-    @ManyToMany(mappedBy = "students")
-    private Set<Session> sessions = new HashSet<>();
+    @OneToMany(mappedBy = "student", orphanRemoval = true)
+    private Set<Session> sessions = new LinkedHashSet<>();
+
 }
