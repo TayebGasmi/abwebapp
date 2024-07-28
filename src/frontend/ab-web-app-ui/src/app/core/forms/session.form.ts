@@ -76,7 +76,7 @@ export const sessionForm: FormField[] = [
   {
     label: 'Tags',
     name: 'tags',
-    type: 'chips',
+    type: 'select',
     placeholder: 'Enter tags (comma separated)',
     errors: [],
     validators: []

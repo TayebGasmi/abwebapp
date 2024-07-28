@@ -25,8 +25,10 @@ import lombok.experimental.SuperBuilder;
 public class Role extends BaseEntity<Long> {
 
 
+    @Enumerated(EnumType.STRING)
+    @NotNull
     @Column(unique = true, nullable = false)
-    private String name;
+    private RoleType name;
 
 
     @OneToMany(mappedBy = "role", orphanRemoval = true)
