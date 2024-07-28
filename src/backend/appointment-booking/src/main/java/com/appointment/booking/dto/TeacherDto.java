@@ -1,16 +1,29 @@
 package com.appointment.booking.dto;
 
 import com.appointment.booking.base.BaseDto;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.appointment.booking.entity.Role;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
+import lombok.Value;
+import lombok.experimental.SuperBuilder;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Set;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
+/**
+ * DTO for {@link com.appointment.booking.entity.Teacher}
+ */
 @Data
-public class TeacherDto extends BaseDto<Long> implements Serializable {
-    private UserDto userDto;
-    private Set<Integer> teachingYears;
-    private SchoolDto school;
+@SuperBuilder
+public class TeacherDto extends BaseDto<Long> {
+    String firstName;
+    String lastName;
+    String profilePicture;
+    String email;
+    Boolean isVerified;
+    RoleDTO role;
+    @NotNull
+    BigDecimal payRate;
+    Set<SubjectDto> subjects;
 }

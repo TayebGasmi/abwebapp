@@ -1,30 +1,28 @@
 package com.appointment.booking.dto;
 
 import com.appointment.booking.base.BaseDto;
-import com.appointment.booking.entity.Student;
-import lombok.*;
+import com.appointment.booking.enums.SessionStatus;
+import lombok.Data;
+import lombok.Value;
 import lombok.experimental.SuperBuilder;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Set;
+
+/**
+ * DTO for {@link com.appointment.booking.entity.Session}
+ */
 @Data
 @SuperBuilder
-@AllArgsConstructor
-@NoArgsConstructor
-@Getter
-@Setter
-public class SessionDto extends BaseDto<Long> implements Serializable {
-    private String title;
-    private String description;
-    private LocalDateTime startTime;
-    private LocalDateTime endTime;
-    private String sessionLink;
-    private int capacity;
-    private String status;
-    private List<String> tags;
-    private TeacherDto teacher;
-    private Set<StudentDto> students;
-
+public class SessionDto extends BaseDto<Long> {
+    String title;
+    String description;
+    LocalDateTime startTime;
+    String meetingLink;
+    BigDecimal price;
+    Long duration;
+    SessionStatus status;
+    TeacherDto teacher;
+    StudentDto student;
 }

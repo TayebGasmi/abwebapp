@@ -47,8 +47,7 @@ public class CodeVerificationService {
     }
     @Transactional
     public void sendSessionCreationConfirmation(SessionDto sessionDto, String email, String teacherName) throws MessagingException {
-
-        Map<String, Object> mailVariables = Map.of("teacherName",teacherName,"sessionTitle",sessionDto.getTitle(),"sessionDescription",sessionDto.getDescription(),"StartDate", sessionDto.getStartTime(),"EndDate",sessionDto.getEndTime(), "email", email);
+        Map<String, Object> mailVariables = Map.of("teacherName",teacherName,"sessionTitle",sessionDto.getTitle(),"sessionDescription",sessionDto.getDescription(),"StartDate", sessionDto.getStartTime(), "email", email);
         emailService.sendEmail(
                 EmailDto.builder()
                         .to(Set.of(email))
