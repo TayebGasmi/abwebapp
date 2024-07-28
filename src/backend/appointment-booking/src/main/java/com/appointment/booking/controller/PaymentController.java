@@ -3,6 +3,7 @@ package com.appointment.booking.controller;
 import com.appointment.booking.base.BaseController;
 import com.appointment.booking.dto.PaymentDto;
 import com.appointment.booking.entity.Payment;
+import com.appointment.booking.service.PaymentService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -14,5 +15,5 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @Tag(name = "Payment")
 @CrossOrigin
-public class PaymentController extends BaseController <Payment,Long, PaymentDto> {
+public class PaymentController extends BaseController<Payment,Long, PaymentDto> {
 }
