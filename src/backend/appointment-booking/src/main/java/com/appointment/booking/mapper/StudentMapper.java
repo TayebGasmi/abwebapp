@@ -7,6 +7,6 @@ import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
 import org.mapstruct.ReportingPolicy;
 
-@Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = MappingConstants.ComponentModel.SPRING,uses=UserMapper.class)
+@Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = MappingConstants.ComponentModel.SPRING,uses={UserMapper.class, SessionMapper.class,SchoolTypeMapper.class, SchoolYearMapper.class})
 public interface StudentMapper extends BaseMapper<Student, StudentDto> {
 }
