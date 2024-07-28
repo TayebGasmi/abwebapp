@@ -2,8 +2,9 @@ package com.appointment.booking.entity;
 
 import jakarta.persistence.*;
 
-import java.util.Date;
+import java.math.BigDecimal;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,17 +20,13 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 public class Teacher extends User {
 
-    @ElementCollection
-    private Set<Integer> teachingYears;
-    @OneToOne
-    @JoinColumn(name = "school_id", referencedColumnName = "id")
-    private School school;
+    @Column(name = "pay_rate", nullable = false, precision = 19, scale = 2)
+    private BigDecimal payRate;
 
-    @ManyToMany()
-    @JoinTable(
-        name = "teacher_lesson",
-        joinColumns = @JoinColumn(name = "teacher_id"),
-        inverseJoinColumns = @JoinColumn(name = "lesson_id")
-    )
-    private Set<Lesson> lessons = new HashSet<>();
+    @ManyToMany(mappedBy = "teachers")
+    private Set<Subject> subjects = new LinkedHashSet<>();
+
+    @OneToMany(mappedBy = "teacher", orphanRemoval = true)
+    private Set<Session> sessions = new LinkedHashSet<>();
+
 }
