@@ -12,7 +12,6 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
-
 @Schema
 public class RoleDTO extends BaseDto<Long> {
 

@@ -3,7 +3,9 @@ package com.appointment.booking.dto;
 import com.appointment.booking.base.BaseDto;
 import com.appointment.booking.entity.Role;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.Value;
 import lombok.experimental.SuperBuilder;
 
@@ -16,6 +18,8 @@ import java.util.Set;
  */
 @Data
 @SuperBuilder
+@AllArgsConstructor
+@NoArgsConstructor
 public class TeacherDto extends BaseDto<Long> {
     String firstName;
     String lastName;
