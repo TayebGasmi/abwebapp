@@ -14,7 +14,6 @@ import com.appointment.booking.utils.JwtUTil;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jwt.JWTClaimsSet;
 import jakarta.mail.MessagingException;
-
 import java.text.ParseException;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +22,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -32,7 +30,6 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class AuthService {
 
-    private static final String USER_NOT_FOUND = "User not found";
     private final UserRepository userRepository;
     private final RoleService roleService;
     private final PasswordEncoder passwordEncoder;
@@ -40,6 +37,7 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final GoogleTokenVerifier googleTokenVerifier;
     private final JwtUTil jwtUTil;
+
     public void register(RegisterDTO registerDTO) throws ExistException, MessagingException {
         if (userRepository.existsByEmail(registerDTO.getEmail())) {
             throw new ExistException("Email already exists");
@@ -66,34 +64,35 @@ public class AuthService {
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         return TokenDtoResponse.builder()
-            .accessToken(jwtUTil.generateToken(loginDTO.getEmail(),userRepository.findRoleByEmail(loginDTO.getEmail()).getName().toString()))
+            .accessToken(jwtUTil.generateToken(loginDTO.getEmail(), userRepository.findRoleByEmail(loginDTO.getEmail()).getName().toString()))
             .build();
 
     }
-    public TokenDtoResponse SigInWithGoogle(Oauth2Dto oauth2Dto) throws ParseException, JOSEException {
 
-            JWTClaimsSet claims = googleTokenVerifier.verify(oauth2Dto.getIdToken());
-            log.info("Google claims: {}", claims);
-            String email = claims.getStringClaim("email");
-            String firstName= claims.getStringClaim("given_name");
-            String lastName= claims.getStringClaim("family_name");
-            Optional<User> userOptional = userRepository.findByEmail(email);
-            if (userOptional.isEmpty()) {
-                User user = User.builder()
-                        .email(email)
-                        .firstName(firstName)
-                        .lastName(lastName)
-                        .isVerified(true)
-                    .build();
-                userRepository.save(user);
-                return TokenDtoResponse.builder()
-                        .accessToken(jwtUTil.generateToken(user.getEmail(),""))
-                        .build();
-            }
+    public TokenDtoResponse sigInWithGoogle(Oauth2Dto oauth2Dto) throws ParseException, JOSEException {
+
+        JWTClaimsSet claims = googleTokenVerifier.verify(oauth2Dto.getIdToken());
+        log.info("Google claims: {}", claims);
+        String email = claims.getStringClaim("email");
+        String firstName = claims.getStringClaim("given_name");
+        String lastName = claims.getStringClaim("family_name");
+        Optional<User> userOptional = userRepository.findByEmail(email);
+        if (userOptional.isEmpty()) {
+            User user = User.builder()
+                .email(email)
+                .firstName(firstName)
+                .lastName(lastName)
+                .isVerified(true)
+                .build();
+            userRepository.save(user);
             return TokenDtoResponse.builder()
-                .accessToken(jwtUTil.generateToken(userOptional.get().getEmail(),""))
+                .accessToken(jwtUTil.generateToken(user.getEmail(), ""))
                 .build();
         }
+        return TokenDtoResponse.builder()
+            .accessToken(jwtUTil.generateToken(userOptional.get().getEmail(), ""))
+            .build();
+    }
 
 
 }

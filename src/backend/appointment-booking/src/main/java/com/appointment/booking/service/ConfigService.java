@@ -8,5 +8,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class ConfigService extends BaseServiceImpl<Config,Long, ConfigDto> {
+public class ConfigService extends BaseServiceImpl<Config, Long, ConfigDto> {
+
 }

@@ -14,5 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @Tag(name = "Session")
 @CrossOrigin
-public class SessionController extends BaseController<Session,Long, SessionDto> {
+public class SessionController extends BaseController<Session, Long, SessionDto> {
+
 }

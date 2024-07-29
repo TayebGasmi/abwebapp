@@ -1,23 +1,38 @@
 package com.appointment.booking.dto;
 
 import com.appointment.booking.base.BaseDto;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
-import lombok.Data;
-import lombok.Value;
-import lombok.experimental.SuperBuilder;
-
-import java.io.Serializable;
 import java.util.Set;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 /**
  * DTO for {@link com.appointment.booking.entity.Subject}
  */
-@Data
 @SuperBuilder
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
+@EqualsAndHashCode(callSuper = true)
 public class SubjectDto extends BaseDto<Long> {
-    String name;
-    String description;
+
     @NotNull
-    Set<SchoolTypeDto> schoolTypes;
-    Set<SchoolYearDto> schoolYears;
+    @NotBlank
+    private String name;
+    @NotNull
+    @NotBlank
+    private String description;
+    @NotNull
+    @NotEmpty
+    private Set<SchoolTypeDto> schoolTypes;
+    @NotNull
+    @NotEmpty
+    private Set<SchoolYearDto> schoolYears;
 }
