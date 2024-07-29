@@ -8,5 +8,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class SessionService extends BaseServiceImpl<Session,Long, SessionDto> {
+public class SessionService extends BaseServiceImpl<Session, Long, SessionDto> {
+
 }

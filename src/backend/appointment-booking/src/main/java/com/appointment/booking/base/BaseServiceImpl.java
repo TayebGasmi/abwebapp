@@ -45,8 +45,8 @@ public class BaseServiceImpl<E extends BaseEntity<I>, I extends Serializable, D 
     @Override
     @Transactional
     public D updateById(I id, D dto) {
-        E entity = repository.findById(id).orElseThrow(() -> new NotFoundException(String.format(ENTITY_NOT_FOUND_FORMAT, entityClassName, id)));
-        entity = mapper.convertDtoToEntity(dto);
+        repository.findById(id).orElseThrow(() -> new NotFoundException(String.format(ENTITY_NOT_FOUND_FORMAT, entityClassName, id)));
+        E entity = mapper.convertDtoToEntity(dto);
         return mapper.convertEntityToDto(repository.save(entity));
     }
 

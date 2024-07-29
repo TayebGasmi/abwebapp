@@ -2,29 +2,25 @@ package com.appointment.booking.dto;
 
 import com.appointment.booking.base.BaseDto;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
-
-import java.io.Serializable;
 import java.math.BigDecimal;
+import lombok.Data;
+import lombok.experimental.SuperBuilder;
 
 /**
  * DTO for {@link com.appointment.booking.entity.Payment}
  */
 @Data
 @SuperBuilder
-@AllArgsConstructor
-@NoArgsConstructor
 public class PaymentDto extends BaseDto<Long> {
-    SessionDto session;
+
     @NotNull
-    BigDecimal teacherShare;
+    private SessionDto session;
     @NotNull
-    BigDecimal adminShare;
+    private BigDecimal teacherShare;
     @NotNull
-    BigDecimal total;
+    private BigDecimal adminShare;
     @NotNull
-    Boolean isTeacherPaid;
+    private BigDecimal total;
+    @NotNull
+    private Boolean isTeacherPaid;
 }

@@ -3,7 +3,6 @@ package com.appointment.booking.controller;
 import com.appointment.booking.base.BaseController;
 import com.appointment.booking.dto.ConfigDto;
 import com.appointment.booking.entity.Config;
-import com.appointment.booking.service.ConfigService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -15,5 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @Tag(name = "Config")
 @CrossOrigin
-public class ConfigController extends BaseController<Config,Long, ConfigDto> {
+public class ConfigController extends BaseController<Config, Long, ConfigDto> {
+
 }

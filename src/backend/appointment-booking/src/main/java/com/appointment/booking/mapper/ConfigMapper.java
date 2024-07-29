@@ -9,4 +9,5 @@ import org.mapstruct.ReportingPolicy;
 
 @Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = MappingConstants.ComponentModel.SPRING)
 public interface ConfigMapper extends BaseMapper<Config, ConfigDto> {
+
 }

@@ -14,5 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @Tag(name = "School Year")
 @CrossOrigin
-public class SchoolYearController extends BaseController<SchoolYear,Long, SchoolYearDto>{
+public class SchoolYearController extends BaseController<SchoolYear, Long, SchoolYearDto> {
+
 }

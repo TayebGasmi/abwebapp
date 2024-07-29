@@ -8,5 +8,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class TeacherService extends BaseServiceImpl<Teacher,Long, TeacherDto> {
+public class TeacherService extends BaseServiceImpl<Teacher, Long, TeacherDto> {
+
 }

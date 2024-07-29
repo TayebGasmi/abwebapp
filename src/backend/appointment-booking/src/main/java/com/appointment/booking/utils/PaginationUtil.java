@@ -22,10 +22,6 @@ public class PaginationUtil {
         return createPageData(page, data);
     }
 
-    public static <T> PageData<T> paginate(Page page) {
-        return createPageData(page, page.getContent());
-    }
-
     private static <T> PageData<T> createPageData(Page<T> page, List<T> data) {
         return new PageData<>(
             data, page.getTotalPages(), Math.toIntExact(page.getTotalElements()), page.hasNext());

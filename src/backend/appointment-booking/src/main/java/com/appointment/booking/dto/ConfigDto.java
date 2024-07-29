@@ -6,28 +6,32 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import java.io.Serializable;
-
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 /**
  * DTO for {@link Config}
  */
-@Data
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
+@EqualsAndHashCode(callSuper = true)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ConfigDto extends BaseDto<Long> implements Serializable {
 
     @NotNull
     @NotBlank
-    String key;
+    private String key;
     @NotNull
     @NotBlank
-    String value;
+    private String value;
     @NotNull
     @NotBlank
-    String description;
+    private String description;
 }

@@ -12,6 +12,7 @@ import jakarta.transaction.Transactional;
 import java.util.Map;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationContext;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +22,7 @@ public class CodeVerificationService {
 
     private final CodeVerificationRepository codeVerificationRepository;
     private final EmailService emailService;
+    private final ApplicationContext applicationContext;
 
     private void saveCode(User user, String code) {
         codeVerificationRepository.save(VerificationCode.builder()
@@ -33,7 +35,7 @@ public class CodeVerificationService {
     public void sendVerificationCode(User user) throws MessagingException {
         String code = CodeGenerationUtil.generate4DigitCode();
         Map<String, Object> mailVariables = Map.of("confirmationCode", code, "email", user.getEmail());
-        deletePreviousVerification(user);
+        getCodeVerificationService().deletePreviousVerification(user);
         saveCode(user, code);
         emailService.sendEmail(
             EmailDto.builder()
@@ -45,17 +47,19 @@ public class CodeVerificationService {
             "code-verification"
         );
     }
+
     @Transactional
     public void sendSessionCreationConfirmation(SessionDto sessionDto, String email, String teacherName) throws MessagingException {
-        Map<String, Object> mailVariables = Map.of("teacherName",teacherName,"sessionTitle",sessionDto.getTitle(),"sessionDescription",sessionDto.getDescription(),"StartDate", sessionDto.getStartTime(), "email", email);
+        Map<String, Object> mailVariables = Map.of("teacherName", teacherName, "sessionTitle", sessionDto.getTitle(), "sessionDescription",
+            sessionDto.getDescription(), "StartDate", sessionDto.getStartTime(), "email", email);
         emailService.sendEmail(
-                EmailDto.builder()
-                        .to(Set.of(email))
-                        .from("doowi@gmail.com")
-                        .subject("Session Creation")
-                        .build(),
-                mailVariables,
-                "created-session"
+            EmailDto.builder()
+                .to(Set.of(email))
+                .from("doowi@gmail.com")
+                .subject("Session Creation")
+                .build(),
+            mailVariables,
+            "created-session"
         );
     }
 
@@ -69,6 +73,10 @@ public class CodeVerificationService {
     public void verifyCode(User user, String code) {
         codeVerificationRepository.findByUserEmailAndCode(user.getEmail(), code)
             .orElseThrow(() -> new EntityNotFoundException("Invalid code"));
-        deletePreviousVerification(user);
+        getCodeVerificationService().deletePreviousVerification(user);
+    }
+
+    private CodeVerificationService getCodeVerificationService() {
+        return applicationContext.getBean(CodeVerificationService.class);
     }
 }

@@ -8,5 +8,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class PaymentService extends BaseServiceImpl<Payment,Long, PaymentDto> {
+public class PaymentService extends BaseServiceImpl<Payment, Long, PaymentDto> {
+
 }

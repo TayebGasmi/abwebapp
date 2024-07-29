@@ -6,24 +6,22 @@ import com.nimbusds.jose.crypto.RSASSAVerifier;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
+import jakarta.annotation.PostConstruct;
 import java.io.IOException;
 import java.net.URL;
 import java.security.interfaces.RSAPublicKey;
 import java.text.ParseException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-
-import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
 public class GoogleTokenVerifier {
 
+    private final Map<String, RSAPublicKey> publicKeys = new ConcurrentHashMap<>();
     @Value("${google.jwk.url}")
     private String googleJwkUrl;
-
-    private final Map<String, RSAPublicKey> publicKeys = new ConcurrentHashMap<>();
 
     @PostConstruct
     private void loadPublicKeys() throws IOException, ParseException, JOSEException {
