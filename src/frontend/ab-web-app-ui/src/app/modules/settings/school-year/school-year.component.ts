@@ -1,11 +1,16 @@
 import { Component } from '@angular/core';
-import {School} from "../../../core/models/School";
+import {Config} from "../../../core/models/Config";
 import {PageLink} from "../../../core/models/page-link";
+import {configForm} from "../../../core/forms/config.form";
 import {TableColumn} from "../../../core/models/table-cloumn";
-import {SchoolService} from "../../../core/service/school.service";
+import {ConfigService} from "../../../core/service/config.service";
 import {NotificationService} from "../../../core/service/notification.service";
 import {SortOrder} from "../../../core/enum/sort-order.enum";
 import {FormGroup} from "@angular/forms";
+import {schoolYearForm} from "../../../core/forms/schoolYear.form";
+import {School} from "../../../core/models/School";
+import {SchoolYearService} from "../../../core/service/school-year.service";
+import {SchoolYear} from "../../../core/models/SchoolYear";
 import {ButtonDirective} from "primeng/button";
 import {
   DeleteConfirmationComponent
@@ -14,12 +19,9 @@ import {FormComponent} from "../../../shared/components/form/form.component";
 import {FormSideBarComponent} from "../../../shared/components/form-side-bar/form-side-bar.component";
 import {Ripple} from "primeng/ripple";
 import {TableComponent} from "../../../shared/components/table/table.component";
-import {schoolTypeForm} from "../../../core/forms/schoolType.form";
-import {SchoolType} from "../../../core/models/SchoolType";
-import {flush} from "@angular/core/testing";
 
 @Component({
-  selector: 'app-school',
+  selector: 'app-school-year',
   standalone: true,
   imports: [
     ButtonDirective,
@@ -29,19 +31,19 @@ import {flush} from "@angular/core/testing";
     Ripple,
     TableComponent
   ],
-  templateUrl: './schooltype.component.html',
-  styleUrl: './schooltype.component.scss'
+  templateUrl: './school-year.component.html',
+  styleUrl: './school-year.component.scss'
 })
-export class SchooltypeComponent {
+export class SchoolYearComponent {
   sidebarVisible = false;
-  formTitle = 'Add new School type';
-  data: SchoolType[] = [];
+  formTitle = 'Add new School Year';
+  data: SchoolYear[] = [];
   totalRecords: number = 0;
   pageSize = 10;
   pageLink: PageLink = {page: 0, pageSize: this.pageSize};
-  selectedSchool: SchoolType | null = null;
-  protected readonly formFields = schoolTypeForm;
-  SchoolToDelete: SchoolType | null = null;
+  selectedConfig: SchoolYear | null = null;
+  protected readonly formFields = schoolYearForm;
+  ConfigToDelete: SchoolYear | null = null;
 
   columns: TableColumn[] = [
     {field: 'name', header: 'Name', type: 'text', sortable: true, filterable: true},
@@ -52,10 +54,10 @@ export class SchooltypeComponent {
   rowsPerPageOptions = [10, 25, 50];
   showDeleteConfirmation=false;
   showDeleteAllConfirmation:boolean=false;
-  constructor(private SchoolService: SchoolService, private notificationService: NotificationService) {
+  constructor(private SchoolService: SchoolYearService, private notificationService: NotificationService) {
   }
 
-  loadSchools(): void {
+  loadConfigs(): void {
     this.SchoolService.findAll(this.pageLink).subscribe(pageData => {
       this.data = pageData.data;
       this.totalRecords = pageData.totalElements;
@@ -76,20 +78,20 @@ export class SchooltypeComponent {
     if (event.globalFilter) {
       this.pageLink.globalFilter = {keys: ['name', 'description'], value: event.globalFilter};
     }
-    this.loadSchools();
+    this.loadConfigs();
   }
 
-  editSchool(school: SchoolType): void {
-    this.selectedSchool = school;
+  editSchool(school: SchoolYear): void {
+    this.selectedConfig = school;
     this.sidebarVisible = true;
-    this.formTitle = 'Edit School';
+    this.formTitle = 'Edit School Year';
   }
 
   delete(): void {
-    this.SchoolService.deleteById((this.SchoolToDelete?.id) as number).subscribe(() => {
-      this.loadSchools();
+    this.SchoolService.deleteById((this.ConfigToDelete?.id) as number).subscribe(() => {
+      this.loadConfigs();
       this.showDeleteConfirmation = false;
-      this.notificationService.showSuccess('School deleted successfully');
+      this.notificationService.showSuccess('School Year deleted successfully');
     });
   }
 
@@ -97,20 +99,20 @@ export class SchooltypeComponent {
     if (form.invalid) {
       return;
     }
-    if (this.selectedSchool) {
-      this.SchoolService.updateById({id: this.selectedSchool.id, ...form.value}, this.selectedSchool.id).subscribe(() => {
-        this.loadSchools();
+    if (this.selectedConfig) {
+      this.SchoolService.updateById({id: this.selectedConfig.id, ...form.value}, this.selectedConfig.id).subscribe(() => {
+        this.loadConfigs();
         this.sidebarVisible = false;
         form.reset();
-        this.notificationService.showSuccess('School updated successfully');
+        this.notificationService.showSuccess('School Year updated successfully');
       })
       return;
     }
     this.SchoolService.save(form.value).subscribe(() => {
-      this.loadSchools();
+      this.loadConfigs();
       this.sidebarVisible = false;
       form.reset();
-      this.notificationService.showSuccess('School saved successfully');
+      this.notificationService.showSuccess('School Year saved successfully');
     });
 
   }
@@ -121,27 +123,27 @@ export class SchooltypeComponent {
   }
 
   onGlobalFilter(value: string) {
-    this.pageLink.globalFilter = {keys: ['name', 'description'], value};
-    this.loadSchools();
+    this.pageLink.globalFilter = {keys: ['name','description'], value};
+    this.loadConfigs();
   }
 
   add() {
     this.sidebarVisible = true;
-    this.formTitle = 'Add new School';
-    this.selectedSchool = null;
+    this.formTitle = 'Add new School Year';
+    this.selectedConfig = null;
   }
 
   deleteAll(selectedItems: any[]) {
     this.SchoolService.deleteAllByIds(selectedItems).subscribe(() => {
-      this.loadSchools();
+      this.loadConfigs();
       this.showDeleteAllConfirmation = false;
-      this.notificationService.showSuccess('Selected School types deleted successfully');
+      this.notificationService.showSuccess('Selected School Year deleted successfully');
     });
   }
 
   confirmDelete(item: any) {
     this.showDeleteConfirmation = true;
-    this.SchoolToDelete = item;
+    this.ConfigToDelete = item;
   }
   confirmDeleteALL(item:any[]){
     this.showDeleteAllConfirmation = true;

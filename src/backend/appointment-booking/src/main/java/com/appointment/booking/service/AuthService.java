@@ -8,6 +8,7 @@ import com.appointment.booking.entity.Role;
 import com.appointment.booking.entity.User;
 import com.appointment.booking.exceptions.ExistException;
 import com.appointment.booking.exceptions.NotFoundException;
+import com.appointment.booking.repository.RoleRepository;
 import com.appointment.booking.repository.UserRepository;
 import com.appointment.booking.utils.GoogleTokenVerifier;
 import com.appointment.booking.utils.JwtUTil;
@@ -37,7 +38,7 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final GoogleTokenVerifier googleTokenVerifier;
     private final JwtUTil jwtUTil;
-
+    private final RoleRepository roleRepository;
     public void register(RegisterDTO registerDTO) throws ExistException, MessagingException {
         if (userRepository.existsByEmail(registerDTO.getEmail())) {
             throw new ExistException("Email already exists");
@@ -62,9 +63,9 @@ public class AuthService {
         );
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
-
+        User userLogin = userRepository.findByEmail(loginDTO.getEmail()).orElseThrow(()->new NotFoundException("User not found"));
         return TokenDtoResponse.builder()
-            .accessToken(jwtUTil.generateToken(loginDTO.getEmail(), userRepository.findRoleByEmail(loginDTO.getEmail()).getName().toString()))
+            .accessToken(jwtUTil.generateToken(loginDTO.getEmail(), userLogin.getRole().getName().toString()))
             .build();
 
     }

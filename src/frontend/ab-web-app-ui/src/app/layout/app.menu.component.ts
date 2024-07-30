@@ -59,10 +59,20 @@ export class AppMenuComponent implements OnInit {
             icon: "pi pi-book",
             routerLink: "settings/subject"
           },{
-            label: "School",
+            label: "School types",
             icon: "pi pi-book",
             routerLink: "settings/school"
           }
+          ,{
+            label: "School Year",
+            icon: "pi pi-book",
+            routerLink: "settings/schoolyear"
+          },
+          {
+            label: "Configuration",
+            icon: "pi pi-book",
+            routerLink: "settings/config"
+          },
         ]
       }
     ]

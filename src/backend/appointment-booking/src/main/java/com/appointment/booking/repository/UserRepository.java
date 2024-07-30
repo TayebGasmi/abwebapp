@@ -13,6 +13,5 @@ public interface UserRepository extends BaseRepository<User, Long> {
 
     boolean existsByEmail(String email);
 
-    Role findRoleByEmail(String email);
 
 }

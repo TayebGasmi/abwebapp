@@ -3,9 +3,10 @@ import {Observable} from "rxjs";
 import {IBaseService} from "./base.service.interface";
 import {PageData} from "../models/page-data";
 import {PageLink} from "../models/page-link";
+import {inject} from "@angular/core";
+import {Router} from "@angular/router";
 
 export class BaseService<T, I> implements IBaseService<T, I> {
-
 
   constructor(private httpClient: HttpClient, private url: string) {
 
@@ -36,6 +37,8 @@ export class BaseService<T, I> implements IBaseService<T, I> {
   save(t: T): Observable<T> {
     return this.httpClient.post<T>(`${this.url}`, t)
   }
-
+  getALL():Observable<T[]>{
+    return this.httpClient.get<T[]>(`${this.url}`);
+  }
 
 }

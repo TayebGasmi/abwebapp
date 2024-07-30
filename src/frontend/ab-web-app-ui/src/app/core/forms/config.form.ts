@@ -3,22 +3,22 @@ import {Validators} from "@angular/forms";
 
 export const configForm: FormField[] = [
   {
-    label: 'Name',
+    label: 'Key',
     name: 'key',
     type: 'text',
-    placeholder: 'Enter name',
+    placeholder: 'Enter Key',
     errors: [
-      {type: 'required', message: 'Name is required'}
+      {type: 'required', message: 'key is required'}
     ]
     ,
     validators: [Validators.required]
 
   },
   {
-    label: 'Type',
+    label: 'Value',
     name: 'value',
     type: 'text',
-    placeholder: 'Enter type',
+    placeholder: 'Enter value',
     errors: [
       {type: 'required', message: 'value is required'}
     ],
@@ -26,10 +26,10 @@ export const configForm: FormField[] = [
 
   },
   {
-    label: 'Type',
+    label: 'Description',
     name: 'description',
     type: 'text',
-    placeholder: 'Enter type',
+    placeholder: 'Enter Description',
     errors: [
       {type: 'required', message: 'description is required'}
     ],

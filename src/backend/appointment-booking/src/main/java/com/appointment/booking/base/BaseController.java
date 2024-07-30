@@ -90,7 +90,7 @@ public abstract class BaseController<E extends BaseEntity<I>, I extends Serializ
     @ApiResponses(value = {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Found the entity"),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Entity not found")})
-    @GetMapping("/findAll")
+    @GetMapping()
     public ResponseEntity<List<D>> getAll() {
         return new ResponseEntity<>(baseService.getAll(), HttpStatus.OK);
     }

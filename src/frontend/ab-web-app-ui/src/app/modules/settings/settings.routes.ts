@@ -9,4 +9,12 @@ export const routes: Routes = [
     path: 'school',
     loadComponent: () => import('./school/schooltype.component').then(m => m.SchooltypeComponent)
   },
+  {
+    path: 'config',
+    loadComponent: () => import('./config/config/config.component').then(m => m.ConfigComponent)
+  },
+  {
+    path: 'schoolyear',
+    loadComponent: () => import('./school-year/school-year.component').then(m => m.SchoolYearComponent)
+  },
 ];

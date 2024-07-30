@@ -32,7 +32,7 @@
 
   <app-form-side-bar [title]="formTitle" [(sidebarVisible)]="sidebarVisible">
     <div ngProjectAs="content">
-      <app-form #form [fields]="formFields" [formData]="selectedSchool"></app-form>
+      <app-form #form [fields]="formFields" [formData]="selectedConfig"></app-form>
     </div>
     <footer class="flex justify-content-end p-3 gap-2">
       <button pRipple pButton type="button" label="Cancel" class="p-button-outlined" icon="pi pi-times" (click)="onCancel(form.form)"></button>
