@@ -4,6 +4,8 @@ package com.appointment.booking.base;
 import com.appointment.booking.model.PageData;
 import com.appointment.booking.model.PageLink;
 import java.io.Serializable;
+import java.util.List;
+import java.util.Set;
 
 
 public interface BaseService<E extends BaseEntity, I extends Serializable, D extends BaseDto> {
@@ -18,5 +20,8 @@ public interface BaseService<E extends BaseEntity, I extends Serializable, D ext
 
     PageData<D> findAll(PageLink pageLink);
 
+    List<D> getAll();
 
+    void deleteAll();
+    void deleteAllByIds(List<E> entities);
 }

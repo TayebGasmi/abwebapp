@@ -5,6 +5,6 @@ import com.appointment.booking.entity.SchoolType;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface SchoolRepository extends BaseRepository<SchoolType, Long> {
+public interface SchoolTypeRepository extends BaseRepository<SchoolType, Long> {
 
 }

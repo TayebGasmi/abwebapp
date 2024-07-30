@@ -25,7 +25,7 @@ public class SchoolType extends BaseEntity<Long> {
     @ManyToMany(mappedBy = "schoolTypes")
     private Set<Subject> subjects;
 
-    @OneToMany(mappedBy = "schoolType", orphanRemoval = true)
+    @OneToMany(mappedBy = "schoolType")
     private Set<Student> students = new LinkedHashSet<>();
 
 }

@@ -45,7 +45,7 @@ public class Session extends BaseEntity<Long> {
     private SessionStatus status;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "teacher_id", nullable = false)
+    @JoinColumn(name = "teacher_id")
     private Teacher teacher;
 
     @ManyToOne(optional = false)

@@ -3,22 +3,31 @@ package com.appointment.booking.dto;
 import com.appointment.booking.base.BaseDto;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
-import lombok.Data;
-import lombok.Value;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
-import java.io.Serializable;
+import java.util.Set;
 
 /**
  * DTO for {@link com.appointment.booking.entity.SchoolType}
  */
-@Data
 @SuperBuilder
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
+@EqualsAndHashCode(callSuper = true)
 public class SchoolTypeDto extends BaseDto<Long> {
+
     @NotNull
     @NotEmpty
-    String name;
+    private String name;
     @NotNull
     @NotEmpty
-    String description;
+    private String description;
+
 }

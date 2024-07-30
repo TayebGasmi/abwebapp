@@ -38,7 +38,6 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         String username = null;
         String jwtToken = null;
 
-        // JWT Token is in the form "Bearer token". Remove "Bearer " and get only the token
         if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")) {
             jwtToken = requestTokenHeader.substring(7);
             try {
@@ -46,6 +45,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             } catch (IllegalArgumentException e) {
                 logger.warn("Unable to get JWT Token");
             } catch (ExpiredJwtException e) {
+                response.sendError(403);
                 logger.warn("JWT Token has expired");
             } catch (SignatureException | MalformedJwtException e) {
                 logger.error("Invalid JWT Token");
@@ -54,21 +54,16 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             logger.warn("JWT Token does not begin with Bearer String");
         }
 
-        // Once we get the token, validate it
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
 
-            // if token is valid, configure Spring Security to manually set authentication
             if (Boolean.TRUE.equals(jwtProvider.validateToken(jwtToken, username))) {
 
                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
                     new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                 usernamePasswordAuthenticationToken
                     .setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-
-                // After setting the Authentication in the context, we specify that the current user is authenticated
-                // So it passes the Spring Security Configurations successfully.
                 SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
             }
         }

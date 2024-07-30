@@ -11,7 +11,7 @@ import {catchError, throwError} from "rxjs";
 import {InputTextModule} from "primeng/inputtext";
 import {PasswordModule} from "primeng/password";
 import {DropdownModule} from "primeng/dropdown";
-import {Role} from "../../../core/models/Role";
+import {Role, RoleName} from "../../../core/models/Role";
 
 @Component({
   selector: 'app-register',
@@ -33,8 +33,8 @@ import {Role} from "../../../core/models/Role";
 export class RegisterComponent {
 
   role: any[] = [
-    {label: 'Teacher', value: Role.TEACHER},
-    {label: 'Student', value: Role.STUDENT}
+    {label: 'Teacher', value: RoleName.TEACHER},
+    {label: 'Student', value: RoleName.STUDENT}
   ];
   form!: FormGroup;
   dark: boolean = false;

@@ -1,7 +1,6 @@
 package com.appointment.booking.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Collections;
 import java.util.List;
 import lombok.Getter;

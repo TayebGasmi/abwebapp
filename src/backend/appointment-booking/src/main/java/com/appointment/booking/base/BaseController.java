@@ -10,6 +10,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import java.io.Serializable;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -84,6 +86,30 @@ public abstract class BaseController<E extends BaseEntity<I>, I extends Serializ
     public ResponseEntity<PageData<D>> findAll(@RequestBody PageLink pageLink) {
         return new ResponseEntity<>(baseService.findAll(pageLink), HttpStatus.OK);
     }
-
-
+    @Operation(summary = "Get all entities no pagination provided")
+    @ApiResponses(value = {
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Found the entity"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Entity not found")})
+    @GetMapping()
+    public ResponseEntity<List<D>> getAll() {
+        return new ResponseEntity<>(baseService.getAll(), HttpStatus.OK);
+    }
+    @Operation(summary = "Delete all Entities")
+    @ApiResponses(value = {
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Found the entity"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Entity not found")})
+    @DeleteMapping("/deleteall")
+    public ResponseEntity<Void> deleteAll() {
+        baseService.deleteAll();
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+    @Operation(summary = "Delete all Entities by ids")
+    @ApiResponses(value = {
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Found the entity"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Entity not found")})
+    @PostMapping("/deleteallByIds")
+    public ResponseEntity<Void> deleteAllByIds(@RequestBody List<E> ids) {
+        baseService.deleteAllByIds(ids);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

@@ -11,4 +11,5 @@ public interface RoleRepository extends BaseRepository<Role, Long> {
 
     Optional<Role> findByName(RoleType roleType);
 
+
 }

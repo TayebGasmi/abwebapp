@@ -9,11 +9,9 @@ import com.appointment.booking.utils.FilterUtil;
 import com.appointment.booking.utils.PaginationUtil;
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -45,8 +43,8 @@ public class BaseServiceImpl<E extends BaseEntity<I>, I extends Serializable, D 
     @Override
     @Transactional
     public D updateById(I id, D dto) {
-        E entity = repository.findById(id).orElseThrow(() -> new NotFoundException(String.format(ENTITY_NOT_FOUND_FORMAT, entityClassName, id)));
-        entity = mapper.convertDtoToEntity(dto);
+        repository.findById(id).orElseThrow(() -> new NotFoundException(String.format(ENTITY_NOT_FOUND_FORMAT, entityClassName, id)));
+        E entity = mapper.convertDtoToEntity(dto);
         return mapper.convertEntityToDto(repository.save(entity));
     }
 
@@ -78,10 +76,27 @@ public class BaseServiceImpl<E extends BaseEntity<I>, I extends Serializable, D 
         return paginateData(specification, pageable);
     }
 
+    @Override
+    public List<D> getAll() {
+        return repository.findAll().stream().map(mapper::convertEntityToDto).collect(Collectors.toList());
+    }
+
+    @Override
+    public void deleteAll() {
+        repository.deleteAll();
+    }
+
+    @Override
+    public void deleteAllByIds(List<E> entities) {
+        repository.deleteAllInBatch(entities);
+    }
+
     private PageData<D> paginateData(Specification<E> specification, Pageable pageable) {
         Page<E> resultPage = repository.findAll(specification, pageable);
         return PaginationUtil.paginate(resultPage, mapper);
     }
+
+
 
 
 }

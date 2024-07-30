@@ -1,0 +1,149 @@
+import { Component } from '@angular/core';
+import {Config} from "../../../../core/models/Config";
+import {PageLink} from "../../../../core/models/page-link";
+import {TableColumn} from "../../../../core/models/table-cloumn";
+import {NotificationService} from "../../../../core/service/notification.service";
+import {SortOrder} from "../../../../core/enum/sort-order.enum";
+import {FormGroup} from "@angular/forms";
+import {ConfigService} from "../../../../core/service/config.service";
+import {configForm} from "../../../../core/forms/config.form";
+import {ButtonDirective} from "primeng/button";
+import {
+  DeleteConfirmationComponent
+} from "../../../../shared/components/delete-confirmation/delete-confirmation.component";
+import {FormComponent} from "../../../../shared/components/form/form.component";
+import {FormSideBarComponent} from "../../../../shared/components/form-side-bar/form-side-bar.component";
+import {Ripple} from "primeng/ripple";
+import {TableComponent} from "../../../../shared/components/table/table.component";
+
+@Component({
+  selector: 'app-config',
+  standalone: true,
+  imports: [
+    ButtonDirective,
+    DeleteConfirmationComponent,
+    FormComponent,
+    FormSideBarComponent,
+    Ripple,
+    TableComponent
+  ],
+  templateUrl: './config.component.html',
+  styleUrl: './config.component.scss'
+})
+export class ConfigComponent {
+  sidebarVisible = false;
+  formTitle = 'Add new Config';
+  data: Config[] = [];
+  totalRecords: number = 0;
+  pageSize = 10;
+  pageLink: PageLink = {page: 0, pageSize: this.pageSize};
+  selectedConfig: Config | null = null;
+  protected readonly formFields = configForm;
+  ConfigToDelete: Config | null = null;
+
+  columns: TableColumn[] = [
+    {field: 'key', header: 'Key', type: 'text', sortable: true, filterable: true},
+    {field: 'value', header: 'Value', type: 'text', sortable: true, filterable: true},
+    {field: 'description', header: 'Description', type: 'text', sortable: true, filterable: true}
+  ];
+
+  currentPageReportTemplate = "Showing {first} to {last} of {totalRecords} entries";
+  rowsPerPageOptions = [10, 25, 50];
+  showDeleteConfirmation=false;
+  showDeleteAllConfirmation:boolean=false;
+  constructor(private SchoolService: ConfigService, private notificationService: NotificationService) {
+  }
+
+  loadConfigs(): void {
+    this.SchoolService.findAll(this.pageLink).subscribe(pageData => {
+      this.data = pageData.data;
+      this.totalRecords = pageData.totalElements;
+    });
+  }
+
+  onLazyLoad(event: any): void {
+    this.pageLink.page = event.first! / event.rows!;
+    this.pageLink.pageSize = event.rows!;
+    if (event.sortField) {
+      this.pageLink.sortProperty = event.sortField;
+      this.pageLink.sortOrder = event.sortOrder === 1 ? SortOrder.ASC : SortOrder.DESC;
+    }
+    if (event.filters) {
+      this.pageLink.filters = event.filters;
+    }
+
+    if (event.globalFilter) {
+      this.pageLink.globalFilter = {keys: ['name', 'description'], value: event.globalFilter};
+    }
+    this.loadConfigs();
+  }
+
+  editSchool(school: Config): void {
+    this.selectedConfig = school;
+    this.sidebarVisible = true;
+    this.formTitle = 'Edit Config';
+  }
+
+  delete(): void {
+    this.SchoolService.deleteById((this.ConfigToDelete?.id) as number).subscribe(() => {
+      this.loadConfigs();
+      this.showDeleteConfirmation = false;
+      this.notificationService.showSuccess('Config deleted successfully');
+    });
+  }
+
+  save(form: FormGroup): void {
+    if (form.invalid) {
+      return;
+    }
+    if (this.selectedConfig) {
+      this.SchoolService.updateById({id: this.selectedConfig.id, ...form.value}, this.selectedConfig.id).subscribe(() => {
+        this.loadConfigs();
+        this.sidebarVisible = false;
+        form.reset();
+        this.notificationService.showSuccess('Config updated successfully');
+      })
+      return;
+    }
+    this.SchoolService.save(form.value).subscribe(() => {
+      this.loadConfigs();
+      this.sidebarVisible = false;
+      form.reset();
+      this.notificationService.showSuccess('Config saved successfully');
+    });
+
+  }
+
+  onCancel(form: FormGroup): void {
+    form.reset();
+    this.sidebarVisible = false;
+  }
+
+  onGlobalFilter(value: string) {
+    this.pageLink.globalFilter = {keys: ['key', 'value','description'], value};
+    this.loadConfigs();
+  }
+
+  add() {
+    this.sidebarVisible = true;
+    this.formTitle = 'Add new School';
+    this.selectedConfig = null;
+  }
+
+  deleteAll(selectedItems: any[]) {
+    this.SchoolService.deleteAllByIds(selectedItems).subscribe(() => {
+      this.loadConfigs();
+      this.showDeleteAllConfirmation = false;
+      this.notificationService.showSuccess('Selected Config deleted successfully');
+    });
+  }
+
+  confirmDelete(item: any) {
+    this.showDeleteConfirmation = true;
+    this.ConfigToDelete = item;
+  }
+  confirmDeleteALL(item:any[]){
+    this.showDeleteAllConfirmation = true;
+
+  }
+}

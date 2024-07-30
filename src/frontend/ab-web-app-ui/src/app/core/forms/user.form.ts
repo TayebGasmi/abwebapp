@@ -1,7 +1,7 @@
 import {FormField} from "../models/form-field";
 import {Validators} from "@angular/forms";
 
-export const subjectForm: FormField[] = [
+export const userForm: FormField[] = [
   {
     label: 'First Name',
     name: 'firstName',
@@ -39,10 +39,13 @@ export const subjectForm: FormField[] = [
   {
     label: 'Role',
     name: 'roles',
-    type: 'text',
-    placeholder: 'Enter description',
+    type: 'dropdown',
+    placeholder: 'Enter Role',
+    options:[ {label:"Teacher",value:"TEACHER"},
+      {label:"Student",value:"STUDENT"},
+     ],
     errors: [
-      {type: 'required', message: 'Description is required'}
+      {type: 'required', message: 'Role is required'}
     ],
     validators: [Validators.required]
   }
