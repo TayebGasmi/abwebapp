@@ -23,5 +23,5 @@ public interface BaseService<E extends BaseEntity, I extends Serializable, D ext
     List<D> getAll();
 
     void deleteAll();
-    void deleteAllByIds(List<I> entities);
+    void deleteAllByIds(List<E> entities);
 }

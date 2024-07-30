@@ -87,8 +87,8 @@ public class BaseServiceImpl<E extends BaseEntity<I>, I extends Serializable, D 
     }
 
     @Override
-    public void deleteAllByIds(List<I> ids) {
-        repository.deleteAllByIdInBatch(ids);
+    public void deleteAllByIds(List<E> entities) {
+        repository.deleteAllInBatch(entities);
     }
 
     private PageData<D> paginateData(Specification<E> specification, Pageable pageable) {
