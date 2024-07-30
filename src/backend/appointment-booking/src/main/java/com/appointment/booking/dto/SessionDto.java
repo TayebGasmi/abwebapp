@@ -40,9 +40,7 @@ public class SessionDto extends BaseDto<Long> {
     BigDecimal price;
     @NotNull
     Long duration;
-    @NotNull
     SessionStatus status;
-    @NotNull
     TeacherDto teacher;
     @NotNull
     StudentDto student;

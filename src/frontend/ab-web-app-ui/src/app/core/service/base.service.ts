@@ -19,10 +19,12 @@ export class BaseService<T, I> implements IBaseService<T, I> {
     return this.httpClient.get<T>(`${this.url}/${id}`);
   }
 
-  deleteAll(t: T[]): Observable<void> {
-    return this.httpClient.put<void>(`${this.url}/delete`, {body: t});
+  deleteAll(): Observable<void> {
+    return this.httpClient.delete<void>(`${this.url}/deleteall`);
   }
-
+  deleteAllByIds(t:T[]): Observable<void> {
+    return this.httpClient.post<void>(`${this.url}/deleteallByIds`,t);
+  }
   deleteById(id: I): Observable<void> {
     return this.httpClient.delete<void>(`${this.url}/${id}`)
   }

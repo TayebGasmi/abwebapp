@@ -34,18 +34,8 @@ export const sessionForm: FormField[] = [
     validators: [Validators.required]
   },
   {
-    label: 'End Time',
-    name: 'endTime',
-    type: 'date',
-    placeholder: 'Select end time',
-    errors: [
-      { type: 'required', message: 'End time is required' }
-    ],
-    validators: [Validators.required]
-  },
-  {
     label: 'Session Link',
-    name: 'sessionLink',
+    name: 'meetingLink',
     type: 'text',
     placeholder: 'Enter session link',
     errors: [
@@ -54,31 +44,37 @@ export const sessionForm: FormField[] = [
     validators: [Validators.required, Validators.pattern('https?://.+')]
   },
   {
-    label: 'Capacity',
-    name: 'capacity',
-    type: 'number',
-    placeholder: 'Enter capacity',
-    errors: [
-      { type: 'required', message: 'Capacity is required' }
-    ],
-    validators: [Validators.required, Validators.min(1)]
-  },
-  {
     label: 'Status',
     name: 'status',
-    type: 'text',
+    type: 'dropdown',
     placeholder: 'Enter status',
+    options:[ {label:"Pending",value:"PENDING"},
+              {label:"Accepted",value:"ACCEPTED"},
+              {label:"Rejected",value:"REJECTED"},
+              {label:"Cancelled",value:"CANCELLED"}],
     errors: [
       { type: 'required', message: 'Status is required' }
     ],
     validators: [Validators.required]
   },
   {
-    label: 'Tags',
-    name: 'tags',
-    type: 'select',
-    placeholder: 'Enter tags (comma separated)',
-    errors: [],
-    validators: []
+    label: 'Price',
+    name: 'price',
+    type: 'number',
+    placeholder: 'Enter price',
+    errors: [
+      { type: 'required', message: 'Price is required' }
+    ],
+    validators: [Validators.required]
+  },
+  {
+    label: 'Duration',
+    name: 'duration',
+    type: 'number',
+    placeholder: 'Enter duration',
+    errors: [
+      { type: 'required', message: 'Duration is required' }
+    ],
+    validators: [Validators.required]
   }
 ];
