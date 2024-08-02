@@ -25,14 +25,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class WebSecurityConfig {
 
     private static final String[] WHITE_LIST = {
+        "/appointment-booking/v3/api-docs/**",
         "/swagger-ui/**",
-        "/swagger-ui.html",
-        "/v3/api-docs/**",
-        "/swagger-resources/**",
-        "/actuator/**",
-        "webjars/**",
-        "/auth",
-        "/session/**"
+        "/appointment-booking/auth/**",
     };
     private final UserDetailsService userDetailsService;
     private final JwtTokenFilter jwtTokenFilter;
@@ -44,7 +39,7 @@ public class WebSecurityConfig {
             .authorizeHttpRequests(authorizationManagerRequestMatcherRegistry ->
                 authorizationManagerRequestMatcherRegistry
                     .requestMatchers(WHITE_LIST).permitAll()
-                    .anyRequest().permitAll())
+                    .anyRequest().authenticated())
             .sessionManagement(
                 httpSecuritySessionManagementConfigurer -> httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
