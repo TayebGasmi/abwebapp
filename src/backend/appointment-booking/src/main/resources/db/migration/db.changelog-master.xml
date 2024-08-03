@@ -8,4 +8,6 @@
 
   <include file="db/migration/changes/roles-changelog.sql"/>
 
+  <include file="db/migration/changes/config-changelog.sql"/>
+
 </databaseChangeLog>

@@ -1,20 +1,18 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 import {Config} from "../../../../core/models/Config";
 import {PageLink} from "../../../../core/models/page-link";
 import {TableColumn} from "../../../../core/models/table-cloumn";
 import {NotificationService} from "../../../../core/service/notification.service";
 import {SortOrder} from "../../../../core/enum/sort-order.enum";
-import {FormGroup} from "@angular/forms";
+import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 import {ConfigService} from "../../../../core/service/config.service";
-import {configForm} from "../../../../core/forms/config.form";
 import {ButtonDirective} from "primeng/button";
-import {
-  DeleteConfirmationComponent
-} from "../../../../shared/components/delete-confirmation/delete-confirmation.component";
+import {DeleteConfirmationComponent} from "../../../../shared/components/delete-confirmation/delete-confirmation.component";
 import {FormComponent} from "../../../../shared/components/form/form.component";
 import {FormSideBarComponent} from "../../../../shared/components/form-side-bar/form-side-bar.component";
 import {Ripple} from "primeng/ripple";
 import {TableComponent} from "../../../../shared/components/table/table.component";
+import {InputTextModule} from "primeng/inputtext";
 
 @Component({
   selector: 'app-config',
@@ -25,33 +23,30 @@ import {TableComponent} from "../../../../shared/components/table/table.componen
     FormComponent,
     FormSideBarComponent,
     Ripple,
-    TableComponent
+    TableComponent,
+    InputTextModule,
+    ReactiveFormsModule
   ],
   templateUrl: './config.component.html',
   styleUrl: './config.component.scss'
 })
 export class ConfigComponent {
   sidebarVisible = false;
-  formTitle = 'Add new Config';
   data: Config[] = [];
   totalRecords: number = 0;
   pageSize = 10;
   pageLink: PageLink = {page: 0, pageSize: this.pageSize};
-  selectedConfig: Config | null = null;
-  protected readonly formFields = configForm;
-  ConfigToDelete: Config | null = null;
-
   columns: TableColumn[] = [
     {field: 'key', header: 'Key', type: 'text', sortable: true, filterable: true},
     {field: 'value', header: 'Value', type: 'text', sortable: true, filterable: true},
     {field: 'description', header: 'Description', type: 'text', sortable: true, filterable: true}
   ];
-
+  form!: FormGroup
   currentPageReportTemplate = "Showing {first} to {last} of {totalRecords} entries";
   rowsPerPageOptions = [10, 25, 50];
-  showDeleteConfirmation=false;
-  showDeleteAllConfirmation:boolean=false;
-  constructor(private SchoolService: ConfigService, private notificationService: NotificationService) {
+  selectedConfig!:Config
+  constructor(private SchoolService: ConfigService, private notificationService: NotificationService, private fb: FormBuilder) {
+    this.initForm();
   }
 
   loadConfigs(): void {
@@ -78,72 +73,45 @@ export class ConfigComponent {
     this.loadConfigs();
   }
 
-  editSchool(school: Config): void {
-    this.selectedConfig = school;
-    this.sidebarVisible = true;
-    this.formTitle = 'Edit Config';
-  }
-
-  delete(): void {
-    this.SchoolService.deleteById((this.ConfigToDelete?.id) as number).subscribe(() => {
-      this.loadConfigs();
-      this.showDeleteConfirmation = false;
-      this.notificationService.showSuccess('Config deleted successfully');
-    });
-  }
-
-  save(form: FormGroup): void {
-    if (form.invalid) {
-      return;
-    }
-    if (this.selectedConfig) {
-      this.SchoolService.updateById({id: this.selectedConfig.id, ...form.value}, this.selectedConfig.id).subscribe(() => {
-        this.loadConfigs();
-        this.sidebarVisible = false;
-        form.reset();
-        this.notificationService.showSuccess('Config updated successfully');
-      })
-      return;
-    }
-    this.SchoolService.save(form.value).subscribe(() => {
-      this.loadConfigs();
-      this.sidebarVisible = false;
-      form.reset();
-      this.notificationService.showSuccess('Config saved successfully');
-    });
-
-  }
-
-  onCancel(form: FormGroup): void {
-    form.reset();
-    this.sidebarVisible = false;
-  }
-
   onGlobalFilter(value: string) {
-    this.pageLink.globalFilter = {keys: ['key', 'value','description'], value};
+    this.pageLink.globalFilter = {keys: ['key', 'value', 'description'], value};
     this.loadConfigs();
   }
 
-  add() {
-    this.sidebarVisible = true;
-    this.formTitle = 'Add new School';
-    this.selectedConfig = null;
-  }
-
-  deleteAll(selectedItems: any[]) {
-    this.SchoolService.deleteAllByIds(selectedItems).subscribe(() => {
-      this.loadConfigs();
-      this.showDeleteAllConfirmation = false;
-      this.notificationService.showSuccess('Selected Config deleted successfully');
+  private initForm() {
+    this.form = this.fb.group({
+      value: ['', [Validators.required]],
+      description: ['', [Validators.required]]
     });
   }
 
-  confirmDelete(item: any) {
-    this.showDeleteConfirmation = true;
-    this.ConfigToDelete = item;
-  }
-  confirmDeleteALL(item:any[]){
-    this.showDeleteAllConfirmation = true;
+  edit(item: Config) {
+    this.selectedConfig = item;
+    this.form.patchValue(item);
+    this.sidebarVisible = true;
 
+  }
+
+  cancel() {
+    this.sidebarVisible = false;
+    this.form.reset();
+  }
+  save() {
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
+    const formData = this.form.value;
+    this.SchoolService.updateById({...formData,key:this.selectedConfig.key,id:this.selectedConfig.id},this.selectedConfig?.id).subscribe(() => {
+      this.notificationService.showSuccess('Config update successfully');
+      this.loadConfigs();
+      this.sidebarVisible = false;
+      this.form.reset();
+    });
+  }
+
+  fieldHasError(fieldName: string): boolean {
+    const control = this.form.get(fieldName);
+    return !!(control?.invalid && (control?.dirty || control?.touched));
   }
 }

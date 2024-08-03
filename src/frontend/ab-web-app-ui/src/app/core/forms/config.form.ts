@@ -11,7 +11,7 @@ export const configForm: FormField[] = [
       {type: 'required', message: 'key is required'}
     ]
     ,
-    validators: [Validators.required]
+    validators: [Validators.required],
 
   },
   {
