@@ -1,6 +1,5 @@
 package com.appointment.booking.dto;
 
-import com.appointment.booking.enums.RoleType;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -20,7 +19,12 @@ public class RegisterDTO {
     @NotBlank
     @NotNull
     private String password;
+    @NotBlank
     @NotNull
-    private RoleType role;
+    private String firstName;
+    @NotBlank
+    @NotNull
+    private String lastName;
+
 
 }

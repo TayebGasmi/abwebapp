@@ -40,9 +40,8 @@ public class AuthController {
         return ResponseEntity.ok(authService.login(loginDTO));
     }
 
-    //todo: add google login
-    @PostMapping("/googlelogin")
+    @PostMapping("/social")
     public ResponseEntity<TokenDtoResponse> loginGoogle(@RequestBody @Valid Oauth2Dto oauth2Dto) throws ParseException, JOSEException {
-        return ResponseEntity.ok(authService.sigInWithGoogle(oauth2Dto));
+        return ResponseEntity.ok(authService.socialLogin(oauth2Dto));
     }
 }

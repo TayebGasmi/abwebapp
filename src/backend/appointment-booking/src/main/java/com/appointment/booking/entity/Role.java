@@ -6,7 +6,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.ManyToMany;
 import jakarta.validation.constraints.NotNull;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -30,8 +30,7 @@ public class Role extends BaseEntity<Long> {
     @Column(unique = true, nullable = false)
     private RoleType name;
 
-
-    @OneToMany(mappedBy = "role", orphanRemoval = true)
+    @ManyToMany(mappedBy = "roles")
     private Set<User> users = new LinkedHashSet<>();
 
 }

@@ -9,10 +9,10 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
     catchError((error) => {
       if(error.status === 401)
         notificationService.showError('Unauthorized');
-      if(error?.error?.debugMessage)
+      if(error?.error?.debugMessage && error.status === 400)
         notificationService.showError(error.error.debugMessage);
-      else
-        notificationService.showError('An error occurred. Please try again later.');
+      if(error.status === 500)
+        notificationService.showError('server error please try again later');
       return throwError(error);
     })
   );
