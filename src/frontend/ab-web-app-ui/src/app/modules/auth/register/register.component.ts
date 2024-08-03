@@ -10,8 +10,6 @@ import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/
 import {catchError, throwError} from "rxjs";
 import {InputTextModule} from "primeng/inputtext";
 import {PasswordModule} from "primeng/password";
-import {DropdownModule} from "primeng/dropdown";
-import {Role, RoleName} from "../../../core/models/Role";
 
 @Component({
   selector: 'app-register',
@@ -24,18 +22,13 @@ import {Role, RoleName} from "../../../core/models/Role";
     Ripple,
     ReactiveFormsModule,
     InputTextModule,
-    PasswordModule,
-    DropdownModule
+    PasswordModule
   ],
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.scss']
 })
 export class RegisterComponent {
 
-  role: any[] = [
-    {label: 'Teacher', value: RoleName.TEACHER},
-    {label: 'Student', value: RoleName.STUDENT}
-  ];
   form!: FormGroup;
   dark: boolean = false;
 
@@ -48,7 +41,8 @@ export class RegisterComponent {
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(8)]],
       confirmPassword: ['', Validators.required],
-      role: ['', Validators.required],
+      firstName: ['', Validators.required],
+      lastName: ['', Validators.required],
       terms: [false, Validators.requiredTrue]
     }, {
       validators: this.passwordMatchValidator,
@@ -71,11 +65,12 @@ export class RegisterComponent {
     const registerRequest: Register = {
       email: formValue.email,
       password: formValue.password,
-      role: formValue.role
+      firstName: formValue.firstName,
+      lastName: formValue.lastName
     };
     this.authService.signUp(registerRequest).pipe(
       catchError((error) => {
-        if (error.error.keyMessage == "error.entity.exist") {
+        if (error.error.keyMessage === "error.entity.exist") {
           const emailControl = this.form.get("email");
           emailControl?.setErrors({user_exist: true});
         }

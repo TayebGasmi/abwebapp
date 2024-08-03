@@ -16,7 +16,6 @@ import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jwt.JWTClaimsSet;
 import jakarta.mail.MessagingException;
 import java.text.ParseException;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -46,7 +45,7 @@ public class AuthService {
         Role role = roleService.findByName(RoleType.STUDENT)
             .orElseThrow(() -> new NotFoundException("Role not found"));
         User user = buildNewUser(registerDTO, Set.of(role));
-        user = userRepository.save(user);
+        userRepository.save(user);
 
         codeVerificationService.sendVerificationCode(user);
     }
@@ -57,7 +56,11 @@ public class AuthService {
         User user = userRepository.findByEmail(loginDTO.getEmail())
             .orElseThrow(() -> new NotFoundException("User not found"));
 
-        String token = jwtUtil.generateToken(user.getEmail(), user.getRoles().stream().map(role -> role.getName().name()).collect(Collectors.toSet()));
+        String token = jwtUtil.generateToken(user.getEmail(),
+            user.getRoles().stream()
+                .map(role -> role.getName().name())
+                .collect(Collectors.toSet()));
+
         return buildTokenResponse(token);
     }
 
@@ -69,16 +72,18 @@ public class AuthService {
         String firstName = claims.getStringClaim("given_name");
         String lastName = claims.getStringClaim("family_name");
 
-        Optional<User> userOptional = userRepository.findByEmail(email);
-        if (userOptional.isEmpty()) {
-            User newUser = buildNewSocialUser(email, firstName, lastName);
-            userRepository.save(newUser);
-            String token = jwtUtil.generateToken(newUser.getEmail(), Set.of(RoleType.STUDENT.name()));
-            return buildTokenResponse(token);
-        }
+        User user = userRepository.findByEmail(email)
+            .orElseGet(() -> {
+                User newUser = buildNewSocialUser(email, firstName, lastName);
+                userRepository.save(newUser);
+                return newUser;
+            });
 
-        String token = jwtUtil.generateToken(userOptional.get().getEmail(),
-            userOptional.get().getRoles().stream().map(role -> role.getName().name()).collect(Collectors.toSet()));
+        String token = jwtUtil.generateToken(user.getEmail(),
+            user.getRoles().stream()
+                .map(role -> role.getName().name())
+                .collect(Collectors.toSet()));
+
         return buildTokenResponse(token);
     }
 
@@ -106,11 +111,15 @@ public class AuthService {
     }
 
     private User buildNewSocialUser(String email, String firstName, String lastName) {
+        Role studentRole = roleService.findByName(RoleType.STUDENT)
+            .orElseThrow(() -> new NotFoundException("Role not found"));
+
         return User.builder()
             .email(email)
             .firstName(firstName)
             .lastName(lastName)
             .isVerified(true)
+            .roles(Set.of(studentRole))
             .build();
     }
 
