@@ -13,14 +13,9 @@ import {TokenResponse} from "../models/TokenResponse";
 export class AuthService {
 
   private readonly AUTH_URL = `${environment.APPOINTMENT_BOOKING_URL}/auth`;
-  private readonly currentUser: BehaviorSubject<any> = new BehaviorSubject<any>(null);
-  currentUser$ = this.currentUser.asObservable();
   private readonly router = inject(Router);
   private readonly httpClient: HttpClient = inject(HttpClient);
-
-  nextUser(user: any) {
-    this.currentUser.next(user);
-  }
+  private readonly currentUserSubject = new BehaviorSubject<any | null>(null);
 
   socialLogin(user: any): Observable<TokenResponse> {
     return this.httpClient.post<TokenResponse>(`${this.AUTH_URL}/social`, user);
@@ -44,8 +39,7 @@ export class AuthService {
 
   logout() {
     localStorage.removeItem('access_token');
-    this.currentUser.next(null);
-    this.router.navigate(['/login']);
+    this.router.navigate(['/auth/login']);
   }
 
   addToken(token: string) {

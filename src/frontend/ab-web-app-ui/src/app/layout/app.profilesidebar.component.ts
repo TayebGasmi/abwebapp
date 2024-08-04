@@ -2,6 +2,7 @@ import {Component} from '@angular/core';
 import {LayoutService} from './service/app.layout.service';
 import {BadgeModule} from 'primeng/badge';
 import {SidebarModule} from 'primeng/sidebar';
+import { AuthService } from '../core/service/auth.service';
 
 @Component({
   selector: 'app-profilemenu',
@@ -11,7 +12,7 @@ import {SidebarModule} from 'primeng/sidebar';
 })
 export class AppProfileSidebarComponent {
 
-  constructor(public layoutService: LayoutService) {
+  constructor(public layoutService: LayoutService,private authService: AuthService) {
   }
 
   get visible(): boolean {
@@ -20,5 +21,9 @@ export class AppProfileSidebarComponent {
 
   set visible(_val: boolean) {
     this.layoutService.state.profileSidebarVisible = _val;
+  }
+
+  signOut() {
+    this.authService.logout();
   }
 }

@@ -13,11 +13,12 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @Getter
 @Setter
-public class TokenDtoResponse {
+public class LoginDtoResponse {
 
     @NotNull
     @NotBlank
     private String accessToken;
     private String refreshToken;
+    UserDto user;
 
 }

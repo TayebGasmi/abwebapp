@@ -3,7 +3,7 @@ package com.appointment.booking.service;
 import com.appointment.booking.dto.LoginDTO;
 import com.appointment.booking.dto.Oauth2Dto;
 import com.appointment.booking.dto.RegisterDTO;
-import com.appointment.booking.dto.TokenDtoResponse;
+import com.appointment.booking.dto.LoginDtoResponse;
 import com.appointment.booking.entity.Role;
 import com.appointment.booking.entity.User;
 import com.appointment.booking.enums.RoleType;
@@ -50,7 +50,7 @@ public class AuthService {
         codeVerificationService.sendVerificationCode(user);
     }
 
-    public TokenDtoResponse login(LoginDTO loginDTO) {
+    public LoginDtoResponse login(LoginDTO loginDTO) {
         authenticateUser(loginDTO.getEmail(), loginDTO.getPassword());
 
         User user = userRepository.findByEmail(loginDTO.getEmail())
@@ -64,14 +64,14 @@ public class AuthService {
         return buildTokenResponse(token);
     }
 
-    public TokenDtoResponse socialLogin(Oauth2Dto oauth2Dto) throws ParseException, JOSEException {
+    public LoginDtoResponse socialLogin(Oauth2Dto oauth2Dto) throws ParseException, JOSEException {
         JWTClaimsSet claims = googleTokenVerifier.verify(oauth2Dto.getIdToken());
         log.info("Google claims: {}", claims);
 
         String email = claims.getStringClaim("email");
         String firstName = claims.getStringClaim("given_name");
         String lastName = claims.getStringClaim("family_name");
-
+        String  profilePicture = claims.getStringClaim("photo_url");
         User user = userRepository.findByEmail(email)
             .orElseGet(() -> {
                 User newUser = buildNewSocialUser(email, firstName, lastName);
@@ -123,8 +123,8 @@ public class AuthService {
             .build();
     }
 
-    private TokenDtoResponse buildTokenResponse(String token) {
-        return TokenDtoResponse.builder()
+    private LoginDtoResponse buildTokenResponse(String token) {
+        return LoginDtoResponse.builder()
             .accessToken(token)
             .build();
     }

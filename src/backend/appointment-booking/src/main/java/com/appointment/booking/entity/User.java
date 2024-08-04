@@ -40,7 +40,6 @@ public class User extends BaseEntity<Long> implements UserDetails {
     private String profilePicture;
     @Column(unique = true, nullable = false)
     private String email;
-
     private Boolean isVerified = false;
 
     @ManyToMany(fetch = FetchType.EAGER)

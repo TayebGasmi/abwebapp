@@ -56,6 +56,7 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {
     this.socialAuthService.authState.pipe(
       map((user) => {
+         console.log(user);
           return {
             oauthProvider: user.provider,
             idToken: user.idToken,
