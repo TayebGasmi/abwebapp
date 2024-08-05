@@ -4,8 +4,6 @@
     <app-delete-confirmation message="Are you sure to delete this selected School types !" [(showDeleteConfirmation)]="showDeleteAllConfirmation" >
       <ng-template #confirmButton>
         <button pButton pRipple icon="pi pi-check" label="Yes" class="p-button-danger" (click)="deleteAll(table.selectedItems)"></button>
-
-        <!--        <button pButton pRipple icon="pi pi-check" label="Yes" class="p-button-danger" (click)="deleteAll(table.selectedItems)"></button>-->
       </ng-template>
     </app-delete-confirmation>
     <button pRipple pButton type="button" label="Delete" icon="pi pi-trash" class="p-button-danger" (click)="confirmDeleteALL(table.selectedItems)"
