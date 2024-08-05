@@ -3,6 +3,7 @@ package com.appointment.booking.dto;
 import com.appointment.booking.base.BaseDto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -29,6 +30,6 @@ public class UserDto extends BaseDto<Long> {
     private String email;
     private String profilePicture;
     @NotNull
-    private RoleDTO role;
+    private Set<RoleDTO> roles;
 
 }

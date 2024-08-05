@@ -1,14 +1,16 @@
 package com.appointment.booking.service;
 
 import com.appointment.booking.dto.LoginDTO;
+import com.appointment.booking.dto.LoginDtoResponse;
 import com.appointment.booking.dto.Oauth2Dto;
 import com.appointment.booking.dto.RegisterDTO;
-import com.appointment.booking.dto.LoginDtoResponse;
+import com.appointment.booking.dto.UserDto;
 import com.appointment.booking.entity.Role;
 import com.appointment.booking.entity.User;
 import com.appointment.booking.enums.RoleType;
 import com.appointment.booking.exceptions.ExistException;
 import com.appointment.booking.exceptions.NotFoundException;
+import com.appointment.booking.mapper.UserMapper;
 import com.appointment.booking.repository.UserRepository;
 import com.appointment.booking.utils.GoogleTokenVerifier;
 import com.appointment.booking.utils.JwtUTil;
@@ -39,6 +41,7 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final GoogleTokenVerifier googleTokenVerifier;
     private final JwtUTil jwtUtil;
+    private final UserMapper userMapper;
 
     public void register(RegisterDTO registerDTO) throws ExistException, MessagingException {
         checkIfEmailExists(registerDTO.getEmail());
@@ -61,7 +64,7 @@ public class AuthService {
                 .map(role -> role.getName().name())
                 .collect(Collectors.toSet()));
 
-        return buildTokenResponse(token);
+        return buildTokenResponse(token, "", userMapper.convertEntityToDto(user));
     }
 
     public LoginDtoResponse socialLogin(Oauth2Dto oauth2Dto) throws ParseException, JOSEException {
@@ -71,10 +74,10 @@ public class AuthService {
         String email = claims.getStringClaim("email");
         String firstName = claims.getStringClaim("given_name");
         String lastName = claims.getStringClaim("family_name");
-        String  profilePicture = claims.getStringClaim("photo_url");
+        String profilePicture = claims.getStringClaim("picture");
         User user = userRepository.findByEmail(email)
             .orElseGet(() -> {
-                User newUser = buildNewSocialUser(email, firstName, lastName);
+                User newUser = buildNewSocialUser(email, firstName, lastName, profilePicture);
                 userRepository.save(newUser);
                 return newUser;
             });
@@ -83,8 +86,8 @@ public class AuthService {
             user.getRoles().stream()
                 .map(role -> role.getName().name())
                 .collect(Collectors.toSet()));
-
-        return buildTokenResponse(token);
+        UserDto userDto = userMapper.convertEntityToDto(user);
+        return buildTokenResponse(token, "", userDto);
     }
 
     private void checkIfEmailExists(String email) throws ExistException {
@@ -110,7 +113,7 @@ public class AuthService {
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 
-    private User buildNewSocialUser(String email, String firstName, String lastName) {
+    private User buildNewSocialUser(String email, String firstName, String lastName, String profilePicture) {
         Role studentRole = roleService.findByName(RoleType.STUDENT)
             .orElseThrow(() -> new NotFoundException("Role not found"));
 
@@ -119,13 +122,16 @@ public class AuthService {
             .firstName(firstName)
             .lastName(lastName)
             .isVerified(true)
+            .profilePicture(profilePicture)
             .roles(Set.of(studentRole))
             .build();
     }
 
-    private LoginDtoResponse buildTokenResponse(String token) {
+    private LoginDtoResponse buildTokenResponse(String token, String refreshToken, UserDto user) {
         return LoginDtoResponse.builder()
             .accessToken(token)
+            .refreshToken(refreshToken)
+            .user(user)
             .build();
     }
 }

@@ -1,8 +1,10 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {LayoutService} from './service/app.layout.service';
 import {BadgeModule} from 'primeng/badge';
 import {SidebarModule} from 'primeng/sidebar';
-import { AuthService } from '../core/service/auth.service';
+import {AuthService} from '../core/service/auth.service';
+import {UserService} from '../core/service/user.service';
+import {User} from "../core/models/User";
 
 @Component({
   selector: 'app-profilemenu',
@@ -10,10 +12,19 @@ import { AuthService } from '../core/service/auth.service';
   standalone: true,
   imports: [SidebarModule, BadgeModule]
 })
-export class AppProfileSidebarComponent {
-
-  constructor(public layoutService: LayoutService,private authService: AuthService) {
+export class AppProfileSidebarComponent implements OnInit {
+  ngOnInit(): void {
+    this.userService.getUserDetails().subscribe(user => {
+      this.currentUser = user;
+    });
   }
+
+
+  constructor(public layoutService: LayoutService, private authService: AuthService, private userService: UserService) {
+
+  }
+
+  currentUser!: User
 
   get visible(): boolean {
     return this.layoutService.state.profileSidebarVisible;

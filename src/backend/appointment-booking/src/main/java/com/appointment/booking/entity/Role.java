@@ -2,6 +2,7 @@ package com.appointment.booking.entity;
 
 import com.appointment.booking.base.BaseEntity;
 import com.appointment.booking.enums.RoleType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -31,6 +32,7 @@ public class Role extends BaseEntity<Long> {
     private RoleType name;
 
     @ManyToMany(mappedBy = "roles")
+    @JsonIgnore
     private Set<User> users = new LinkedHashSet<>();
 
 }
