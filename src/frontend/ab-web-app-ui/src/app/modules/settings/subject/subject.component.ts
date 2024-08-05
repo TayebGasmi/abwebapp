@@ -12,9 +12,13 @@ import {Ripple} from "primeng/ripple";
 import {TableComponent} from "../../../shared/components/table/table.component";
 import {TableColumn} from "../../../core/models/table-cloumn";
 import {ColumnDefDirective} from "../../../shared/directives/column-def.directive";
-import {FormGroup} from "@angular/forms";
+import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {NotificationService} from "../../../core/service/notification.service";
 import {DeleteConfirmationComponent} from "../../../shared/components/delete-confirmation/delete-confirmation.component";
+import {InputTextModule} from "primeng/inputtext";
+import {DropdownModule} from "primeng/dropdown";
+import {SchoolType} from "../../../core/models/SchoolType";
+import {SchoolService} from "../../../core/service/school.service";
 
 @Component({
   selector: 'app-subject',
@@ -28,11 +32,19 @@ import {DeleteConfirmationComponent} from "../../../shared/components/delete-con
     Ripple,
     TableComponent,
     ColumnDefDirective,
-    DeleteConfirmationComponent
+    DeleteConfirmationComponent,
+    FormsModule,
+    InputTextModule,
+    ReactiveFormsModule,
+    DropdownModule
   ],
   standalone: true
 })
-export class SubjectComponent  {
+export class SubjectComponent implements OnInit {
+  ngOnInit(): void {
+    this.initForm();
+  }
+
   sidebarVisible = false;
   formTitle = 'Add new Subject';
   data: Subject[] = [];
@@ -50,9 +62,13 @@ export class SubjectComponent  {
 
   currentPageReportTemplate = "Showing {first} to {last} of {totalRecords} entries";
   rowsPerPageOptions = [10, 25, 50];
-  showDeleteConfirmation=false;
+  showDeleteConfirmation = false;
+  form!: FormGroup;
+  schoolTypes!: SchoolType[];
 
-  constructor(private subjectService: SubjectService, private notificationService: NotificationService) {
+  constructor(private subjectService: SubjectService, private notificationService: NotificationService, private fb: FormBuilder,private schoolTypeService: SchoolService) {
+    this.initForm();
+
   }
 
   loadSubjects(): void {
@@ -138,5 +154,20 @@ export class SubjectComponent  {
   confirmDelete(item: any) {
     this.showDeleteConfirmation = true;
     this.subjectToDelete = item;
+  }
+
+
+  private initForm() {
+    this.form = this.fb.group({
+      name: ['', [Validators.required]],
+      description: ['', [Validators.required]],
+      schoolType: ['', [Validators.required]],
+      schoolYear: ['', [Validators.required]]
+    });
+  }
+
+  fieldHasError(fieldName: string): boolean {
+    const control = this.form.get(fieldName);
+    return !!(control?.invalid && (control?.dirty || control?.touched));
   }
 }
