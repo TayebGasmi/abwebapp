@@ -1,15 +1,14 @@
-import { Component, OnDestroy, Renderer2, ViewChild, Inject, PLATFORM_ID } from '@angular/core';
-import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
-import { filter, Subscription } from 'rxjs';
-import { isPlatformBrowser } from '@angular/common';
-import { MenuService } from './app.menu.service';
-import { AppSidebarComponent } from './app.sidebar.component';
-import { AppTopbarComponent } from './app.topbar.component';
-import { LayoutService } from './service/app.layout.service';
-import { AppConfigComponent } from './config/app.config.component';
-import { AppProfileSidebarComponent } from './app.profilesidebar.component';
-import { AppBreadcrumbComponent } from './app.breadcrumb.component';
-import { NgClass } from '@angular/common';
+import {Component, Inject, OnDestroy, PLATFORM_ID, Renderer2, ViewChild} from '@angular/core';
+import {NavigationEnd, Router, RouterOutlet} from '@angular/router';
+import {filter, Subscription} from 'rxjs';
+import {isPlatformBrowser, NgClass} from '@angular/common';
+import {MenuService} from './app.menu.service';
+import {AppSidebarComponent} from './app.sidebar.component';
+import {AppTopbarComponent} from './app.topbar.component';
+import {LayoutService} from './service/app.layout.service';
+import {AppConfigComponent} from './config/app.config.component';
+import {AppProfileSidebarComponent} from './app.profilesidebar.component';
+import {AppBreadcrumbComponent} from './app.breadcrumb.component';
 
 @Component({
   selector: 'app-layout',
@@ -18,7 +17,6 @@ import { NgClass } from '@angular/common';
   imports: [NgClass, AppSidebarComponent, AppTopbarComponent, AppBreadcrumbComponent, RouterOutlet, AppProfileSidebarComponent, AppConfigComponent]
 })
 export class AppLayoutComponent implements OnDestroy {
-
   overlayMenuOpenSubscription: Subscription;
 
   menuOutsideClickListener: any;
@@ -47,7 +45,7 @@ export class AppLayoutComponent implements OnDestroy {
         });
       }
 
-      if ((this.layoutService.isHorizontal() || this.layoutService.isSlim()|| this.layoutService.isSlimPlus()) && !this.menuScrollListener && isPlatformBrowser(this.platformId)) {
+      if ((this.layoutService.isHorizontal() || this.layoutService.isSlim() || this.layoutService.isSlimPlus()) && !this.menuScrollListener && isPlatformBrowser(this.platformId)) {
         this.menuScrollListener = this.renderer.listen(this.appSidebar.menuContainer.nativeElement, 'scroll', event => {
           if (this.layoutService.isDesktop()) {
             this.hideMenu();
@@ -64,48 +62,6 @@ export class AppLayoutComponent implements OnDestroy {
     .subscribe(() => {
       this.hideMenu();
     });
-  }
-
-  blockBodyScroll(): void {
-    if (isPlatformBrowser(this.platformId)) {
-      if (document.body.classList) {
-        document.body.classList.add('blocked-scroll');
-      }
-      else {
-        document.body.className += ' blocked-scroll';
-      }
-    }
-  }
-
-  unblockBodyScroll(): void {
-    if (isPlatformBrowser(this.platformId)) {
-      if (document.body.classList) {
-        document.body.classList.remove('blocked-scroll');
-      }
-      else {
-        document.body.className = document.body.className.replace(new RegExp('(^|\\b)' +
-          'blocked-scroll'.split(' ').join('|') + '(\\b|$)', 'gi'), ' ');
-      }
-    }
-  }
-
-  hideMenu() {
-    this.layoutService.state.overlayMenuActive = false;
-    this.layoutService.state.staticMenuMobileActive = false;
-    this.layoutService.state.menuHoverActive = false;
-    this.menuService.reset();
-
-    if(this.menuOutsideClickListener) {
-      this.menuOutsideClickListener();
-      this.menuOutsideClickListener = null;
-    }
-
-    if (this.menuScrollListener) {
-      this.menuScrollListener();
-      this.menuScrollListener = null;
-    }
-
-    this.unblockBodyScroll();
   }
 
   get containerClass() {
@@ -131,6 +87,46 @@ export class AppLayoutComponent implements OnDestroy {
       'layout-sidebar-active': this.layoutService.state.sidebarActive,
       'layout-sidebar-anchored': this.layoutService.state.anchored
     }
+  }
+
+  blockBodyScroll(): void {
+    if (isPlatformBrowser(this.platformId)) {
+      if (document.body.classList) {
+        document.body.classList.add('blocked-scroll');
+      } else {
+        document.body.className += ' blocked-scroll';
+      }
+    }
+  }
+
+  unblockBodyScroll(): void {
+    if (isPlatformBrowser(this.platformId)) {
+      if (document.body.classList) {
+        document.body.classList.remove('blocked-scroll');
+      } else {
+        document.body.className = document.body.className.replace(new RegExp('(^|\\b)' +
+          'blocked-scroll'.split(' ').join('|') + '(\\b|$)', 'gi'), ' ');
+      }
+    }
+  }
+
+  hideMenu() {
+    this.layoutService.state.overlayMenuActive = false;
+    this.layoutService.state.staticMenuMobileActive = false;
+    this.layoutService.state.menuHoverActive = false;
+    this.menuService.reset();
+
+    if (this.menuOutsideClickListener) {
+      this.menuOutsideClickListener();
+      this.menuOutsideClickListener = null;
+    }
+
+    if (this.menuScrollListener) {
+      this.menuScrollListener();
+      this.menuScrollListener = null;
+    }
+
+    this.unblockBodyScroll();
   }
 
   ngOnDestroy() {

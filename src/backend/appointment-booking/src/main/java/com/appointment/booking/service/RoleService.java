@@ -1,29 +1,21 @@
 package com.appointment.booking.service;
 
-import com.appointment.booking.enums.Rolename;
-import com.appointment.booking.model.Role;
+import com.appointment.booking.base.BaseServiceImpl;
+import com.appointment.booking.dto.RoleDTO;
+import com.appointment.booking.entity.Role;
+import com.appointment.booking.enums.RoleType;
 import com.appointment.booking.repository.RoleRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.Optional;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 @Service
-@Transactional
-public class RoleService {
-    @Autowired
-    RoleRepository rolRepository;
+@RequiredArgsConstructor
+public class RoleService extends BaseServiceImpl<Role, Long, RoleDTO> {
 
-    public Optional<Role> getByRolName(Rolename roleName){
-        return rolRepository.findByroleName(roleName);
-    }
+    private final RoleRepository roleRepository;
 
-    public boolean existsRolName(Rolename roleName){
-        return rolRepository.existsByroleName(roleName);
-    }
-
-    public void save(Role role){
-        rolRepository.save(role);
+    public Optional<Role> findByName(RoleType name) {
+        return roleRepository.findByName(name);
     }
 }

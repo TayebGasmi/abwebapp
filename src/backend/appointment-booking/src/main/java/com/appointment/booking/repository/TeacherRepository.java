@@ -1,9 +1,10 @@
 package com.appointment.booking.repository;
 
-import com.appointment.booking.model.Teacher;
-import org.springframework.data.jpa.repository.JpaRepository;
+import com.appointment.booking.base.BaseRepository;
+import com.appointment.booking.entity.Teacher;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface TeacherRepository extends JpaRepository<Teacher, Long> {
+public interface TeacherRepository extends BaseRepository<Teacher, Long> {
+
 }

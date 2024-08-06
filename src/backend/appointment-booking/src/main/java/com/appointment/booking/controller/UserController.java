@@ -1,25 +1,36 @@
 package com.appointment.booking.controller;
 
-import com.appointment.booking.model.User;
+import com.appointment.booking.base.BaseController;
+import com.appointment.booking.dto.UserDto;
+import com.appointment.booking.entity.User;
 import com.appointment.booking.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import java.security.Principal;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.IOException;
-
 @RestController
-@RequestMapping("/usersmanagement")
-public class UserController {
-    @Autowired
-    UserService userService;
-    @PostMapping("/userAdd")
-    public ResponseEntity<?> addUser(@RequestBody User user) throws IOException {
-        userService.save(user);
-        return new ResponseEntity<>(userService.save(user).getEmail(), HttpStatus.OK);
+@RequestMapping("/users")
+@RequiredArgsConstructor
+public class UserController extends BaseController<User, Long, UserDto> {
+
+
+    private final UserService userService;
+
+    @GetMapping("/verify")
+    public ResponseEntity verifyEmail(@RequestParam String email, @RequestParam String code) {
+        userService.verifyEmail(email, code);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+    @GetMapping("/details")
+    public ResponseEntity<?> getUserDetails(@AuthenticationPrincipal User principal) {
+        return ResponseEntity.ok(userService.getUserDetails(principal));
     }
 }

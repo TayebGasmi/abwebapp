@@ -1,11 +1,11 @@
-import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
+import {Injectable} from '@angular/core';
+import {Subject} from 'rxjs';
 
 export type MenuMode = 'static' | 'overlay' | 'horizontal' | 'slim' | 'slim-plus' | 'reveal' | 'drawer';
 
-export type ColorScheme = 'light' | 'dark'| 'dim';
+export type ColorScheme = 'light' | 'dark' | 'dim';
 
-export type MenuColorScheme = 'colorScheme' | 'primaryColor'| 'transparent';
+export type MenuColorScheme = 'colorScheme' | 'primaryColor' | 'transparent';
 
 export interface AppConfig {
   inputStyle: string;
@@ -24,7 +24,7 @@ interface LayoutState {
   configSidebarVisible: boolean;
   staticMenuMobileActive: boolean;
   menuHoverActive: boolean;
-  sidebarActive:boolean;
+  sidebarActive: boolean;
   anchored: boolean,
 }
 
@@ -38,7 +38,7 @@ export class LayoutService {
     inputStyle: 'outlined',
     menuMode: 'static',
     colorScheme: 'light',
-    theme: 'indigo',
+    theme: 'doowi',
     scale: 14,
     menuTheme: 'colorScheme'
   };
@@ -50,16 +50,13 @@ export class LayoutService {
     configSidebarVisible: false,
     staticMenuMobileActive: false,
     menuHoverActive: false,
-    sidebarActive:false,
+    sidebarActive: false,
     anchored: false
   };
 
   private configUpdate = new Subject<AppConfig>();
-
-  private overlayOpen = new Subject<any>();
-
   configUpdate$ = this.configUpdate.asObservable();
-
+  private overlayOpen = new Subject<any>();
   overlayOpen$ = this.overlayOpen.asObservable();
 
   onMenuToggle() {
@@ -73,8 +70,7 @@ export class LayoutService {
 
     if (this.isDesktop()) {
       this.state.staticMenuDesktopInactive = !this.state.staticMenuDesktopInactive;
-    }
-    else {
+    } else {
       this.state.staticMenuMobileActive = !this.state.staticMenuMobileActive;
 
       if (this.state.staticMenuMobileActive) {

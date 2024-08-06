@@ -1,46 +1,74 @@
-import { Component } from '@angular/core';
-import {LayoutService} from "../../../layout/service/app.layout.service";
-import {InputTextModule} from "primeng/inputtext";
-import {KeyFilterModule} from "primeng/keyfilter";
-import {RouterLink} from "@angular/router";
-import {AppConfigComponent} from "../../../layout/config/app.config.component";
+import {Component} from '@angular/core';
+import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import {BackgroundComponent} from "../../../shared/components/background/background.component";
 import {ButtonDirective} from "primeng/button";
 import {Ripple} from "primeng/ripple";
+import {ActivatedRoute, Router, RouterLink} from "@angular/router";
+import {InputTextModule} from "primeng/inputtext";
+import {KeyFilterModule} from "primeng/keyfilter";
+import {UserService} from "../../../core/service/user.service";
 
 @Component({
   templateUrl: './verification.component.html',
-  standalone: true,
-
   imports: [
-    InputTextModule,
-    KeyFilterModule,
-    RouterLink,
-    AppConfigComponent,
+    ReactiveFormsModule,
+    BackgroundComponent,
     ButtonDirective,
-    Ripple
-  ]
+    Ripple,
+    RouterLink,
+    InputTextModule,
+    KeyFilterModule
+  ],
+  standalone: true
 })
 export class VerificationComponent {
 
+  verificationForm: FormGroup;
+  email: string | null = null;
 
-	constructor(private layoutService: LayoutService) {}
+  constructor(
+    private fb: FormBuilder,
+    private route: ActivatedRoute,
+    private userService: UserService,
+    private router: Router
+  ) {
+    this.verificationForm = this.fb.group({
+      digit1: ['', Validators.required],
+      digit2: ['', Validators.required],
+      digit3: ['', Validators.required],
+      digit4: ['', Validators.required]
+    });
+    this.route.params.subscribe(params => {
+      this.email = params['email'];
+    });
+  }
 
-	get dark(): boolean {
-		return this.layoutService.config.colorScheme !== 'light';
-	}
-    onDigitInput(event: any) {
-        let element;
-        if (event.code !== 'Backspace')
-            if (event.code.includes('Numpad')|| event.code.includes('Digit')) {
-                element = event.srcElement.nextElementSibling;
-            }
-        if (event.code === 'Backspace')
-            element = event.srcElement.previousElementSibling;
 
-        if (element == null)
-            return;
-        else
-            element.focus();
+  verifyCode() {
+    if (this.verificationForm.valid) {
+      const code = this.verificationForm.value.digit1 + this.verificationForm.value.digit2 + this.verificationForm.value.digit3 + this.verificationForm.value.digit4;
+      if (this.email) {
+        this.userService.verifyUserEmail(this.email, code).subscribe(
+          () => {
+            this.router.navigate(['/auth/login']).then();
+          }
+        );
+      }
     }
+  }
 
+  onDigitInput(event: any) {
+    let element;
+    if (event.code !== 'Backspace')
+      if (event.code.includes('Numpad') || event.code.includes('Digit')) {
+        element = event.srcElement.nextElementSibling;
+      }
+    if (event.code === 'Backspace')
+      element = event.srcElement.previousElementSibling;
+
+    if (element == null)
+      return;
+    else
+      element.focus();
+  }
 }

@@ -135,12 +135,34 @@ export class AppMenuitemComponent implements OnInit, OnDestroy {
     .subscribe(params => {
       if (this.isSlimPlus || this.isSlim || this.isHorizontal) {
         this.active = false;
-      } else {
-        if (this.item.routerLink) {
-          this.updateActiveStateFromRoute();
-        }
+      } else if (this.item.routerLink) {
+        this.updateActiveStateFromRoute();
       }
     });
+  }
+
+  get submenuAnimation() {
+    if (this.layoutService.isDesktop() && (this.layoutService.isHorizontal() || this.layoutService.isSlim() || this.layoutService.isSlimPlus())) {
+      return this.active ? 'visible' : 'hidden';
+    } else
+      return this.root ? 'expanded' : (this.active ? 'expanded' : 'collapsed');
+  }
+
+  get isHorizontal() {
+    return this.layoutService.isHorizontal();
+  }
+
+  get isSlim() {
+    return this.layoutService.isSlim();
+  }
+
+  get isSlimPlus() {
+    return this.layoutService.isSlimPlus();
+  }
+
+  @HostBinding('class.active-menuitem')
+  get activeClass() {
+    return this.active && !this.root;
   }
 
   ngOnInit() {
@@ -239,30 +261,6 @@ export class AppMenuitemComponent implements OnInit, OnDestroy {
         this.menuService.onMenuStateChange({key: this.key});
       }
     }
-  }
-
-  get submenuAnimation() {
-    if (this.layoutService.isDesktop() && (this.layoutService.isHorizontal() || this.layoutService.isSlim() || this.layoutService.isSlimPlus())) {
-      return this.active ? 'visible' : 'hidden';
-    } else
-      return this.root ? 'expanded' : (this.active ? 'expanded' : 'collapsed');
-  }
-
-  get isHorizontal() {
-    return this.layoutService.isHorizontal();
-  }
-
-  get isSlim() {
-    return this.layoutService.isSlim();
-  }
-
-  get isSlimPlus() {
-    return this.layoutService.isSlimPlus();
-  }
-
-  @HostBinding('class.active-menuitem')
-  get activeClass() {
-    return this.active && !this.root;
   }
 
   ngOnDestroy() {

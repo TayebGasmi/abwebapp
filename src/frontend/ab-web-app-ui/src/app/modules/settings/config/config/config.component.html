@@ -1,0 +1,49 @@
+<div class="card">
+  <app-table
+    [columns]="columns"
+    [data]="data"
+    [totalRecords]="totalRecords"
+    [pageSize]="pageSize"
+    [currentPageReportTemplate]="currentPageReportTemplate"
+    [rowsPerPageOptions]="rowsPerPageOptions"
+    (onLazyLoad)="onLazyLoad($event)"
+    (onGlobalFilter)="onGlobalFilter($event)"
+    #table
+  >
+    <ng-template #actions let-item>
+      <button pRipple pButton type="button" icon="pi pi-pencil" class="mr-2 p-button-rounded p-button-outlined" (click)="edit(item)"></button>
+    </ng-template>
+  </app-table>
+
+  <app-form-side-bar title="Edit Config" [(sidebarVisible)]="sidebarVisible">
+    <div ngProjectAs="content">
+      <form [formGroup]="form" >
+        @if (selectedConfig){
+          <div class="flex flex-column">
+            <label class="mb-2" for="name">key</label>
+            <input [disabled]="true" id="name" pInputText class="w-full"  [value]="selectedConfig.key || ''" />
+          </div>
+        }
+        <div class="flex flex-column">
+          <label class="mb-2" for="value">Value</label>
+          <input formControlName="value" id="value" pInputText class="w-full" />
+        </div>
+        @if (fieldHasError('value')) {
+          <div class="mb-2 ng-invalid p-error">value is required  </div>
+        }
+        <div class="flex flex-column">
+          <label class="mb-2" for="description">Description</label>
+          <input formControlName="description" id="description" pInputText class="w-full" />
+        </div>
+        @if (fieldHasError('description')) {
+          <div class="mb-2 ng-invalid p-error">description is required  </div>
+        }
+      </form>
+    </div>
+    <footer class="flex justify-content-end p-3 gap-2">
+      <button pButton type="button" label="Cancel" class="p-button-outlined" (click)="cancel()"></button>
+      <button pButton type="button" label="Save" class="p-button-primary" (click)="save()"></button>
+    </footer>
+  </app-form-side-bar>
+</div>
+

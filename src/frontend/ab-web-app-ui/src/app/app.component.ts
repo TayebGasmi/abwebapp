@@ -1,24 +1,17 @@
-import {Component, OnInit} from '@angular/core';
-import {PrimeNGConfig} from 'primeng/api';
+import {Component} from '@angular/core';
 import {RouterOutlet} from "@angular/router";
-import {environment} from "../environments/environment";
+import {ToastModule} from "primeng/toast";
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   standalone: true,
   imports: [
-    RouterOutlet
+    RouterOutlet,
+    ToastModule
   ]
 })
-export class AppComponent implements OnInit {
+export class AppComponent {
 
-  constructor(private primengConfig: PrimeNGConfig) {
-  }
-
-  ngOnInit(): void {
-    this.primengConfig.ripple = true;
-    console.log(environment.production);
-  }
 
 }
