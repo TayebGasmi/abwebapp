@@ -9,16 +9,9 @@
 
   <div class="topbar-end">
     <ul class="topbar-menu">
-      <li class="topbar-search">
-                <span class="p-input-icon-left">
-                    <i class="pi pi-search"></i>
-                    <input class="w-12rem sm:w-full" pInputText placeholder="Search" type="text">
-                </span>
-      </li>
-
       <li class="topbar-profile">
         <button (click)="onProfileButtonClick()" class="p-link" type="button">
-          <img alt="Profile"/>
+          <img [src]="currentUser.profilePicture" [alt]="currentUser.firstName+' '+currentUser.lastName" class="profile-image"/>
         </button>
       </li>
     </ul>

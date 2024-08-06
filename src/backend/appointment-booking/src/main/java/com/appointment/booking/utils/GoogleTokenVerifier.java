@@ -44,7 +44,6 @@ public class GoogleTokenVerifier {
         if (!jwsObject.verify(verifier)) {
             throw new IllegalArgumentException("Token verification failed");
         }
-
         return SignedJWT.parse(idToken).getJWTClaimsSet();
     }
 }

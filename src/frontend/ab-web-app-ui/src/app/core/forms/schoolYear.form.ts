@@ -15,10 +15,10 @@ export const schoolYearForm: FormField[] = [
 
   },
   {
-    label: 'Type',
+    label: 'description',
     name: 'description',
     type: 'text',
-    placeholder: 'Enter type',
+    placeholder: 'Enter description',
     errors: [
       {type: 'required', message: 'description is required'}
     ],

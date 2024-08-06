@@ -45,7 +45,6 @@ export class LoginComponent implements OnInit {
     this.loginForm = this.fb.group({
       email: [''],
       password: [''],
-      rememberMe: [false]
     });
   }
 
@@ -56,6 +55,7 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {
     this.socialAuthService.authState.pipe(
       map((user) => {
+         console.log(user);
           return {
             oauthProvider: user.provider,
             idToken: user.idToken,
@@ -67,6 +67,7 @@ export class LoginComponent implements OnInit {
       next: response => {
         this.authService.addToken(response.accessToken);
         this.router.navigate(['']);
+        this.authService.addRoles(response.roles);
       }
     });
   }
@@ -76,6 +77,7 @@ export class LoginComponent implements OnInit {
     this.authService.signIn(login).subscribe({
       next: response => {
         this.authService.addToken(response.accessToken);
+        this.authService.addRoles(response.roles);
         this.router.navigate(['']);
       }
     });

@@ -17,6 +17,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
@@ -25,14 +27,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class WebSecurityConfig {
 
     private static final String[] WHITE_LIST = {
+        "/appointment-booking/v3/api-docs/**",
         "/swagger-ui/**",
-        "/swagger-ui.html",
-        "/v3/api-docs/**",
-        "/swagger-resources/**",
-        "/actuator/**",
-        "webjars/**",
-        "/auth",
-        "/session/**"
+        "/appointment-booking/auth/**",
     };
     private final UserDetailsService userDetailsService;
     private final JwtTokenFilter jwtTokenFilter;
@@ -40,11 +37,11 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
-            .cors(AbstractHttpConfigurer::disable)
+            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .authorizeHttpRequests(authorizationManagerRequestMatcherRegistry ->
                 authorizationManagerRequestMatcherRegistry
                     .requestMatchers(WHITE_LIST).permitAll()
-                    .anyRequest().permitAll())
+                    .anyRequest().authenticated())
             .sessionManagement(
                 httpSecuritySessionManagementConfigurer -> httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
@@ -70,6 +67,17 @@ public class WebSecurityConfig {
         authProvider.setUserDetailsService(userDetailsService);
         authProvider.setPasswordEncoder(passwordEncoder());
         return authProvider;
+    }
+
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        return request -> {
+            var cors = new CorsConfiguration();
+            cors.setAllowedOrigins(java.util.List.of("*"));
+            cors.setAllowedMethods(java.util.List.of("*"));
+            cors.setAllowedHeaders(java.util.List.of("*"));
+            return cors;
+        };
     }
 
 

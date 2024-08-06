@@ -25,14 +25,58 @@
 
   <app-form-side-bar [title]="formTitle" [(sidebarVisible)]="sidebarVisible">
     <div ngProjectAs="content">
-      <app-form #form [fields]="formFields" [formData]="selectedSubject"></app-form>
+      <form [formGroup]="form">
+
+        <div class="flex flex-column">
+          <label class="mb-2" for="name">Name</label>
+          <input formControlName="name" id="name" pInputText class="w-full" placeholder="Enter Name "/>
+        </div>
+        @if (fieldHasError('name')) {
+          <div class="mb-2 ng-invalid p-error">name is required</div>
+        }
+        <div class="flex flex-column">
+          <label class="mb-2" for="description">Description</label>
+          <input formControlName="description" id="description" pInputText class="w-full" placeholder="Enter Description "/>
+        </div>
+        @if (fieldHasError('description')) {
+          <div class="mb-2 ng-invalid p-error">description is required</div>
+        }
+        <label class="mb-2" for="schoolTypes">school type</label>
+        <p-multiSelect [filter]="true" formControlName="schoolTypes" [options]="schoolTypes"
+                       placeholder="choose a school type "
+                       [showClear]="true"
+                       [ngClass]="{'ng-invalid ng-dirty': fieldHasError('schoolTypes')}"
+                       display="chip"
+                       styleClass="w-full  mb-2"
+                       id="schoolTypes"
+        >
+        </p-multiSelect>
+        @if (fieldHasError('schoolTypes')) {
+          <div class="mb-2 ng-invalid p-error">school type is required</div>
+        }
+        <label class="mb-2" for="schoolYears">school year</label>
+        <p-multiSelect [filter]="true" formControlName="schoolYears" [options]="schoolYears"
+                       placeholder="choose a school years"
+                       [showClear]="true"
+                       [ngClass]="{'ng-invalid ng-dirty': fieldHasError('schoolYears')}"
+                       display="chip"
+                       styleClass="w-full  mb-2"
+                       id="schoolYears"
+        >
+        </p-multiSelect>
+        @if (fieldHasError('schoolYear')) {
+          <div class="mb-2 ng-invalid p-error">school year is required</div>
+        }
+
+      </form>
+
     </div>
     <footer class="flex justify-content-end p-3 gap-2">
-      <button pRipple pButton type="button" label="Cancel" class="p-button-outlined" icon="pi pi-times" (click)="onCancel(form.form)"></button>
-      <button pRipple pButton type="button" label="Save" icon="pi pi-check" (click)="save(form.form)" [disabled]="form.form.invalid" ></button>
+      <button pRipple pButton type="button" label="Cancel" class="p-button-outlined" icon="pi pi-times" (click)="onCancel(form)"></button>
+      <button pRipple pButton type="button" label="Save" icon="pi pi-check" (click)="save(form)" [disabled]="form.invalid"></button>
     </footer>
   </app-form-side-bar>
-  <app-delete-confirmation [(showDeleteConfirmation)]="showDeleteConfirmation" >
+  <app-delete-confirmation [(showDeleteConfirmation)]="showDeleteConfirmation">
     <ng-template #confirmButton>
       <button pButton pRipple icon="pi pi-check" label="Yes" class="p-button-danger" (click)="delete()"></button>
     </ng-template>

@@ -1,60 +1,41 @@
 import { Component } from '@angular/core';
-import {DropdownModule} from "primeng/dropdown";
-import {FormsModule} from "@angular/forms";
-
-import {AutoCompleteModule} from "primeng/autocomplete";
-import {CalendarModule} from "primeng/calendar";
-import {ChipsModule} from "primeng/chips";
-import {InputMaskModule} from "primeng/inputmask";
-import {InputNumberModule} from "primeng/inputnumber";
-import {CascadeSelectModule} from "primeng/cascadeselect";
-import {MultiSelectModule} from "primeng/multiselect";
-import {InputTextareaModule} from "primeng/inputtextarea";
-import {InputTextModule} from "primeng/inputtext";
+import { FormsModule } from '@angular/forms';
+import { DropdownModule } from 'primeng/dropdown';
+import { InputTextModule } from 'primeng/inputtext';
+import { ButtonModule } from 'primeng/button';
 
 @Component({
   selector: 'app-profile',
   standalone: true,
   imports: [
-    DropdownModule,
     FormsModule,
-    FormsModule,
-    AutoCompleteModule,
-    CalendarModule,
-    ChipsModule,
     DropdownModule,
-    InputMaskModule,
-    InputNumberModule,
-    CascadeSelectModule,
-    MultiSelectModule,
-    InputTextareaModule,
-    InputTextModule
-],
+    InputTextModule,
+    ButtonModule
+  ],
   templateUrl: './profile.component.html',
-  styleUrl: './profile.component.scss'
+  styleUrls: ['./profile.component.scss']
 })
 export class ProfileComponent {
-  selectedState: any = null;
+  isEditing = false;
+  user = {
+    firstName: 'John',
+    lastName: 'Doe',
+    email: 'john.doe@example.com',
+    city: 'Los Angeles',
+    state: { name: 'California', code: 'CA' },
+    zip: '90001'
+  };
 
-  states: any[] = [
-    {name: 'Arizona', code: 'Arizona'},
-    {name: 'California', value: 'California'},
-    {name: 'Florida', code: 'Florida'},
-    {name: 'Ohio', code: 'Ohio'},
-    {name: 'Washington', code: 'Washington'}
+  states = [
+    { name: 'Arizona', code: 'AZ' },
+    { name: 'California', code: 'CA' },
+    { name: 'Florida', code: 'FL' },
+    { name: 'Ohio', code: 'OH' },
+    { name: 'Washington', code: 'WA' }
   ];
 
-  dropdownItems = [
-    { name: 'Option 1', code: 'Option 1' },
-    { name: 'Option 2', code: 'Option 2' },
-    { name: 'Option 3', code: 'Option 3' }
-  ];
-
-  cities1: any[] = [];
-
-  cities2: any[] = [];
-
-  city1: any = null;
-
-  city2: any = null;
+  toggleEdit() {
+    this.isEditing = !this.isEditing;
+  }
 }

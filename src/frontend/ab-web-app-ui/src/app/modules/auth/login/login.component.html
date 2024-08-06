@@ -1,6 +1,6 @@
 <app-background [dark]="dark"></app-background>
 <div class="px-5 min-h-screen flex justify-content-center align-items-center">
-  <div class="border-1 surface-border surface-card border-round py-7 px-4 md:px-7 z-1">
+  <div class="border-1 surface-border surface-card border-round py-5 px-4 md:px-7 z-1">
     <div class="mb-4">
       <div class="text-900 text-xl font-bold mb-2">Log in</div>
       <span class="text-600 font-medium">Please enter your details</span>
@@ -15,11 +15,7 @@
           <i class="pi pi-lock"></i>
           <input class="w-full md:w-25rem" formControlName="password" id="password" pInputText placeholder="Password" type="password">
         </span>
-        <div class="mb-4 flex flex-wrap gap-3">
-          <div>
-            <p-checkbox id="rememberMe" [binary]="true" formControlName="rememberMe" styleClass="mr-2"></p-checkbox>
-            <label class="text-900 font-medium mr-8" for="rememberMe">Remember Me</label>
-          </div>
+        <div class="mb-4 flex ">
           <a routerLink="/auth/new-password" class="text-600 hover:text-primary cursor-pointer ml-auto transition-colors transition-duration-300">Reset password</a>
         </div>
         <button class="w-full mb-4" label="Log In" pButton pRipple type="submit"></button>

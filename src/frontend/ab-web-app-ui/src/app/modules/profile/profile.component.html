@@ -1,32 +1,32 @@
-
-  <div class="col-12">
-    <div class="card">
-      <h5>Advanced</h5>
-      <div class="p-fluid p-formgrid grid">
-        <div class="field col-12 md:col-6">
-          <label htmlFor="firstname2">Firstname</label>
-          <input pInputText id="firstname2" type="text" />
-        </div>
-        <div class="field col-12 md:col-6">
-          <label htmlFor="lastname2">Lastname</label>
-          <input pInputText id="lastname2" type="text" />
-        </div>
-        <div class="field col-12">
-          <label htmlFor="address">Address</label>
-          <input pInputTextarea id="address" rows="4" />
-        </div>
-        <div class="field col-12 md:col-6">
-          <label htmlFor="city">City</label>
-          <input pInputText id="city" type="text" />
-        </div>
-        <div class="field col-12 md:col-3">
-          <label htmlFor="state">State</label>
-          <p-dropdown [options]="dropdownItems" optionLabel="name" [(ngModel)]="selectedState"></p-dropdown>
-        </div>
-        <div class="field col-12 md:col-3">
-          <label htmlFor="zip">Zip</label>
-          <input pInputText id="zip" type="text" />
-        </div>
+<div class="col-12">
+  <div class="card">
+    <h5>Profile</h5>
+    <div class="p-fluid p-formgrid grid">
+      <div class="field col-12 md:col-6">
+        <label htmlFor="firstname">Firstname</label>
+        <input pInputText id="firstname" type="text" [(ngModel)]="user.firstName" [readonly]="!isEditing" />
+      </div>
+      <div class="field col-12 md:col-6">
+        <label htmlFor="lastname">Lastname</label>
+        <input pInputText id="lastname" type="text" [(ngModel)]="user.lastName" [readonly]="!isEditing" />
+      </div>
+      <div class="field col-12">
+        <label htmlFor="email">Email</label>
+        <input pInputText id="email" type="text" [(ngModel)]="user.email" [readonly]="true" />
+      </div>
+      <div class="field col-12 md:col-6">
+        <label htmlFor="city">City</label>
+        <input pInputText id="city" type="text" [(ngModel)]="user.city" [readonly]="!isEditing" />
+      </div>
+      <div class="field col-12 md:col-3">
+        <label htmlFor="state">State</label>
+        <p-dropdown [options]="states" optionLabel="name" [(ngModel)]="user.state" [disabled]="!isEditing"></p-dropdown>
+      </div>
+      <div class="field col-12 md:col-3">
+        <label htmlFor="zip">Zip</label>
+        <input pInputText id="zip" type="text" [(ngModel)]="user.zip" [readonly]="!isEditing" />
       </div>
     </div>
+    <button pButton type="button" label="Edit" icon="pi pi-pencil" (click)="toggleEdit()"></button>
   </div>
+</div>

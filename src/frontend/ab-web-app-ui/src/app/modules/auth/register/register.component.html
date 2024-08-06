@@ -55,15 +55,34 @@
           <div class="mb-2 ng-invalid p-error">Passwords do not match</div>
         }
       </div>
+
       <div class="flex flex-column mb-4">
-        <p-dropdown formControlName="role"
-                    [options]="role"
-                    placeholder="Select a role"
-                    [showClear]="true"
-                    styleClass="w-full md:w-25rem mb-2">
-        </p-dropdown>
-        @if (fieldHasError('role')) {
-          <div class="mb-2 ng-invalid p-error">{{ getFieldErrorMessage('role') }}</div>
+        <span class="p-input-icon-left w-full mb-2">
+          <i class="pi pi-user"></i>
+          <input formControlName="firstName"
+                 id="firstName"
+                 placeholder="First Name"
+                 type="text"
+                 pInputText
+                 class="w-full md:w-25rem"/>
+          </span>
+        @if (fieldHasError('firstName')) {
+          <div class="mb-2 ng-invalid p-error">{{ getFieldErrorMessage('firstName') }}</div>
+        }
+      </div>
+
+      <div class="flex flex-column mb-4">
+        <span class="p-input-icon-left w-full mb-2">
+          <i class="pi pi-user"></i>
+          <input formControlName="lastName"
+                 id="lastName"
+                 placeholder="Last Name"
+                 type="text"
+                 pInputText
+                 class="w-full md:w-25rem"/>
+          </span>
+        @if (fieldHasError('lastName')) {
+          <div class="mb-2 ng-invalid p-error">{{ getFieldErrorMessage('lastName') }}</div>
         }
       </div>
 

@@ -13,14 +13,9 @@ import {TokenResponse} from "../models/TokenResponse";
 export class AuthService {
 
   private readonly AUTH_URL = `${environment.APPOINTMENT_BOOKING_URL}/auth`;
-  private readonly currentUser: BehaviorSubject<any> = new BehaviorSubject<any>(null);
-  currentUser$ = this.currentUser.asObservable();
   private readonly router = inject(Router);
   private readonly httpClient: HttpClient = inject(HttpClient);
-
-  nextUser(user: any) {
-    this.currentUser.next(user);
-  }
+  private readonly currentUserSubject = new BehaviorSubject<any | null>(null);
 
   socialLogin(user: any): Observable<TokenResponse> {
     return this.httpClient.post<TokenResponse>(`${this.AUTH_URL}/social`, user);
@@ -41,11 +36,25 @@ export class AuthService {
     }
     return false;
   }
+  hasRoles(roles: string[]): boolean {
+    if(roles.length === 0){
+      return true;
+    }
+    if (typeof window !== 'undefined' && window.localStorage) {
+      const userRoles = localStorage.getItem('roles');
+      if (userRoles) {
+        return roles.some(role => userRoles.includes(role));
+      }
+    }
+    return false;
+  }
 
   logout() {
-    localStorage.removeItem('access_token');
-    this.currentUser.next(null);
-    this.router.navigate(['/login']);
+    if (typeof window !== 'undefined' && window.localStorage) {
+      this.router.navigate(['auth/login']);
+      localStorage.clear();
+    }
+
   }
 
   addToken(token: string) {
@@ -59,5 +68,10 @@ export class AuthService {
       return localStorage.getItem('access_token');
     }
     return null;
+  }
+  addRoles(roles: string[]) {
+    if (typeof window !== 'undefined' && window.localStorage) {
+      localStorage.setItem('roles', JSON.stringify(roles));
+    }
   }
 }

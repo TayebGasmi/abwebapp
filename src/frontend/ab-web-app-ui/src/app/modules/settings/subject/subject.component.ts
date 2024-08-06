@@ -7,14 +7,21 @@ import {FormSideBarComponent} from "../../../shared/components/form-side-bar/for
 import {FormComponent} from "../../../shared/components/form/form.component";
 import {ButtonDirective} from "primeng/button";
 import {SortOrder} from "../../../core/enum/sort-order.enum";
-import {subjectForm} from "../../../core/forms/subject.form";
 import {Ripple} from "primeng/ripple";
 import {TableComponent} from "../../../shared/components/table/table.component";
 import {TableColumn} from "../../../core/models/table-cloumn";
 import {ColumnDefDirective} from "../../../shared/directives/column-def.directive";
-import {FormGroup} from "@angular/forms";
+import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {NotificationService} from "../../../core/service/notification.service";
 import {DeleteConfirmationComponent} from "../../../shared/components/delete-confirmation/delete-confirmation.component";
+import {InputTextModule} from "primeng/inputtext";
+import {DropdownModule} from "primeng/dropdown";
+import {SchoolType} from "../../../core/models/SchoolType";
+import {SchoolService} from "../../../core/service/school.service";
+import {SchoolYearService} from "../../../core/service/school-year.service";
+import {MultiSelectModule} from "primeng/multiselect";
+import {SchoolYear} from "../../../core/models/SchoolYear";
+import {NgClass} from "@angular/common";
 
 @Component({
   selector: 'app-subject',
@@ -28,11 +35,17 @@ import {DeleteConfirmationComponent} from "../../../shared/components/delete-con
     Ripple,
     TableComponent,
     ColumnDefDirective,
-    DeleteConfirmationComponent
+    DeleteConfirmationComponent,
+    FormsModule,
+    InputTextModule,
+    ReactiveFormsModule,
+    DropdownModule,
+    MultiSelectModule,
+    NgClass
   ],
   standalone: true
 })
-export class SubjectComponent  {
+export class SubjectComponent implements OnInit {
   sidebarVisible = false;
   formTitle = 'Add new Subject';
   data: Subject[] = [];
@@ -40,19 +53,34 @@ export class SubjectComponent  {
   pageSize = 10;
   pageLink: PageLink = {page: 0, pageSize: this.pageSize};
   selectedSubject: Subject | null = null;
-  protected readonly formFields = subjectForm;
   subjectToDelete: Subject | null = null;
-
   columns: TableColumn[] = [
     {field: 'name', header: 'Name', type: 'text', sortable: true, filterable: true},
     {field: 'description', header: 'Description', type: 'text', sortable: true, filterable: true},
   ];
-
   currentPageReportTemplate = "Showing {first} to {last} of {totalRecords} entries";
   rowsPerPageOptions = [10, 25, 50];
-  showDeleteConfirmation=false;
+  showDeleteConfirmation = false;
+  form!: FormGroup;
+  schoolTypes!: { label: string, value: SchoolType }[];
+  schoolYears!: { label: string, value: SchoolYear }[]
 
-  constructor(private subjectService: SubjectService, private notificationService: NotificationService) {
+  constructor(private subjectService: SubjectService, private notificationService: NotificationService, private fb: FormBuilder, private schoolTypeService: SchoolService, private SchoolYearService: SchoolYearService) {
+    this.initForm();
+    this.schoolTypeService.getALL().subscribe(schoolTypes => {
+        this.schoolTypes = schoolTypes.map(schoolType => ({label: schoolType.name, value: schoolType}));
+      }
+    );
+    this.SchoolYearService.getALL().subscribe(schoolYears => {
+        this.schoolYears = schoolYears.map(schoolYear => ({label: schoolYear.name, value: schoolYear}));
+      }
+    );
+
+
+  }
+
+  ngOnInit(): void {
+    this.initForm();
   }
 
   loadSubjects(): void {
@@ -83,6 +111,7 @@ export class SubjectComponent  {
     this.selectedSubject = subject;
     this.sidebarVisible = true;
     this.formTitle = 'Edit Subject';
+    this.form.patchValue(subject);
   }
 
   delete(): void {
@@ -98,7 +127,7 @@ export class SubjectComponent  {
       return;
     }
     if (this.selectedSubject) {
-      this.subjectService.updateById({id: 0, ...form.value}, this.selectedSubject.id).subscribe(() => {
+      this.subjectService.updateById({id: this.selectedSubject.id, ...form.value}, this.selectedSubject.id).subscribe(() => {
         this.loadSubjects();
         this.sidebarVisible = false;
         form.reset();
@@ -138,5 +167,19 @@ export class SubjectComponent  {
   confirmDelete(item: any) {
     this.showDeleteConfirmation = true;
     this.subjectToDelete = item;
+  }
+
+  fieldHasError(fieldName: string): boolean {
+    const control = this.form.get(fieldName);
+    return !!(control?.invalid && (control?.dirty || control?.touched));
+  }
+
+  private initForm() {
+    this.form = this.fb.group({
+      name: ['', [Validators.required]],
+      description: ['', [Validators.required]],
+      schoolTypes: [null, [Validators.required]],
+      schoolYears: [null, [Validators.required]]
+    });
   }
 }

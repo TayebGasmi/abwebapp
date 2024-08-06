@@ -3,7 +3,7 @@ package com.appointment.booking.controller;
 import com.appointment.booking.dto.LoginDTO;
 import com.appointment.booking.dto.Oauth2Dto;
 import com.appointment.booking.dto.RegisterDTO;
-import com.appointment.booking.dto.TokenDtoResponse;
+import com.appointment.booking.dto.LoginDtoResponse;
 import com.appointment.booking.exceptions.ExistException;
 import com.appointment.booking.service.AuthService;
 import com.nimbusds.jose.JOSEException;
@@ -36,13 +36,12 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<TokenDtoResponse> login(@RequestBody @Valid LoginDTO loginDTO) {
+    public ResponseEntity<LoginDtoResponse> login(@RequestBody @Valid LoginDTO loginDTO) {
         return ResponseEntity.ok(authService.login(loginDTO));
     }
 
-    //todo: add google login
-    @PostMapping("/googlelogin")
-    public ResponseEntity<TokenDtoResponse> loginGoogle(@RequestBody @Valid Oauth2Dto oauth2Dto) throws ParseException, JOSEException {
-        return ResponseEntity.ok(authService.sigInWithGoogle(oauth2Dto));
+    @PostMapping("/social")
+    public ResponseEntity<LoginDtoResponse> loginGoogle(@RequestBody @Valid Oauth2Dto oauth2Dto) throws ParseException, JOSEException {
+        return ResponseEntity.ok(authService.socialLogin(oauth2Dto));
     }
 }

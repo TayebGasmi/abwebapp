@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.converter.HttpMessageNotWritableException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
@@ -122,6 +123,10 @@ public class ControllerAdvice {
     @ExceptionHandler(UserAlreadyVerifiedException.class)
     public ResponseEntity<ErrorResponse> handleUserAlreadyVerifiedException(UserAlreadyVerifiedException ex) {
         return createErrorResponse(HttpStatus.BAD_REQUEST, ex, KeyExceptionMessageConstants.USER_ALREADY_VERIFIED);
+    }
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<ErrorResponse> handleBadCredentialsException(BadCredentialsException ex) {
+        return createErrorResponse(HttpStatus.BAD_REQUEST, ex, KeyExceptionMessageConstants.BAD_CREDENTIALS);
     }
 
     @ExceptionHandler(Exception.class)

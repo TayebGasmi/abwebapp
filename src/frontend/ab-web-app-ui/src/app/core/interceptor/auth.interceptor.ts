@@ -18,8 +18,8 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   return next(req).pipe(
     catchError((error) => {
       if (error.status === 403) {
-        router.navigate(['auth/login']);
-        localStorage.clear()// Redirect to home page
+        router.navigate(['/auth/login']);
+        localStorage.clear()
       }
       return throwError(error);
     })
