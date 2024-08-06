@@ -36,10 +36,25 @@ export class AuthService {
     }
     return false;
   }
+  hasRoles(roles: string[]): boolean {
+    if(roles.length === 0){
+      return true;
+    }
+    if (typeof window !== 'undefined' && window.localStorage) {
+      const userRoles = localStorage.getItem('roles');
+      if (userRoles) {
+        return roles.some(role => userRoles.includes(role));
+      }
+    }
+    return false;
+  }
 
   logout() {
-    localStorage.removeItem('access_token');
-    this.router.navigate(['/auth/login']);
+    if (typeof window !== 'undefined' && window.localStorage) {
+      this.router.navigate(['auth/login']);
+      localStorage.clear();
+    }
+
   }
 
   addToken(token: string) {
@@ -53,5 +68,10 @@ export class AuthService {
       return localStorage.getItem('access_token');
     }
     return null;
+  }
+  addRoles(roles: string[]) {
+    if (typeof window !== 'undefined' && window.localStorage) {
+      localStorage.setItem('roles', JSON.stringify(roles));
+    }
   }
 }

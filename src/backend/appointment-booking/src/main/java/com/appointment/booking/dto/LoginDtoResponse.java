@@ -1,7 +1,9 @@
 package com.appointment.booking.dto;
 
+import com.appointment.booking.enums.RoleType;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,6 +21,5 @@ public class LoginDtoResponse {
     @NotBlank
     private String accessToken;
     private String refreshToken;
-    UserDto user;
-
+    private Set<RoleType> roles;
 }

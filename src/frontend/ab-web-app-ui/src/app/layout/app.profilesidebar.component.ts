@@ -1,10 +1,11 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, inject, OnInit} from '@angular/core';
 import {LayoutService} from './service/app.layout.service';
 import {BadgeModule} from 'primeng/badge';
 import {SidebarModule} from 'primeng/sidebar';
 import {AuthService} from '../core/service/auth.service';
 import {UserService} from '../core/service/user.service';
 import {User} from "../core/models/User";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-profilemenu',
@@ -18,7 +19,7 @@ export class AppProfileSidebarComponent implements OnInit {
       this.currentUser = user;
     });
   }
-
+  router =inject(Router)
 
   constructor(public layoutService: LayoutService, private authService: AuthService, private userService: UserService) {
 
@@ -36,5 +37,9 @@ export class AppProfileSidebarComponent implements OnInit {
 
   signOut() {
     this.authService.logout();
+  }
+
+  goToProfile() {
+    this.router.navigate(['/profile']);
   }
 }

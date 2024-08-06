@@ -111,6 +111,7 @@ export class SubjectComponent implements OnInit {
     this.selectedSubject = subject;
     this.sidebarVisible = true;
     this.formTitle = 'Edit Subject';
+    this.form.patchValue(subject);
   }
 
   delete(): void {
@@ -126,7 +127,7 @@ export class SubjectComponent implements OnInit {
       return;
     }
     if (this.selectedSubject) {
-      this.subjectService.updateById({id: 0, ...form.value}, this.selectedSubject.id).subscribe(() => {
+      this.subjectService.updateById({id: this.selectedSubject.id, ...form.value}, this.selectedSubject.id).subscribe(() => {
         this.loadSubjects();
         this.sidebarVisible = false;
         form.reset();
