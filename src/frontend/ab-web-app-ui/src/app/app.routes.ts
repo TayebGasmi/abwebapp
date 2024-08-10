@@ -32,7 +32,13 @@ export const routes: Routes = [
         canActivate: [authGuard],
         data: { roles: ['ADMIN'] }
       }
+
     ],
+  },
+  {
+    path: 'completeprofile',
+    loadChildren: () => import('./modules/complete-profile/complete.routes').then(m => m.routes),
+    canActivate: [authGuard],
   },
   {
     path: 'auth',

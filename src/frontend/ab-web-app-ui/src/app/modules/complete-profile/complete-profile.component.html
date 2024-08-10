@@ -1,0 +1,91 @@
+<form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+  <div class="col-12">
+    <div class="card">
+      <h5>Complete profile</h5>
+
+      <div class="border-1 surface-border flex justify-content-between align-items-center py-2 px-3 border-round">
+        <span class="text-900 font-bold p-3">Become a teacher</span>
+        <p-inputSwitch
+          id="teat"
+          formControlName="teat"
+          (onChange)="handleChange($event)"
+        ></p-inputSwitch>
+      </div>
+      <div class="p-fluid p-formgrid grid">
+        <div class="field col-12 md:col-6">
+          <label htmlFor="firstname">Firstname</label>
+          <input
+            pInputText
+            id="firstname"
+            type="text"
+            formControlName="firstName"
+            [ngClass]="{'ng-dirty ng-invalid': isFieldInvalid('firstName')}"
+          />
+          <div *ngIf="isFieldInvalid('firstName')" class="error-message">
+            <div *ngIf="profileForm.get('firstName')?.hasError('required')">
+              Firstname is required.
+            </div>
+          </div>
+        </div>
+        <div class="field col-12 md:col-6">
+          <label htmlFor="lastname">Lastname</label>
+          <input
+            pInputText
+            id="lastname"
+            type="text"
+            formControlName="lastName"
+            [ngClass]="{'ng-dirty ng-invalid': isFieldInvalid('lastName')}"
+          />
+          <div *ngIf="isFieldInvalid('lastName')" class="error-message">
+            <div *ngIf="profileForm.get('lastName')?.hasError('required')">
+              Lastname is required.
+            </div>
+          </div>
+        </div>
+        <div class="field col-12">
+          <label htmlFor="email">Email</label>
+          <input
+            pInputText
+            id="email"
+            type="text"
+            formControlName="email"
+            [disabled]="true"
+            readonly
+          />
+        </div>
+        <div class="field col-12 md:col-6">
+          <label htmlFor="schoolYear">School Year</label>
+          <p-dropdown
+            formControlName="schoolYear"
+            [options]="schoolYears"
+            optionLabel="name"
+          ></p-dropdown>
+          <div *ngIf="isFieldInvalid('schoolYear')" class="error-message">
+            <div *ngIf="profileForm.get('schoolYear')?.hasError('required')">
+              School Year is required.
+            </div>
+          </div>
+        </div>
+        <div class="field col-12 md:col-6">
+          <label htmlFor="schoolType">School Type</label>
+          <p-dropdown
+            formControlName="schoolType"
+            [options]="schoolTypes"
+            optionLabel="name"
+          ></p-dropdown>
+          <div *ngIf="isFieldInvalid('schoolType')" class="error-message">
+            <div *ngIf="profileForm.get('schoolType')?.hasError('required')">
+              School Type is required.
+            </div>
+          </div>
+        </div>
+      </div>
+      <button
+        pButton
+        type="submit"
+        label="Submit"
+        icon="pi pi-check"
+      ></button>
+    </div>
+  </div>
+</form>

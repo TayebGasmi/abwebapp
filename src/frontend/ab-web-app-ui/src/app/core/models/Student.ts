@@ -3,7 +3,8 @@ import {SchoolType} from "./SchoolType";
 import {SchoolYear} from "./SchoolYear";
 import {SessionDto} from "./session";
 
-export interface Student extends User{
+export interface Student{
+  user:User,
   schoolType:SchoolType,
   schoolYear:SchoolYear,
   sessions:SessionDto[]
