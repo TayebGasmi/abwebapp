@@ -25,8 +25,7 @@ export class AppProfileSidebarComponent implements OnInit {
 
   }
 
-  currentUser!: User
-
+  currentUser: User|null = null;
   get visible(): boolean {
     return this.layoutService.state.profileSidebarVisible;
   }
