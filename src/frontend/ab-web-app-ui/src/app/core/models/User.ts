@@ -6,4 +6,5 @@ export interface User{
   email:string;
   profilePicture:string;
   roles:Role[];
+  isCompleted:boolean;
 }

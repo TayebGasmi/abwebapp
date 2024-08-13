@@ -31,5 +31,7 @@ public class UserDto extends BaseDto<Long> {
     private String profilePicture;
     @NotNull
     private Set<RoleDTO> roles;
+    private Boolean isCompleted ;
+
 
 }

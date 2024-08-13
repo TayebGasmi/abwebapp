@@ -6,6 +6,8 @@ import {Login} from '../models/login';
 import {HttpClient} from '@angular/common/http';
 import {Register} from '../models/register';
 import {TokenResponse} from "../models/TokenResponse";
+import {BrowserStorageService} from "./browser-storage.service";
+import {User} from "../models/User";
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +18,7 @@ export class AuthService {
   private readonly router = inject(Router);
   private readonly httpClient: HttpClient = inject(HttpClient);
   private readonly currentUserSubject = new BehaviorSubject<any | null>(null);
-
+  private browserStorage : BrowserStorageService = inject(BrowserStorageService);
   socialLogin(user: any): Observable<TokenResponse> {
     return this.httpClient.post<TokenResponse>(`${this.AUTH_URL}/social`, user);
   }
@@ -31,7 +33,7 @@ export class AuthService {
 
   isAuthenticated(): boolean {
     if (typeof window !== 'undefined' && window.localStorage) {
-      const token = localStorage.getItem('access_token');
+      const token = this.browserStorage.getItem('access_token');
       return !!token;
     }
     return false;
@@ -41,7 +43,7 @@ export class AuthService {
       return true;
     }
     if (typeof window !== 'undefined' && window.localStorage) {
-      const userRoles = localStorage.getItem('roles');
+      const userRoles = this.browserStorage.getItem('roles');
       if (userRoles) {
         return roles.some(role => userRoles.includes(role));
       }
@@ -51,27 +53,45 @@ export class AuthService {
 
   logout() {
     if (typeof window !== 'undefined' && window.localStorage) {
-      this.router.navigate(['/auth/login']);
-      localStorage.clear();
+      this.router.navigate(['auth/login']);
+      this.browserStorage.clear();
     }
 
   }
 
   addToken(token: string) {
     if (typeof window !== 'undefined' && window.localStorage) {
-      localStorage.setItem('access_token', token);
+      this.browserStorage.setItem('access_token', token);
+    }
+  }
+  addUser(user: User) {
+    if (typeof window !== 'undefined' && window.localStorage) {
+      this.browserStorage.setItem('user', JSON.stringify(user));
     }
   }
 
   getAccessToken(): string | null {
     if (typeof window !== 'undefined' && window.localStorage) {
-      return localStorage.getItem('access_token');
+      return this.browserStorage.getItem('access_token');
     }
     return null;
   }
+  getUser(): User | null {
+    if (typeof window !== 'undefined' && window.localStorage) {
+      const userJson = this.browserStorage.getItem('user')
+      if (userJson) {
+        return JSON.parse(userJson) as User;
+      } else {
+        // Handle the case where the user is not found (e.g., return a default value or throw an error)
+        return null;
+    }
+  }else{
+      return null;}
+  }
+
   addRoles(roles: string[]) {
     if (typeof window !== 'undefined' && window.localStorage) {
-      localStorage.setItem('roles', JSON.stringify(roles));
+      this.browserStorage.setItem('roles', JSON.stringify(roles));
     }
   }
 }

@@ -31,11 +31,20 @@ export const routes: Routes = [
         loadChildren: () => import('./modules/settings/settings.routes').then(m => m.routes),
         canActivate: [authGuard],
         data: { roles: ['ADMIN'] }
-      },
+      }
+
     ],
+  },
+  {
+    path: 'completeprofile',
+    loadChildren: () => import('./modules/complete-profile/complete.routes').then(m => m.routes),
+    canActivate: [authGuard],
   },
   {
     path: 'auth',
     loadChildren: () => import('./modules/auth/auth.routes').then(m => m.routes)
   },
+  {
+    path: '**', redirectTo: '/notfound'
+  }
 ];

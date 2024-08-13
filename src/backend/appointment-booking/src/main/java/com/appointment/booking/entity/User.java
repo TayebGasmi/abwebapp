@@ -41,7 +41,7 @@ public class User extends BaseEntity<Long> implements UserDetails {
     @Column(unique = true, nullable = false)
     private String email;
     private Boolean isVerified = false;
-
+    private Boolean isCompleted = false;
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
         name = "user_role",
@@ -84,4 +84,5 @@ public class User extends BaseEntity<Long> implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
 }
