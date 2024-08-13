@@ -20,10 +20,8 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @Setter
 @EqualsAndHashCode(callSuper = true)
-public class TeacherDto extends BaseDto<Long> {
+public class TeacherDto extends UserDto {
 
-    @NotNull
-    private UserDto user;
     @NotNull
     private BigDecimal payRate;
     @NotNull

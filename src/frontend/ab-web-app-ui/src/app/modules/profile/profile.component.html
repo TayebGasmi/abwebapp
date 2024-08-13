@@ -1,32 +1,84 @@
 <div class="col-12">
   <div class="card">
-    <h5>Profile</h5>
-    <div class="p-fluid p-formgrid grid">
-      <div class="field col-12 md:col-6">
-        <label htmlFor="firstname">Firstname</label>
-        <input pInputText id="firstname" type="text" [(ngModel)]="user.firstName" [readonly]="!isEditing" />
-      </div>
-      <div class="field col-12 md:col-6">
-        <label htmlFor="lastname">Lastname</label>
-        <input pInputText id="lastname" type="text" [(ngModel)]="user.lastName" [readonly]="!isEditing" />
-      </div>
-      <div class="field col-12">
-        <label htmlFor="email">Email</label>
-        <input pInputText id="email" type="text" [(ngModel)]="user.email" [readonly]="true" />
-      </div>
-      <div class="field col-12 md:col-6">
-        <label htmlFor="city">City</label>
-        <input pInputText id="city" type="text" [(ngModel)]="user.city" [readonly]="!isEditing" />
-      </div>
-      <div class="field col-12 md:col-3">
-        <label htmlFor="state">State</label>
-        <p-dropdown [options]="states" optionLabel="name" [(ngModel)]="user.state" [disabled]="!isEditing"></p-dropdown>
-      </div>
-      <div class="field col-12 md:col-3">
-        <label htmlFor="zip">Zip</label>
-        <input pInputText id="zip" type="text" [(ngModel)]="user.zip" [readonly]="!isEditing" />
-      </div>
+    <h5>Complete profile</h5>
+
+    <div class="border-1 surface-border flex justify-content-between align-items-center py-2 px-3 border-round">
+      <span class="text-900 font-bold p-3">Become a teacher</span>
+      <p-inputSwitch
+        id="teat"
+        [(ngModel)]="checked"
+        [disabled]="switch"
+        (onChange)="handleChange($event)"
+      ></p-inputSwitch>
     </div>
-    <button pButton type="button" label="Edit" icon="pi pi-pencil" (click)="toggleEdit()"></button>
+    <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+      <div class="p-fluid p-formgrid grid">
+        <div class="field col-12 md:col-6">
+          <label htmlFor="firstname">Firstname</label>
+          <input
+            pInputText
+            id="firstname"
+            type="text"
+            formControlName="firstName"
+            [ngClass]="{'ng-dirty ng-invalid': isFieldInvalid('firstName')}"
+          />
+          @if (isFieldInvalid("firstName")) {
+            <div class="mb-2 ng-invalid p-error">first name is required</div>
+          }
+        </div>
+        <div class="field col-12 md:col-6">
+          <label htmlFor="lastname">Lastname</label>
+          <input
+            pInputText
+            id="lastname"
+            type="text"
+            formControlName="lastName"
+            [ngClass]="{'ng-dirty ng-invalid': isFieldInvalid('lastName')}"
+          />
+          @if (isFieldInvalid("firstName")) {
+            <div class="mb-2 ng-invalid p-error">Last name is required</div>
+          }
+        </div>
+        <div class="field col-12">
+          <label htmlFor="email">Email</label>
+          <input
+            pInputText
+            id="email"
+            type="text"
+            formControlName="email"
+            [disabled]="true"
+            readonly
+          />
+        </div>
+        <div class="field col-12 md:col-6">
+          <label htmlFor="schoolYear">School Year</label>
+          <p-dropdown
+            formControlName="schoolYear"
+            [options]="schoolYears"
+            optionLabel="name"
+          ></p-dropdown>
+          @if (isFieldInvalid("schoolYear")) {
+            <div class="mb-2 ng-invalid p-error">School Year is required</div>
+          }
+        </div>
+        <div class="field col-12 md:col-6">
+          <label htmlFor="schoolType">School Type</label>
+          <p-dropdown
+            formControlName="schoolType"
+            [options]="schoolTypes"
+            optionLabel="name"
+          ></p-dropdown>
+          @if (isFieldInvalid("schoolType")) {
+            <div class="mb-2 ng-invalid p-error">School Type is required</div>
+          }
+        </div>
+      </div>
+      <button
+        pButton
+        type="submit"
+        label="Submit"
+        icon="pi pi-check"
+      ></button>
+    </form>
   </div>
 </div>

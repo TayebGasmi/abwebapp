@@ -2,14 +2,24 @@ package com.appointment.booking.service;
 
 
 import com.appointment.booking.base.BaseServiceImpl;
+import com.appointment.booking.dto.StudentDto;
+import com.appointment.booking.dto.TeacherDto;
 import com.appointment.booking.dto.UserDto;
+import com.appointment.booking.entity.Student;
+import com.appointment.booking.entity.Teacher;
 import com.appointment.booking.entity.User;
 import com.appointment.booking.exceptions.NotFoundException;
 import com.appointment.booking.exceptions.UserAlreadyVerifiedException;
+import com.appointment.booking.mapper.StudentMapper;
+import com.appointment.booking.mapper.TeacherMapper;
 import com.appointment.booking.mapper.UserMapper;
+import com.appointment.booking.repository.StudentRepository;
+import com.appointment.booking.repository.TeacherRepository;
 import com.appointment.booking.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.security.Principal;
+import java.util.Optional;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,10 +30,13 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Slf4j
 public class UserService extends BaseServiceImpl<User, Long, UserDto> implements UserDetailsService {
-
+    private final StudentRepository studentRepository;
+    private final TeacherRepository teacherRepository;
     private final UserRepository userRepository;
     private final CodeVerificationService codeVerificationService;
     private final UserMapper userMapper;
+    private final StudentMapper studentMapper;
+    private final TeacherMapper teacherMapper;
     public void verifyEmail(String email, String code) {
         User user = userRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("User not found"));
         if (Boolean.TRUE.equals(user.getIsVerified())) {
@@ -42,6 +55,24 @@ public class UserService extends BaseServiceImpl<User, Long, UserDto> implements
             .orElseThrow(() -> new NotFoundException("User not found"));
     }
 
+    @Override
+    public UserDto updateById(Long id, UserDto dto) {
+        Optional<Student> student = studentRepository.findById(id);
+        Optional<Teacher> teacher = teacherRepository.findById(id);
+        if(student.isPresent()) {
+            Student stud = student.get();
+            User user = userMapper.convertDtoToEntity(dto);
+            stud.setParentProperties(user);
+            return userMapper.convertEntityToDto(userRepository.save(stud));
+        }
+        if (teacher.isPresent()) {
+            Teacher teacher1 = (Teacher) userMapper.convertDtoToEntity(dto);
+            User user = userMapper.convertDtoToEntity(dto);
+            teacher1.setParentProperties(user);
+            return userMapper.convertEntityToDto(userRepository.save(teacher1));
+        }
+        return super.updateById(id, dto);
+    }
 
     public UserDto getUserDetails(User user) {
         return userMapper.convertEntityToDto(user);

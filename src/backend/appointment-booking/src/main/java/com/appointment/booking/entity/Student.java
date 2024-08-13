@@ -11,6 +11,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
+import org.springframework.beans.BeanUtils;
 
 @Getter
 @Setter
@@ -20,15 +21,18 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 public class Student extends User {
 
+    public void setParentProperties(User user) {
+        BeanUtils.copyProperties(user, this);
+    }
     @ManyToOne
     @JoinColumn(name = "school_type_id")
     private SchoolType schoolType;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "school_year_id", nullable = false)
+    @ManyToOne()
+    @JoinColumn(name = "school_year_id")
     private SchoolYear schoolYear;
 
-    @OneToMany(mappedBy = "student", orphanRemoval = true)
+    @OneToMany(mappedBy = "student")
     private Set<Session> sessions = new LinkedHashSet<>();
 
 }

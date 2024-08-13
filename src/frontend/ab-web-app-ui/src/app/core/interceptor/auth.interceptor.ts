@@ -19,6 +19,8 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   }
   if(!user?.isCompleted){
     router.navigate(['/completeprofile/profilecomplete'])
+  }else{
+    router.navigate(['/'])
   }
   return next(req).pipe(
     catchError((error) => {

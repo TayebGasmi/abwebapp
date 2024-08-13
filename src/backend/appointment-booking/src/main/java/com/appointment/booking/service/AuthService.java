@@ -2,11 +2,13 @@ package com.appointment.booking.service;
 
 import com.appointment.booking.dto.*;
 import com.appointment.booking.entity.Role;
+import com.appointment.booking.entity.Student;
 import com.appointment.booking.entity.User;
 import com.appointment.booking.enums.RoleType;
 import com.appointment.booking.exceptions.ExistException;
 import com.appointment.booking.exceptions.NotFoundException;
 import com.appointment.booking.mapper.UserMapper;
+import com.appointment.booking.repository.StudentRepository;
 import com.appointment.booking.repository.UserRepository;
 import com.appointment.booking.utils.GoogleTokenVerifier;
 import com.appointment.booking.utils.JwtUTil;
@@ -38,7 +40,7 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final GoogleTokenVerifier googleTokenVerifier;
     private final JwtUTil jwtUtil;
-
+private final StudentRepository studentRepository;
     public void register(RegisterDTO registerDTO) throws ExistException, MessagingException {
         checkIfEmailExists(registerDTO.getEmail());
         Role role = roleService.findByName(RoleType.STUDENT)
@@ -75,7 +77,7 @@ public class AuthService {
         String profilePicture = claims.getStringClaim("picture");
         User user = userRepository.findByEmail(email)
             .orElseGet(() -> {
-                User newUser = buildNewSocialUser(email, firstName, lastName, profilePicture);
+                Student newUser = buildNewSocialUser(email, firstName, lastName, profilePicture);
                 userRepository.save(newUser);
                 return newUser;
             });
@@ -115,11 +117,11 @@ public class AuthService {
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 
-    private User buildNewSocialUser(String email, String firstName, String lastName, String profilePicture) {
+    private Student buildNewSocialUser(String email, String firstName, String lastName, String profilePicture) {
         Role studentRole = roleService.findByName(RoleType.STUDENT)
             .orElseThrow(() -> new NotFoundException("Role not found"));
 
-        return User.builder()
+        return Student.builder()
             .email(email)
             .firstName(firstName)
             .lastName(lastName)

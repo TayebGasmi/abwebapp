@@ -12,6 +12,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
+import org.springframework.beans.BeanUtils;
 
 @Getter
 @Setter
@@ -20,7 +21,9 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @SuperBuilder
 public class Teacher extends User {
-
+    public void setParentProperties(User user) {
+        BeanUtils.copyProperties(user, this);
+    }
     @Column(name = "pay_rate", nullable = false, precision = 19, scale = 2)
     private BigDecimal payRate;
 
