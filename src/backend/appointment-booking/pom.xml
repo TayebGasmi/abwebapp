@@ -21,6 +21,9 @@
     <mapstruct.version>1.5.5.Final</mapstruct.version>
     <projectlombok.version>1.18.30</projectlombok.version>
     <nimbus-jose-jwt.version>9.22</nimbus-jose-jwt.version>
+    <google-api-client.version>2.6.0</google-api-client.version>
+    <google-api-services-calendar.version>v3-rev20240705-2.0.0</google-api-services-calendar.version>
+    <google-http-client-jackson2.version>1.42.3</google-http-client-jackson2.version>
   </properties>
   <dependencies>
     <dependency>
@@ -111,6 +114,22 @@
       <groupId>org.liquibase</groupId>
       <artifactId>liquibase-core</artifactId>
     </dependency>
+    <dependency>
+      <groupId>com.google.api-client</groupId>
+      <artifactId>google-api-client</artifactId>
+      <version>${google-api-client.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.google.apis</groupId>
+      <artifactId>google-api-services-calendar</artifactId>
+      <version>${google-api-services-calendar.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.google.http-client</groupId>
+      <artifactId>google-http-client-jackson2</artifactId>
+      <version>${google-http-client-jackson2.version}</version>
+    </dependency>
+
   </dependencies>
 
   <build>

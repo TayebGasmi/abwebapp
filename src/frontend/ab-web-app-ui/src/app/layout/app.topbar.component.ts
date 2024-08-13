@@ -25,7 +25,7 @@ export class AppTopbarComponent implements OnInit {
 
   constructor(public layoutService: LayoutService,private userServices:UserService) {
   }
-  currentUser!:User
+  currentUser:User|null=null;
   onMenuButtonClick() {
     this.layoutService.onMenuToggle();
   }
@@ -34,8 +34,6 @@ export class AppTopbarComponent implements OnInit {
     this.layoutService.showProfileSidebar();
   }
 
-  onConfigButtonClick() {
-    this.layoutService.showConfigSidebar();
-  }
+
 
 }
