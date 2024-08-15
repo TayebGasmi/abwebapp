@@ -14,24 +14,25 @@ import {Router} from "@angular/router";
   imports: [SidebarModule, BadgeModule]
 })
 export class AppProfileSidebarComponent implements OnInit {
-  ngOnInit(): void {
-    this.userService.getUserDetails().subscribe(user => {
-      this.currentUser = user;
-    });
-  }
-  router =inject(Router)
+  router = inject(Router)
+  currentUser: User | null = null;
 
   constructor(public layoutService: LayoutService, private authService: AuthService, private userService: UserService) {
 
   }
 
-  currentUser: User|null = null;
   get visible(): boolean {
     return this.layoutService.state.profileSidebarVisible;
   }
 
   set visible(_val: boolean) {
     this.layoutService.state.profileSidebarVisible = _val;
+  }
+
+  ngOnInit(): void {
+    this.userService.getUserDetails().subscribe(user => {
+      this.currentUser = user;
+    });
   }
 
   signOut() {

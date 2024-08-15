@@ -36,25 +36,6 @@ export class RegisterComponent {
     this.initForm();
   }
 
-  private initForm() {
-    this.form = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(8)]],
-      confirmPassword: ['', Validators.required],
-      firstName: ['', Validators.required],
-      lastName: ['', Validators.required],
-      terms: [false, Validators.requiredTrue]
-    }, {
-      validators: this.passwordMatchValidator,
-      updateOn: 'blur'
-    });
-  }
-
-  private passwordMatchValidator(form: FormGroup) {
-    return form.get('password')?.value === form.get('confirmPassword')?.value
-      ? null : {'mismatch': true};
-  }
-
   signupUser(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
@@ -111,5 +92,24 @@ export class RegisterComponent {
       }
     }
     return '';
+  }
+
+  private initForm() {
+    this.form = this.fb.group({
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(8)]],
+      confirmPassword: ['', Validators.required],
+      firstName: ['', Validators.required],
+      lastName: ['', Validators.required],
+      terms: [false, Validators.requiredTrue]
+    }, {
+      validators: this.passwordMatchValidator,
+      updateOn: 'blur'
+    });
+  }
+
+  private passwordMatchValidator(form: FormGroup) {
+    return form.get('password')?.value === form.get('confirmPassword')?.value
+      ? null : {'mismatch': true};
   }
 }

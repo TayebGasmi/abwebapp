@@ -10,8 +10,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
-import java.util.Set;
-
 /**
  * DTO for {@link com.appointment.booking.entity.SchoolType}
  */

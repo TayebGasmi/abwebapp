@@ -16,7 +16,8 @@
           <input class="w-full md:w-25rem" formControlName="password" id="password" pInputText placeholder="Password" type="password">
         </span>
         <div class="mb-4 flex ">
-          <a routerLink="/auth/new-password" class="text-600 hover:text-primary cursor-pointer ml-auto transition-colors transition-duration-300">Reset password</a>
+          <a class="text-600 hover:text-primary cursor-pointer ml-auto transition-colors transition-duration-300" routerLink="/auth/new-password">Reset
+            password</a>
         </div>
         <button class="w-full mb-4" label="Log In" pButton pRipple type="submit"></button>
         <p-divider align="center" layout="horizontal" type="solid">Other log in options</p-divider>
@@ -25,7 +26,7 @@
         </div>
         <div class="text-center mt-4">
           <span class="text-600">Don't have an account?</span>
-          <a routerLink="/auth/register" class="text-primary cursor-pointer ml-2">Sign up</a>
+          <a class="text-primary cursor-pointer ml-2" routerLink="/auth/register">Sign up</a>
         </div>
       </div>
     </form>

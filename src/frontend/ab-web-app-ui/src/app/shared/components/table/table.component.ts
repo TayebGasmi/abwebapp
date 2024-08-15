@@ -48,8 +48,8 @@ export class TableComponent {
   @ContentChild('caption')
   captionTemplate: TemplateRef<any> | null = null;
   globalFilter = new FormControl();
-  private debounceTimeMs: number = 300
   selectedItems: any[] = [];
+  private debounceTimeMs: number = 300
 
   constructor() {
     this.globalFilter.valueChanges.pipe(filter((val) => val != null), distinctUntilChanged(), debounceTime(this.debounceTimeMs)).subscribe(value => {

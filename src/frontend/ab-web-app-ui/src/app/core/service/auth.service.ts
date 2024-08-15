@@ -1,11 +1,11 @@
 import {inject, Injectable} from '@angular/core';
-import {BehaviorSubject, Observable} from 'rxjs';
+import {Observable} from 'rxjs';
 import {Router} from '@angular/router';
 import {environment} from '../../../environments/environment';
 import {Login} from '../models/login';
 import {HttpClient} from '@angular/common/http';
 import {Register} from '../models/register';
-import {TokenResponse} from "../models/TokenResponse";
+import {TokenResponse} from "../models/token-response";
 import {BrowserStorageService} from "./browser-storage.service";
 import {User} from "../models/User";
 
@@ -17,8 +17,8 @@ export class AuthService {
   private readonly AUTH_URL = `${environment.APPOINTMENT_BOOKING_URL}/auth`;
   private readonly router = inject(Router);
   private readonly httpClient: HttpClient = inject(HttpClient);
-  private readonly currentUserSubject = new BehaviorSubject<any | null>(null);
-  private browserStorage : BrowserStorageService = inject(BrowserStorageService);
+  private browserStorage: BrowserStorageService = inject(BrowserStorageService);
+
   socialLogin(user: any): Observable<TokenResponse> {
     return this.httpClient.post<TokenResponse>(`${this.AUTH_URL}/social`, user);
   }
@@ -38,8 +38,9 @@ export class AuthService {
     }
     return false;
   }
+
   hasRoles(roles: string[]): boolean {
-    if(roles.length === 0){
+    if (roles.length === 0) {
       return true;
     }
     if (typeof window !== 'undefined' && window.localStorage) {
@@ -64,6 +65,7 @@ export class AuthService {
       this.browserStorage.setItem('access_token', token);
     }
   }
+
   addUser(user: User) {
     if (typeof window !== 'undefined' && window.localStorage) {
       this.browserStorage.setItem('user', JSON.stringify(user));
@@ -76,6 +78,7 @@ export class AuthService {
     }
     return null;
   }
+
   getUser(): User | null {
     if (typeof window !== 'undefined' && window.localStorage) {
       const userJson = this.browserStorage.getItem('user')
@@ -84,9 +87,10 @@ export class AuthService {
       } else {
         // Handle the case where the user is not found (e.g., return a default value or throw an error)
         return null;
+      }
+    } else {
+      return null;
     }
-  }else{
-      return null;}
   }
 
   addRoles(roles: string[]) {

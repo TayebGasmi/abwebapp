@@ -4,5 +4,5 @@ export interface TokenResponse {
   accessToken: string;
   refreshToken: string;
   roles: string[];
-  user:User
+  user: User
 }

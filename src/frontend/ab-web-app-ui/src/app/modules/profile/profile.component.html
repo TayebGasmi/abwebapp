@@ -5,22 +5,22 @@
     <div class="border-1 surface-border flex justify-content-between align-items-center py-2 px-3 border-round">
       <span class="text-900 font-bold p-3">Become a teacher</span>
       <p-inputSwitch
-        id="teat"
+        (onChange)="handleChange($event)"
         [(ngModel)]="checked"
         [disabled]="switch"
-        (onChange)="handleChange($event)"
+        id="teat"
       ></p-inputSwitch>
     </div>
-    <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+    <form (ngSubmit)="onSubmit()" [formGroup]="profileForm">
       <div class="p-fluid p-formgrid grid">
         <div class="field col-12 md:col-6">
           <label htmlFor="firstname">Firstname</label>
           <input
-            pInputText
-            id="firstname"
-            type="text"
-            formControlName="firstName"
             [ngClass]="{'ng-dirty ng-invalid': isFieldInvalid('firstName')}"
+            formControlName="firstName"
+            id="firstname"
+            pInputText
+            type="text"
           />
           @if (isFieldInvalid("firstName")) {
             <div class="mb-2 ng-invalid p-error">first name is required</div>
@@ -29,11 +29,11 @@
         <div class="field col-12 md:col-6">
           <label htmlFor="lastname">Lastname</label>
           <input
-            pInputText
-            id="lastname"
-            type="text"
-            formControlName="lastName"
             [ngClass]="{'ng-dirty ng-invalid': isFieldInvalid('lastName')}"
+            formControlName="lastName"
+            id="lastname"
+            pInputText
+            type="text"
           />
           @if (isFieldInvalid("firstName")) {
             <div class="mb-2 ng-invalid p-error">Last name is required</div>
@@ -42,19 +42,19 @@
         <div class="field col-12">
           <label htmlFor="email">Email</label>
           <input
-            pInputText
-            id="email"
-            type="text"
-            formControlName="email"
             [disabled]="true"
+            formControlName="email"
+            id="email"
+            pInputText
             readonly
+            type="text"
           />
         </div>
         <div class="field col-12 md:col-6">
           <label htmlFor="schoolYear">School Year</label>
           <p-dropdown
-            formControlName="schoolYear"
             [options]="schoolYears"
+            formControlName="schoolYear"
             optionLabel="name"
           ></p-dropdown>
           @if (isFieldInvalid("schoolYear")) {
@@ -64,8 +64,8 @@
         <div class="field col-12 md:col-6">
           <label htmlFor="schoolType">School Type</label>
           <p-dropdown
-            formControlName="schoolType"
             [options]="schoolTypes"
+            formControlName="schoolType"
             optionLabel="name"
           ></p-dropdown>
           @if (isFieldInvalid("schoolType")) {
@@ -74,10 +74,10 @@
         </div>
       </div>
       <button
+        icon="pi pi-check"
+        label="Submit"
         pButton
         type="submit"
-        label="Submit"
-        icon="pi pi-check"
       ></button>
     </form>
   </div>

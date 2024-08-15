@@ -1,5 +1,7 @@
 <p-table (onLazyLoad)="lazyLoad($event)"
+         [(selection)]="selectedItems"
          [currentPageReportTemplate]="currentPageReportTemplate"
+         [dataKey]="dataKeys"
          [lazy]="true"
          [paginator]="true"
          [rowsPerPageOptions]="rowsPerPageOptions"
@@ -8,8 +10,6 @@
          [tableStyle]="{ 'min-width': '50rem' }"
          [totalRecords]="totalRecords"
          [value]="data"
-         [dataKey]="dataKeys"
-         [(selection)]="selectedItems"
 >
   @if (withCaption) {
     <ng-template pTemplate="caption">
@@ -64,7 +64,7 @@
       }
     </tr>
   </ng-template>
-  <ng-template pTemplate="body" let-item>
+  <ng-template let-item pTemplate="body">
     <tr>
       @if (multiSelect) {
         <td>

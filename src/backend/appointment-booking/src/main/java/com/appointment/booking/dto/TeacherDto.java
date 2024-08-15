@@ -1,6 +1,5 @@
 package com.appointment.booking.dto;
 
-import com.appointment.booking.base.BaseDto;
 import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.Set;

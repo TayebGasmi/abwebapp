@@ -15,17 +15,18 @@ import {NgOptimizedImage} from "@angular/common";
   styleUrls: ['./app.topbar.component.scss']
 })
 export class AppTopbarComponent implements OnInit {
+  @ViewChild('menubutton') menuButton!: ElementRef;
+  currentUser: User | null = null;
+
+  constructor(public layoutService: LayoutService, private userServices: UserService) {
+  }
+
   ngOnInit(): void {
     this.userServices.getUserDetails().subscribe(user => {
       this.currentUser = user;
     });
   }
 
-  @ViewChild('menubutton') menuButton!: ElementRef;
-
-  constructor(public layoutService: LayoutService,private userServices:UserService) {
-  }
-  currentUser:User|null=null;
   onMenuButtonClick() {
     this.layoutService.onMenuToggle();
   }
@@ -33,7 +34,6 @@ export class AppTopbarComponent implements OnInit {
   onProfileButtonClick() {
     this.layoutService.showProfileSidebar();
   }
-
 
 
 }

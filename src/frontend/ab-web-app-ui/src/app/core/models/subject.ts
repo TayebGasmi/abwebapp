@@ -1,5 +1,5 @@
-import {SchoolType} from "./SchoolType";
-import {SchoolYear} from "./SchoolYear";
+import {SchoolType} from "./school-type";
+import {SchoolYear} from "./school-year";
 
 export interface Subject {
   id: number;

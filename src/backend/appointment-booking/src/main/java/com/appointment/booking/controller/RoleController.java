@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/Roles")
+@RequestMapping("/role")
 public class RoleController extends BaseController<Role, Long, RoleDTO> {
 
 }

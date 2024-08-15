@@ -4,7 +4,8 @@ import {GlobalFilter} from "./global-filter";
 
 export interface PageLink {
   page: number;
-  pageSize: number;sortProperty?: string;
+  pageSize: number;
+  sortProperty?: string;
   sortOrder?: SortOrder;
   timeZone?: string;
   filters?: { [key: string]: FilterModel[] };

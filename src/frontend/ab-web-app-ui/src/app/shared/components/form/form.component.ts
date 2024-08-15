@@ -40,6 +40,11 @@ import {ChipsModule} from "primeng/chips";
   styleUrl: './form.component.scss'
 })
 export class FormComponent implements OnInit, OnChanges {
+  @Input()
+  fields: FormField[] = [];
+  form: FormGroup = new FormGroup({}, {updateOn: 'blur'});
+  @Input() formData: any = {};
+
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['formData']) {
       this.updateFormData(changes['formData'].currentValue);
@@ -62,11 +67,6 @@ export class FormComponent implements OnInit, OnChanges {
       });
     }
   }
-
-  @Input()
-  fields: FormField[] = [];
-  form: FormGroup = new FormGroup({}, {updateOn: 'blur'});
-  @Input() formData: any = {};
 
   ngOnInit(): void {
     this.initForm();

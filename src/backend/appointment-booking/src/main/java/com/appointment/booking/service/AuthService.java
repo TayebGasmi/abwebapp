@@ -1,6 +1,10 @@
 package com.appointment.booking.service;
 
-import com.appointment.booking.dto.*;
+import com.appointment.booking.dto.LoginDTO;
+import com.appointment.booking.dto.LoginDtoResponse;
+import com.appointment.booking.dto.Oauth2Dto;
+import com.appointment.booking.dto.RegisterDTO;
+import com.appointment.booking.dto.UserDto;
 import com.appointment.booking.entity.Role;
 import com.appointment.booking.entity.Student;
 import com.appointment.booking.entity.User;
@@ -31,6 +35,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Slf4j
 public class AuthService {
+
     private final UserMapper userMapper;
 
     private final UserRepository userRepository;
@@ -40,7 +45,8 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final GoogleTokenVerifier googleTokenVerifier;
     private final JwtUTil jwtUtil;
-private final StudentRepository studentRepository;
+    private final StudentRepository studentRepository;
+
     public void register(RegisterDTO registerDTO) throws ExistException, MessagingException {
         checkIfEmailExists(registerDTO.getEmail());
         Role role = roleService.findByName(RoleType.STUDENT)
@@ -56,7 +62,7 @@ private final StudentRepository studentRepository;
 
         User user = userRepository.findByEmail(loginDTO.getEmail())
             .orElseThrow(() -> new NotFoundException("User not found"));
-        UserDto userDto=userMapper.convertEntityToDto(user);
+        UserDto userDto = userMapper.convertEntityToDto(user);
         String token = jwtUtil.generateToken(user.getEmail(),
             user.getRoles().stream()
                 .map(role -> role.getName().name())
@@ -64,7 +70,7 @@ private final StudentRepository studentRepository;
         Set<RoleType> roles = user.getRoles().stream()
             .map(Role::getName)
             .collect(Collectors.toSet());
-        return buildTokenResponse(token, "", roles,userDto);
+        return buildTokenResponse(token, "", roles, userDto);
     }
 
     public LoginDtoResponse socialLogin(Oauth2Dto oauth2Dto) throws ParseException, JOSEException {
@@ -90,7 +96,7 @@ private final StudentRepository studentRepository;
             .map(Role::getName)
             .collect(Collectors.toSet());
         UserDto userDto = userMapper.convertEntityToDto(user);
-        return buildTokenResponse(token, "", roles,userDto);
+        return buildTokenResponse(token, "", roles, userDto);
     }
 
     private void checkIfEmailExists(String email) throws ExistException {
@@ -131,7 +137,7 @@ private final StudentRepository studentRepository;
             .build();
     }
 
-    private LoginDtoResponse buildTokenResponse(String token, String refreshToken, Set<RoleType> roles,UserDto user) {
+    private LoginDtoResponse buildTokenResponse(String token, String refreshToken, Set<RoleType> roles, UserDto user) {
         return LoginDtoResponse.builder()
             .accessToken(token)
             .refreshToken(refreshToken)

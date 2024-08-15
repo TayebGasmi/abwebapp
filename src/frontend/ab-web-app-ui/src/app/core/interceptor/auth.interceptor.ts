@@ -1,4 +1,4 @@
-import {HttpErrorResponse, HttpInterceptorFn} from '@angular/common/http';
+import {HttpInterceptorFn} from '@angular/common/http';
 import {AuthService} from "../service/auth.service";
 import {inject} from '@angular/core';
 import {catchError, throwError} from "rxjs";
@@ -8,7 +8,7 @@ import {User} from "../models/User";
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);
   const token = authService.getAccessToken();
-  const user:null | User =authService.getUser();
+  const user: null | User = authService.getUser();
   const router = inject(Router);
   if (token) {
     req = req.clone({
@@ -17,9 +17,9 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
       }
     });
   }
-  if(!user?.isCompleted){
+  if (!user?.isCompleted) {
     router.navigate(['/completeprofile/profilecomplete'])
-  }else{
+  } else {
     router.navigate(['/'])
   }
   return next(req).pipe(

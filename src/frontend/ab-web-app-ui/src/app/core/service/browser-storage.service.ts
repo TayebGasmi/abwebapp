@@ -1,11 +1,11 @@
-import { Injectable, PLATFORM_ID, Inject } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
+import {Inject, Injectable, PLATFORM_ID} from '@angular/core';
+import {isPlatformBrowser} from '@angular/common';
 
 @Injectable({
   providedIn: 'root',
 })
 export class BrowserStorageService {
-  private storage: null | Storage;
+  private readonly storage: null | Storage;
 
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {
     this.storage = isPlatformBrowser(this.platformId) ? localStorage : null;
@@ -20,8 +20,8 @@ export class BrowserStorageService {
       this.storage.setItem(key, value);
     }
   }
-  clear(){
+
+  clear() {
     this.storage?.clear();
   }
-  // Additional storage methods...
 }

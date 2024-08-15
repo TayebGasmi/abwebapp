@@ -1,150 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>org.springframework.boot</groupId>
-    <artifactId>spring-boot-starter-parent</artifactId>
-    <version>3.1.4</version>
-    <relativePath/> <!-- lookup parent from repository -->
-  </parent>
-  <groupId>com</groupId>
   <artifactId>appointment-booking</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
-  <name>appointment-booking</name>
-  <description>appointment-booking</description>
-  <properties>
-    <java.version>17</java.version>
-    <jjwt-api.version>0.11.5</jjwt-api.version>
-    <springdoc-openapi-starter-webmvc-ui.version>2.5.0</springdoc-openapi-starter-webmvc-ui.version>
-    <lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
-    <mapstruct.version>1.5.5.Final</mapstruct.version>
-    <projectlombok.version>1.18.30</projectlombok.version>
-    <nimbus-jose-jwt.version>9.22</nimbus-jose-jwt.version>
-    <google-api-client.version>2.6.0</google-api-client.version>
-    <google-api-services-calendar.version>v3-rev20240705-2.0.0</google-api-services-calendar.version>
-    <google-http-client-jackson2.version>1.42.3</google-http-client-jackson2.version>
-  </properties>
-  <dependencies>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-actuator</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-data-jpa</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-aop</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-validation</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-web</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-security</artifactId>
-    </dependency>
-
-    <!-- https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt -->
-    <dependency>
-      <groupId>io.jsonwebtoken</groupId>
-      <artifactId>jjwt-api</artifactId>
-      <version>${jjwt-api.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>io.jsonwebtoken</groupId>
-      <artifactId>jjwt-impl</artifactId>
-      <version>${jjwt-api.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>io.jsonwebtoken</groupId>
-      <artifactId>jjwt-jackson</artifactId>
-      <version>${jjwt-api.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.postgresql</groupId>
-      <artifactId>postgresql</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-configuration-processor</artifactId>
-      <optional>true</optional>
-    </dependency>
-    <dependency>
-      <groupId>org.projectlombok</groupId>
-      <artifactId>lombok</artifactId>
-      <optional>true</optional>
-    </dependency>
-    <dependency>
-      <groupId>com.nimbusds</groupId>
-      <artifactId>nimbus-jose-jwt</artifactId>
-      <version>${nimbus-jose-jwt.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-test</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.springdoc</groupId>
-      <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-      <version>${springdoc-openapi-starter-webmvc-ui.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-mail</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-thymeleaf</artifactId>
-    </dependency>
-    <dependency>
-      <artifactId>mapstruct</artifactId>
-      <groupId>org.mapstruct</groupId>
-      <version>${mapstruct.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.liquibase</groupId>
-      <artifactId>liquibase-core</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.google.api-client</groupId>
-      <artifactId>google-api-client</artifactId>
-      <version>${google-api-client.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>com.google.apis</groupId>
-      <artifactId>google-api-services-calendar</artifactId>
-      <version>${google-api-services-calendar.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>com.google.http-client</groupId>
-      <artifactId>google-http-client-jackson2</artifactId>
-      <version>${google-http-client-jackson2.version}</version>
-    </dependency>
-
-  </dependencies>
-
   <build>
     <plugins>
       <plugin>
-        <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
         <configuration>
           <excludes>
             <exclude>
-              <groupId>org.projectlombok</groupId>
               <artifactId>lombok</artifactId>
+              <groupId>org.projectlombok</groupId>
             </exclude>
           </excludes>
         </configuration>
+        <groupId>org.springframework.boot</groupId>
       </plugin>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
@@ -175,5 +45,135 @@
       </plugin>
     </plugins>
   </build>
+  <dependencies>
+    <dependency>
+      <artifactId>spring-boot-starter-actuator</artifactId>
+      <groupId>org.springframework.boot</groupId>
+    </dependency>
+    <dependency>
+      <artifactId>spring-boot-starter-data-jpa</artifactId>
+      <groupId>org.springframework.boot</groupId>
+    </dependency>
+    <dependency>
+      <artifactId>spring-boot-starter-aop</artifactId>
+      <groupId>org.springframework.boot</groupId>
+    </dependency>
+    <dependency>
+      <artifactId>spring-boot-starter-validation</artifactId>
+      <groupId>org.springframework.boot</groupId>
+    </dependency>
+    <dependency>
+      <artifactId>spring-boot-starter-web</artifactId>
+      <groupId>org.springframework.boot</groupId>
+    </dependency>
+    <dependency>
+      <artifactId>spring-boot-starter-security</artifactId>
+      <groupId>org.springframework.boot</groupId>
+    </dependency>
+
+    <!-- https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt -->
+    <dependency>
+      <artifactId>jjwt-api</artifactId>
+      <groupId>io.jsonwebtoken</groupId>
+      <version>${jjwt-api.version}</version>
+    </dependency>
+    <dependency>
+      <artifactId>jjwt-impl</artifactId>
+      <groupId>io.jsonwebtoken</groupId>
+      <version>${jjwt-api.version}</version>
+    </dependency>
+    <dependency>
+      <artifactId>jjwt-jackson</artifactId>
+      <groupId>io.jsonwebtoken</groupId>
+      <version>${jjwt-api.version}</version>
+    </dependency>
+
+    <dependency>
+      <artifactId>postgresql</artifactId>
+      <groupId>org.postgresql</groupId>
+    </dependency>
+    <dependency>
+      <artifactId>spring-boot-configuration-processor</artifactId>
+      <groupId>org.springframework.boot</groupId>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <artifactId>lombok</artifactId>
+      <groupId>org.projectlombok</groupId>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <artifactId>nimbus-jose-jwt</artifactId>
+      <groupId>com.nimbusds</groupId>
+      <version>${nimbus-jose-jwt.version}</version>
+    </dependency>
+    <dependency>
+      <artifactId>spring-boot-starter-test</artifactId>
+      <groupId>org.springframework.boot</groupId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+      <groupId>org.springdoc</groupId>
+      <version>${springdoc-openapi-starter-webmvc-ui.version}</version>
+    </dependency>
+    <dependency>
+      <artifactId>spring-boot-starter-mail</artifactId>
+      <groupId>org.springframework.boot</groupId>
+    </dependency>
+    <dependency>
+      <artifactId>spring-boot-starter-thymeleaf</artifactId>
+      <groupId>org.springframework.boot</groupId>
+    </dependency>
+    <dependency>
+      <artifactId>mapstruct</artifactId>
+      <groupId>org.mapstruct</groupId>
+      <version>${mapstruct.version}</version>
+    </dependency>
+    <dependency>
+      <artifactId>liquibase-core</artifactId>
+      <groupId>org.liquibase</groupId>
+    </dependency>
+    <dependency>
+      <artifactId>google-api-client</artifactId>
+      <groupId>com.google.api-client</groupId>
+      <version>${google-api-client.version}</version>
+    </dependency>
+    <dependency>
+      <artifactId>google-api-services-calendar</artifactId>
+      <groupId>com.google.apis</groupId>
+      <version>${google-api-services-calendar.version}</version>
+    </dependency>
+    <dependency>
+      <artifactId>google-http-client-jackson2</artifactId>
+      <groupId>com.google.http-client</groupId>
+      <version>${google-http-client-jackson2.version}</version>
+    </dependency>
+
+  </dependencies>
+  <description>appointment-booking</description>
+  <groupId>com</groupId>
+  <modelVersion>4.0.0</modelVersion>
+  <name>appointment-booking</name>
+  <parent>
+    <artifactId>spring-boot-starter-parent</artifactId>
+    <groupId>org.springframework.boot</groupId>
+    <relativePath/>
+    <version>3.1.4</version> <!-- lookup parent from repository -->
+  </parent>
+  <properties>
+    <google-api-client.version>2.6.0</google-api-client.version>
+    <google-api-services-calendar.version>v3-rev20240705-2.0.0</google-api-services-calendar.version>
+    <google-http-client-jackson2.version>1.42.3</google-http-client-jackson2.version>
+    <java.version>17</java.version>
+    <jjwt-api.version>0.11.5</jjwt-api.version>
+    <lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
+    <mapstruct.version>1.5.5.Final</mapstruct.version>
+    <nimbus-jose-jwt.version>9.22</nimbus-jose-jwt.version>
+    <projectlombok.version>1.18.30</projectlombok.version>
+    <springdoc-openapi-starter-webmvc-ui.version>2.5.0</springdoc-openapi-starter-webmvc-ui.version>
+  </properties>
+
+  <version>0.0.1-SNAPSHOT</version>
 
 </project>
