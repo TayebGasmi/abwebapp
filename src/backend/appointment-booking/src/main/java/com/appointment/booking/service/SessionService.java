@@ -8,7 +8,6 @@ import com.appointment.booking.entity.Session;
 import com.appointment.booking.exceptions.SessionConflictException;
 import com.appointment.booking.repository.SessionRepository;
 import com.google.api.services.calendar.model.Event;
-import java.io.IOException;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,7 +21,7 @@ public class SessionService extends BaseServiceImpl<Session, Long, SessionDto> {
     private final SessionRepository sessionRepository;
 
     @Override
-    public SessionDto add(SessionDto sessionDto) throws IOException {
+    public SessionDto add(SessionDto sessionDto) {
         if (sessionRepository.existsConflictingSession(
             sessionDto.getTeacher().getId(),
             sessionDto.getStudent().getId(),

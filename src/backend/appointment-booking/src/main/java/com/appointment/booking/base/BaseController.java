@@ -58,8 +58,8 @@ public abstract class BaseController<E extends BaseEntity<I>, I extends Serializ
         @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Entity not found")})
     @Parameters(value = {
         @Parameter(name = "id", description = "Id of entity to be searched", required = true, example = "1", schema = @Schema(implementation = Long.class))})
-    @PatchMapping("/{id}")
-    public ResponseEntity<D> update(@PathVariable I id, @Valid @RequestBody D dto) {
+    @PatchMapping("")
+    public ResponseEntity<D> update(@Valid @RequestBody D dto) {
 
         return new ResponseEntity<>(baseService.update(dto), HttpStatus.OK);
     }
@@ -99,7 +99,7 @@ public abstract class BaseController<E extends BaseEntity<I>, I extends Serializ
     @ApiResponses(value = {
         @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Found the entity"),
         @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Entity not found")})
-    @DeleteMapping("/deleteall")
+    @DeleteMapping("/all")
     public ResponseEntity<Void> deleteAll() {
         baseService.deleteAll();
         return new ResponseEntity<>(HttpStatus.OK);
@@ -109,7 +109,7 @@ public abstract class BaseController<E extends BaseEntity<I>, I extends Serializ
     @ApiResponses(value = {
         @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Found the entity"),
         @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Entity not found")})
-    @PostMapping("/deleteallByIds")
+    @DeleteMapping("/all-by-ids")
     public ResponseEntity<Void> deleteAllByIds(@RequestBody List<E> ids) {
         baseService.deleteAllByIds(ids);
         return new ResponseEntity<>(HttpStatus.OK);

@@ -21,7 +21,6 @@ import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -53,7 +52,7 @@ public class GoogleCalendarServiceImpl implements GoogleCalendarService {
     }
 
     @Override
-    public Event createSimpleMeeting(MeetingDto meetingDto) throws IOException {
+    public Event createSimpleMeeting(MeetingDto meetingDto) {
         try {
             Event event = new Event()
                 .setSummary(meetingDto.getSummary())
