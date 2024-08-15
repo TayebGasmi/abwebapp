@@ -21,18 +21,17 @@ import org.springframework.beans.BeanUtils;
 @SuperBuilder
 public class Student extends User {
 
-    public void setParentProperties(User user) {
-        BeanUtils.copyProperties(user, this);
-    }
     @ManyToOne
     @JoinColumn(name = "school_type_id")
     private SchoolType schoolType;
-
     @ManyToOne()
     @JoinColumn(name = "school_year_id")
     private SchoolYear schoolYear;
-
     @OneToMany(mappedBy = "student")
     private Set<Session> sessions = new LinkedHashSet<>();
+
+    public void setParentProperties(User user) {
+        BeanUtils.copyProperties(user, this);
+    }
 
 }

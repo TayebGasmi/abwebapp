@@ -6,7 +6,7 @@ import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -32,7 +32,7 @@ public class SessionDto extends BaseDto<Long> {
     @NotBlank
     @NotNull
     @FutureOrPresent
-    LocalDateTime startTime;
+    ZonedDateTime startTime;
     @NotBlank
     @NotNull
     String meetingLink;

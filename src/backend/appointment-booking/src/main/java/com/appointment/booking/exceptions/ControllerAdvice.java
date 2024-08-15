@@ -124,14 +124,26 @@ public class ControllerAdvice {
     public ResponseEntity<ErrorResponse> handleUserAlreadyVerifiedException(UserAlreadyVerifiedException ex) {
         return createErrorResponse(HttpStatus.BAD_REQUEST, ex, KeyExceptionMessageConstants.USER_ALREADY_VERIFIED);
     }
+
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<ErrorResponse> handleBadCredentialsException(BadCredentialsException ex) {
         return createErrorResponse(HttpStatus.BAD_REQUEST, ex, KeyExceptionMessageConstants.BAD_CREDENTIALS);
     }
 
+    @ExceptionHandler(GoogleCalendarException.class)
+    public ResponseEntity<ErrorResponse> handleGoogleCalendarException(GoogleCalendarException ex) {
+        log.error("error {}", ex.getMessage(), ex);
+        return createErrorResponse(HttpStatus.BAD_REQUEST, ex, KeyExceptionMessageConstants.GOOGLE_CALENDAR);
+    }
+
+    @ExceptionHandler(SessionConflictException.class)
+    public ResponseEntity<ErrorResponse> handleSessionConflictException(GoogleCalendarException ex) {
+        log.error("error {}", ex.getMessage(), ex);
+        return createErrorResponse(HttpStatus.BAD_REQUEST, ex, KeyExceptionMessageConstants.SESSION_CONFLICT);
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleException(Exception ex) {
-        log.error("error {}", ex.getMessage(), ex);
         return createErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, ex, KeyExceptionMessageConstants.UNKNOWN_ERROR);
     }
 }
