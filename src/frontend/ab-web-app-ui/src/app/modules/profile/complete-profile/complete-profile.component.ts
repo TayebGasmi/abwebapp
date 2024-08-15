@@ -11,19 +11,19 @@ import {InputTextModule} from "primeng/inputtext";
 import {ToastModule} from "primeng/toast";
 import {StepsModule} from "primeng/steps";
 import {DropdownModule} from "primeng/dropdown";
-import {SchoolType} from "../../core/models/school-type";
-import {SchoolYear} from "../../core/models/school-year";
-import {SchoolService} from "../../core/service/school.service";
-import {SchoolYearService} from "../../core/service/school-year.service";
+import {SchoolType} from "../../../core/models/school-type";
+import {SchoolYear} from "../../../core/models/school-year";
+import {SchoolService} from "../../../core/service/school.service";
+import {SchoolYearService} from "../../../core/service/school-year.service";
 import {MultiSelectModule} from "primeng/multiselect";
-import {User} from "../../core/models/User";
-import {AuthService} from "../../core/service/auth.service";
+import {User} from "../../../core/models/User";
+import {AuthService} from "../../../core/service/auth.service";
 import {InputSwitchChangeEvent, InputSwitchModule} from "primeng/inputswitch";
-import {UserService} from "../../core/service/user.service";
-import {RoleName} from "../../core/models/role";
-import {StudentService} from "../../core/service/student.service";
+import {UserService} from "../../../core/service/user.service";
+import {RoleName} from "../../../core/models/role";
+import {StudentService} from "../../../core/service/student.service";
 import {Router} from "@angular/router";
-import {BrowserStorageService} from "../../core/service/browser-storage.service";
+import {BrowserStorageService} from "../../../core/service/browser-storage.service";
 
 @Component({
   selector: 'app-complete-profile',
