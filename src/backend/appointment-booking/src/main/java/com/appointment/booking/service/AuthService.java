@@ -16,6 +16,7 @@ import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jwt.JWTClaimsSet;
 import jakarta.mail.MessagingException;
 import java.text.ParseException;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -77,20 +78,27 @@ private final StudentRepository studentRepository;
         String profilePicture = claims.getStringClaim("picture");
         User user = userRepository.findByEmail(email)
             .orElseGet(() -> {
-                Student newUser = buildNewSocialUser(email, firstName, lastName, profilePicture);
+                User newUser = buildNewSocialUser(email, firstName, lastName, profilePicture);
                 userRepository.save(newUser);
                 return newUser;
             });
-
-        String token = jwtUtil.generateToken(user.getEmail(),
-            user.getRoles().stream()
-                .map(role -> role.getName().name())
-                .collect(Collectors.toSet()));
-        Set<RoleType> roles = user.getRoles().stream()
-            .map(Role::getName)
-            .collect(Collectors.toSet());
-        UserDto userDto = userMapper.convertEntityToDto(user);
-        return buildTokenResponse(token, "", roles,userDto);
+        if(user.getRoles()!=null && !user.getRoles().isEmpty()){
+            String token = jwtUtil.generateToken(user.getEmail(),
+                    user.getRoles().stream()
+                            .map(role -> role.getName().name())
+                            .collect(Collectors.toSet()));
+            Set<RoleType> roles = user.getRoles().stream()
+                    .map(Role::getName)
+                    .collect(Collectors.toSet());
+            UserDto userDto = userMapper.convertEntityToDto(user);
+            return buildTokenResponse(token, "", roles,userDto);
+        }else{
+            String token = jwtUtil.generateToken(user.getEmail(),
+                    new HashSet<>());
+            Set<RoleType> roles = new HashSet<>();
+            UserDto userDto = userMapper.convertEntityToDto(user);
+            return buildTokenResponse(token, "", roles,userDto);
+        }
     }
 
     private void checkIfEmailExists(String email) throws ExistException {
@@ -117,17 +125,16 @@ private final StudentRepository studentRepository;
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 
-    private Student buildNewSocialUser(String email, String firstName, String lastName, String profilePicture) {
+    private User buildNewSocialUser(String email, String firstName, String lastName, String profilePicture) {
         Role studentRole = roleService.findByName(RoleType.STUDENT)
             .orElseThrow(() -> new NotFoundException("Role not found"));
 
-        return Student.builder()
+        return User.builder()
             .email(email)
             .firstName(firstName)
             .lastName(lastName)
             .isVerified(true)
             .profilePicture(profilePicture)
-            .roles(Set.of(studentRole))
             .build();
     }
 

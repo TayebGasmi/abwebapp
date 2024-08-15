@@ -32,6 +32,7 @@ public class UserDto extends BaseDto<Long> {
     @NotNull
     private Set<RoleDTO> roles;
     private Boolean isCompleted ;
+    private Boolean isVerified ;
 
 
 }

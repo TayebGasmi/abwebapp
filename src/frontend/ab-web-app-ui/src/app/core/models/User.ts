@@ -8,4 +8,5 @@ export interface User{
   profilePicture:string;
   roles:Role[];
   isCompleted:boolean;
+  isVerified:boolean;
 }
