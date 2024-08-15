@@ -1,8 +1,8 @@
 import {User} from "./User";
 
 export interface TokenResponse {
-  accessToken: string;
-  refreshToken: string;
-  roles: string[];
-  user: User
+    accessToken: string;
+    refreshToken: string;
+    roles: string[];
+    user: User
 }
