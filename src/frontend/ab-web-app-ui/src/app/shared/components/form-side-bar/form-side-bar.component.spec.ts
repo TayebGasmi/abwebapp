@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { FormSideBarComponent } from './form-side-bar.component';
+import {FormSideBarComponent} from './form-side-bar.component';
 
 describe('FormSideBarComponent', () => {
   let component: FormSideBarComponent;

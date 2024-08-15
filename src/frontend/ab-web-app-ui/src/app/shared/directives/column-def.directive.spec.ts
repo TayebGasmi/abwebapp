@@ -1,4 +1,4 @@
-import { ColumnDefDirective } from './column-def.directive';
+import {ColumnDefDirective} from './column-def.directive';
 
 describe('ColumnDefDirective', () => {
   it('should create an instance', () => {

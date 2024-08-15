@@ -1,8 +1,8 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 import {SessionDto} from "../../../core/models/session";
-import { DatePipe } from "@angular/common";
+import {DatePipe} from "@angular/common";
 import {FormGroup, FormsModule} from "@angular/forms";
-import {TableLazyLoadEvent, TableModule} from "primeng/table";
+import {TableModule} from "primeng/table";
 import {RatingModule} from "primeng/rating";
 import {ButtonModule} from "primeng/button";
 import {SliderModule} from "primeng/slider";
@@ -14,9 +14,7 @@ import {DropdownModule} from "primeng/dropdown";
 import {ProgressBarModule} from "primeng/progressbar";
 import {ToastModule} from "primeng/toast";
 import {SessionService} from "../../../core/service/session.service";
-import {
-  DeleteConfirmationComponent
-} from "../../../shared/components/delete-confirmation/delete-confirmation.component";
+import {DeleteConfirmationComponent} from "../../../shared/components/delete-confirmation/delete-confirmation.component";
 import {FormComponent} from "../../../shared/components/form/form.component";
 import {FormSideBarComponent} from "../../../shared/components/form-side-bar/form-side-bar.component";
 import {TableComponent} from "../../../shared/components/table/table.component";
@@ -59,9 +57,7 @@ export class SessionlistComponent {
   pageSize = 10;
   pageLink: PageLink = {page: 0, pageSize: this.pageSize};
   selectedSession: SessionDto | null = null;
-  protected readonly formFields = sessionForm;
   sessionToDelete: SessionDto | null = null;
-
   columns: TableColumn[] = [
     {field: 'title', header: 'Title', type: 'text', sortable: true, filterable: true},
     {field: 'description', header: 'Description', type: 'text', sortable: true, filterable: true},
@@ -69,10 +65,10 @@ export class SessionlistComponent {
     {field: 'endTime', header: 'End Date', type: 'date', sortable: true, filterable: true},
     {field: 'sessionLink', header: 'Link', type: 'text', sortable: true, filterable: true},
   ];
-
   currentPageReportTemplate = "Showing {first} to {last} of {totalRecords} entries";
   rowsPerPageOptions = [10, 25, 50];
-  showDeleteConfirmation=false;
+  showDeleteConfirmation = false;
+  protected readonly formFields = sessionForm;
 
   constructor(private sessionService: SessionService, private notificationService: NotificationService) {
   }
@@ -121,7 +117,7 @@ export class SessionlistComponent {
       return;
     }
     if (this.selectedSession) {
-      this.sessionService.updateById({id:this.selectedSession.id,...form.value}, this.selectedSession.id).subscribe(() => {
+      this.sessionService.updateById({id: this.selectedSession.id, ...form.value}, this.selectedSession.id).subscribe(() => {
         this.loadSessions();
         this.sidebarVisible = false;
         form.reset();

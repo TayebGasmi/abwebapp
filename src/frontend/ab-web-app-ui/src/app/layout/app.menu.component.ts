@@ -1,6 +1,6 @@
 import {Component, inject, OnInit} from '@angular/core';
 import {AppMenuitemComponent} from './app.menuitem.component';
-import {MenuModel} from "../core/models/MenuModel";
+import {MenuModel} from "../core/models/menu-model";
 import {AuthService} from "../core/service/auth.service";
 
 @Component({
@@ -17,7 +17,7 @@ export class AppMenuComponent implements OnInit {
     this.model = [
       {
         label: "profile",
-        visible: this.authService.hasRoles(["STUDENT","TEACHER"]),
+        visible: this.authService.hasRoles(["STUDENT", "TEACHER"]),
         items: [
           {
             label: "Profile",
@@ -28,7 +28,7 @@ export class AppMenuComponent implements OnInit {
       },
       {
         label: "booking",
-        visible: this.authService.hasRoles(["STUDENT","TEACHER"]),
+        visible: this.authService.hasRoles(["STUDENT", "TEACHER"]),
         items: [
           {
             label: "calendar",
@@ -39,7 +39,7 @@ export class AppMenuComponent implements OnInit {
       },
       {
         label: "session",
-        visible: this.authService.hasRoles(["STUDENT","TEACHER"]),
+        visible: this.authService.hasRoles(["STUDENT", "TEACHER"]),
 
         items: [
           {

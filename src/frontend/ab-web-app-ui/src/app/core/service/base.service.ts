@@ -23,7 +23,7 @@ export class BaseService<T, I> implements IBaseService<T, I> {
   }
 
   deleteAllByIds(t: T[]): Observable<void> {
-    return this.httpClient.d<void>(`${this.url}/deleteallByIds`, t);
+    return this.httpClient.post<void>(`${this.url}/delete`, t);
   }
 
   deleteById(id: I): Observable<void> {

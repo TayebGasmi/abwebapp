@@ -41,9 +41,9 @@ export const userForm: FormField[] = [
     name: 'roles',
     type: 'dropdown',
     placeholder: 'Enter Role',
-    options:[ {label:"Teacher",value:"TEACHER"},
-      {label:"Student",value:"STUDENT"},
-     ],
+    options: [{label: "Teacher", value: "TEACHER"},
+      {label: "Student", value: "STUDENT"},
+    ],
     errors: [
       {type: 'required', message: 'Role is required'}
     ],

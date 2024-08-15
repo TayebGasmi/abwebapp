@@ -6,6 +6,7 @@
   width: 100vw;
   background-color: #111417;
 }
+
 .layout-preloader-container .layout-preloader {
   position: relative;
   width: 75px;
@@ -23,6 +24,7 @@
   text-shadow: 0 0 10px #6366F1;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
 }
+
 .layout-preloader-container .layout-preloader:before {
   content: "";
   position: absolute;
@@ -36,6 +38,7 @@
   border-radius: 50%;
   animation: preloader-rotate-c 1s linear infinite;
 }
+
 .layout-preloader-container .layout-preloader span {
   display: block;
   position: absolute;
@@ -47,6 +50,7 @@
   transform-origin: left;
   animation: preloader-rotate 1s linear infinite;
 }
+
 .layout-preloader-container .layout-preloader span:before {
   content: "";
   position: absolute;
@@ -67,6 +71,7 @@
     transform: rotate(360deg);
   }
 }
+
 @keyframes preloader-rotate {
   0% {
     transform: rotate(45deg);

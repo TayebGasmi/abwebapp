@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {Config} from "../../../../core/models/Config";
+import {Config} from "../../../../core/models/config";
 import {PageLink} from "../../../../core/models/page-link";
 import {TableColumn} from "../../../../core/models/table-cloumn";
 import {NotificationService} from "../../../../core/service/notification.service";
@@ -44,7 +44,8 @@ export class ConfigComponent {
   form!: FormGroup
   currentPageReportTemplate = "Showing {first} to {last} of {totalRecords} entries";
   rowsPerPageOptions = [10, 25, 50];
-  selectedConfig!:Config
+  selectedConfig!: Config
+
   constructor(private SchoolService: ConfigService, private notificationService: NotificationService, private fb: FormBuilder) {
     this.initForm();
   }
@@ -78,13 +79,6 @@ export class ConfigComponent {
     this.loadConfigs();
   }
 
-  private initForm() {
-    this.form = this.fb.group({
-      value: ['', [Validators.required]],
-      description: ['', [Validators.required]]
-    });
-  }
-
   edit(item: Config) {
     this.selectedConfig = item;
     this.form.patchValue(item);
@@ -96,13 +90,14 @@ export class ConfigComponent {
     this.sidebarVisible = false;
     this.form.reset();
   }
+
   save() {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
     }
     const formData = this.form.value;
-    this.SchoolService.updateById({...formData,key:this.selectedConfig.key,id:this.selectedConfig.id},this.selectedConfig?.id).subscribe(() => {
+    this.SchoolService.updateById({...formData, key: this.selectedConfig.key, id: this.selectedConfig.id}, this.selectedConfig?.id).subscribe(() => {
       this.notificationService.showSuccess('Config update successfully');
       this.loadConfigs();
       this.sidebarVisible = false;
@@ -113,5 +108,12 @@ export class ConfigComponent {
   fieldHasError(fieldName: string): boolean {
     const control = this.form.get(fieldName);
     return !!(control?.invalid && (control?.dirty || control?.touched));
+  }
+
+  private initForm() {
+    this.form = this.fb.group({
+      value: ['', [Validators.required]],
+      description: ['', [Validators.required]]
+    });
   }
 }

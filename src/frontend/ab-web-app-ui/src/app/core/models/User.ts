@@ -1,11 +1,11 @@
-import {Role} from "./Role";
+import {Role} from "./role";
 
-export interface User{
-  id:number;
-  firstName:string;
-  lastName:string;
-  email:string;
-  profilePicture:string;
-  roles:Role[];
-  isCompleted:boolean;
+export interface User {
+  id: number;
+  firstName: string;
+  lastName: string;
+  email: string;
+  profilePicture: string;
+  roles: Role[];
+  isCompleted: boolean;
 }

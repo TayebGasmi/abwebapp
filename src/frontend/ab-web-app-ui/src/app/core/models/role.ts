@@ -1,8 +1,9 @@
 export interface Role {
-  id?:number,
-  name:RoleName
+  id?: number,
+  name: RoleName
 }
-export enum RoleName{
+
+export enum RoleName {
   TEACHER = 'TEACHER',
   STUDENT = 'STUDENT'
 }

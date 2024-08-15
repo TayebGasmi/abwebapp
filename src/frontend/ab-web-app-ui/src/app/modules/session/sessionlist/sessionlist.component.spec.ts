@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { SessionlistComponent } from './sessionlist.component';
+import {SessionlistComponent} from './sessionlist.component';
 
 describe('SessionlistComponent', () => {
   let component: SessionlistComponent;

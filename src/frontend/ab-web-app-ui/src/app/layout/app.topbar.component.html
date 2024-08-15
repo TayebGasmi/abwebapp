@@ -11,7 +11,7 @@
     <ul class="topbar-menu">
       <li class="topbar-profile">
         <button (click)="onProfileButtonClick()" class="p-link" type="button">
-          <img [src]="currentUser?.profilePicture" [alt]="currentUser?.firstName+' '+currentUser?.lastName" class="profile-image"/>
+          <img [alt]="currentUser?.firstName+' '+currentUser?.lastName" [src]="currentUser?.profilePicture" class="profile-image"/>
         </button>
       </li>
     </ul>

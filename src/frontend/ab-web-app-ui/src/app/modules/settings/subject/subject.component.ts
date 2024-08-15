@@ -16,11 +16,11 @@ import {NotificationService} from "../../../core/service/notification.service";
 import {DeleteConfirmationComponent} from "../../../shared/components/delete-confirmation/delete-confirmation.component";
 import {InputTextModule} from "primeng/inputtext";
 import {DropdownModule} from "primeng/dropdown";
-import {SchoolType} from "../../../core/models/SchoolType";
+import {SchoolType} from "../../../core/models/school-type";
 import {SchoolService} from "../../../core/service/school.service";
 import {SchoolYearService} from "../../../core/service/school-year.service";
 import {MultiSelectModule} from "primeng/multiselect";
-import {SchoolYear} from "../../../core/models/SchoolYear";
+import {SchoolYear} from "../../../core/models/school-year";
 import {NgClass} from "@angular/common";
 
 @Component({
@@ -127,7 +127,7 @@ export class SubjectComponent implements OnInit {
       return;
     }
     if (this.selectedSubject) {
-      this.subjectService.updateById({id: this.selectedSubject.id, ...form.value}, this.selectedSubject.id).subscribe(() => {
+      this.subjectService.update({id: this.selectedSubject.id, ...form.value}).subscribe(() => {
         this.loadSubjects();
         this.sidebarVisible = false;
         form.reset();

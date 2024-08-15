@@ -1,5 +1,5 @@
-import { FormField } from "../models/form-field";
-import { Validators } from "@angular/forms";
+import {FormField} from "../models/form-field";
+import {Validators} from "@angular/forms";
 
 export const sessionForm: FormField[] = [
 
@@ -9,7 +9,7 @@ export const sessionForm: FormField[] = [
     type: 'text',
     placeholder: 'Enter title',
     errors: [
-      { type: 'required', message: 'Title is required' }
+      {type: 'required', message: 'Title is required'}
     ],
     validators: [Validators.required]
   },
@@ -19,7 +19,7 @@ export const sessionForm: FormField[] = [
     type: 'textarea',
     placeholder: 'Enter description',
     errors: [
-      { type: 'required', message: 'Description is required' }
+      {type: 'required', message: 'Description is required'}
     ],
     validators: [Validators.required]
   },
@@ -29,7 +29,7 @@ export const sessionForm: FormField[] = [
     type: 'date',
     placeholder: 'Select start time',
     errors: [
-      { type: 'required', message: 'Start time is required' }
+      {type: 'required', message: 'Start time is required'}
     ],
     validators: [Validators.required]
   },
@@ -39,7 +39,7 @@ export const sessionForm: FormField[] = [
     type: 'text',
     placeholder: 'Enter session link',
     errors: [
-      { type: 'required', message: 'Session link is required' }
+      {type: 'required', message: 'Session link is required'}
     ],
     validators: [Validators.required, Validators.pattern('https?://.+')]
   },
@@ -48,12 +48,12 @@ export const sessionForm: FormField[] = [
     name: 'status',
     type: 'dropdown',
     placeholder: 'Enter status',
-    options:[ {label:"Pending",value:"PENDING"},
-              {label:"Accepted",value:"ACCEPTED"},
-              {label:"Rejected",value:"REJECTED"},
-              {label:"Cancelled",value:"CANCELLED"}],
+    options: [{label: "Pending", value: "PENDING"},
+      {label: "Accepted", value: "ACCEPTED"},
+      {label: "Rejected", value: "REJECTED"},
+      {label: "Cancelled", value: "CANCELLED"}],
     errors: [
-      { type: 'required', message: 'Status is required' }
+      {type: 'required', message: 'Status is required'}
     ],
     validators: [Validators.required]
   },
@@ -63,7 +63,7 @@ export const sessionForm: FormField[] = [
     type: 'number',
     placeholder: 'Enter price',
     errors: [
-      { type: 'required', message: 'Price is required' }
+      {type: 'required', message: 'Price is required'}
     ],
     validators: [Validators.required]
   },
@@ -73,7 +73,7 @@ export const sessionForm: FormField[] = [
     type: 'number',
     placeholder: 'Enter duration',
     errors: [
-      { type: 'required', message: 'Duration is required' }
+      {type: 'required', message: 'Duration is required'}
     ],
     validators: [Validators.required]
   }
