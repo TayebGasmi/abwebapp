@@ -8,6 +8,11 @@ export const routes: Routes = [
     loadChildren: () => import('./modules/auth/auth.routes').then(m => m.routes)
   },
   {
+    path: 'complete',
+    loadComponent: () => import('./modules/profile/complete-profile/complete-profile.component').then(m => m.CompleteProfileComponent),
+    canActivate: [authGuard],
+  },
+  {
     path: '', component: AppLayoutComponent,
     canActivate: [authGuard],
     children: [
@@ -17,13 +22,7 @@ export const routes: Routes = [
         canActivate: [authGuard],
         data: {roles: ['STUDENT', 'TEACHER']}
       },
-      {
-        path: 'profile',
-        loadChildren: () => import('./modules/profile/profile.routes').then(m => m.routes),
-        canActivate: [authGuard],
 
-
-      },
       {
         path: 'settings',
         loadChildren: () => import('./modules/settings/settings.routes').then(m => m.routes),

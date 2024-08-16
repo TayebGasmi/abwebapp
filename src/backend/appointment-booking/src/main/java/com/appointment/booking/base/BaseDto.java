@@ -1,6 +1,7 @@
 package com.appointment.booking.base;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,7 +18,7 @@ public class BaseDto<I extends Serializable> implements Serializable {
     private I id;
 
 
-    private ZonedDateTime createdDate;
+    private LocalDateTime createdDate;
 
-    private ZonedDateTime lastModifiedDate;
+    private LocalDateTime lastModifiedDate;
 }
