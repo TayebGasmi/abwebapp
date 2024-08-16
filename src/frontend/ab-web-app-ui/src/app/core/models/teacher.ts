@@ -1,8 +1,6 @@
-import {User} from "./User";
+import {User} from "./user";
 import {Subject} from "./subject"
-
-export interface Teacher {
-  user: User,
-  payRate: number,
-  subjects: Subject[]
+export interface Teacher extends User{
+  payRate?:number,
+  subjects?:Subject[]
 }

@@ -1,4 +1,4 @@
-import {User} from "./User";
+import {User} from "./user";
 import {SchoolType} from "./school-type";
 import {SchoolYear} from "./school-year";
 import {SessionDto} from "./session";

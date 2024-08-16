@@ -97,7 +97,7 @@ export class ConfigComponent {
       return;
     }
     const formData = this.form.value;
-    this.SchoolService.updateById({...formData, key: this.selectedConfig.key, id: this.selectedConfig.id}, this.selectedConfig?.id).subscribe(() => {
+    this.SchoolService.update({...formData, key: this.selectedConfig.key, id: this.selectedConfig.id}).subscribe(() => {
       this.notificationService.showSuccess('Config update successfully');
       this.loadConfigs();
       this.sidebarVisible = false;

@@ -38,18 +38,6 @@ export class AppMenuComponent implements OnInit {
         ]
       },
       {
-        label: "session",
-        visible: this.authService.hasRoles(["STUDENT", "TEACHER"]),
-
-        items: [
-          {
-            label: "Sessions",
-            icon: "pi pi-fw pi-list",
-            routerLink: "sessionlist"
-          }
-        ]
-      },
-      {
         label: "settings",
         visible: this.authService.hasRoles(["ADMIN"]),
         items: [
@@ -66,7 +54,7 @@ export class AppMenuComponent implements OnInit {
           {
             label: "School Year",
             icon: "pi pi-fw pi-calendar",
-            routerLink: "settings/schoolyear"
+            routerLink: "settings/school-year"
           },
           {
             label: "Configuration",

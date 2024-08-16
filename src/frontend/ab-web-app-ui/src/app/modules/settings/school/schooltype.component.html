@@ -6,7 +6,7 @@
         <button (click)="deleteAll(table.selectedItems)" class="p-button-danger" icon="pi pi-check" label="Yes" pButton pRipple></button>
       </ng-template>
     </app-delete-confirmation>
-    <button (click)="confirmDeleteALL(table.selectedItems)" [disabled]="!table.selectedItems.length" class="p-button-danger" icon="pi pi-trash" label="Delete"
+    <button (click)="confirmDeleteALL()" [disabled]="!table.selectedItems.length" class="p-button-danger" icon="pi pi-trash" label="Delete"
             pButton pRipple
             type="button"
     ></button>
