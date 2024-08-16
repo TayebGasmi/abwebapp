@@ -17,7 +17,11 @@ export class AuthService {
   private readonly AUTH_URL = `${environment.APPOINTMENT_BOOKING_URL}/auth`;
   private readonly router = inject(Router);
   private readonly httpClient: HttpClient = inject(HttpClient);
-  private browserStorage: BrowserStorageService = inject(BrowserStorageService);
+
+  constructor(
+    private browserStorage: BrowserStorageService
+  ) {
+  }
 
   socialLogin(user: any): Observable<TokenResponse> {
     return this.httpClient.post<TokenResponse>(`${this.AUTH_URL}/social`, user);
@@ -97,5 +101,20 @@ export class AuthService {
     if (typeof window !== 'undefined' && window.localStorage) {
       this.browserStorage.setItem('roles', JSON.stringify(roles));
     }
+  }
+
+  isProfileComplete(): boolean {
+    if (typeof window !== 'undefined' && window.localStorage) {
+      const userJson = this.browserStorage.getItem('user')
+      if (!userJson) {
+        return false
+      }
+      const user = JSON.parse(userJson) as User
+      if(!user){
+        return false
+      }
+      return user?.isCompleted
+    }
+    return false;
   }
 }

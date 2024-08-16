@@ -126,15 +126,13 @@ private final StudentRepository studentRepository;
     }
 
     private User buildNewSocialUser(String email, String firstName, String lastName, String profilePicture) {
-        Role studentRole = roleService.findByName(RoleType.STUDENT)
-            .orElseThrow(() -> new NotFoundException("Role not found"));
-
         return User.builder()
             .email(email)
             .firstName(firstName)
             .lastName(lastName)
             .isVerified(true)
             .profilePicture(profilePicture)
+            .isCompleted(false)
             .build();
     }
 

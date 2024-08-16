@@ -10,7 +10,6 @@ export const routes: Routes = [
   {
     path: 'complete',
     loadComponent: () => import('./modules/profile/complete-profile/complete-profile.component').then(m => m.CompleteProfileComponent),
-    canActivate: [authGuard],
   },
   {
     path: '', component: AppLayoutComponent,
