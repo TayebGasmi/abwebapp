@@ -7,7 +7,7 @@ import {HttpClient} from '@angular/common/http';
 import {Register} from '../models/register';
 import {TokenResponse} from "../models/token-response";
 import {BrowserStorageService} from "./browser-storage.service";
-import {User} from "../models/User";
+import {User} from "../models/user";
 
 @Injectable({
   providedIn: 'root'

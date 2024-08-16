@@ -4,6 +4,10 @@ import {authGuard} from "./core/guard/auth.guard";
 
 export const routes: Routes = [
   {
+    path: 'auth',
+    loadChildren: () => import('./modules/auth/auth.routes').then(m => m.routes)
+  },
+  {
     path: '', component: AppLayoutComponent,
     canActivate: [authGuard],
     children: [
@@ -29,11 +33,5 @@ export const routes: Routes = [
 
     ],
   },
-  {
-    path: 'auth',
-    loadChildren: () => import('./modules/auth/auth.routes').then(m => m.routes)
-  },
-  {
-    path: '**', redirectTo: '/notfound'
-  }
+
 ];

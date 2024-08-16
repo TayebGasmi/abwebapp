@@ -1,5 +1,4 @@
-import {User} from "./User";
-import {School} from "./School";
+import {User} from "./user";
 import {Subject} from "./subject"
 export interface Teacher extends User{
   payRate?:number,

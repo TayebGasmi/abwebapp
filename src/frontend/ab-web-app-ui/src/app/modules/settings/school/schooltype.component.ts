@@ -93,7 +93,7 @@ export class SchooltypeComponent {
       return;
     }
     if (this.selectedSchool) {
-      this.SchoolService.updateById({id: this.selectedSchool.id, ...form.value}, this.selectedSchool.id).subscribe(() => {
+      this.SchoolService.update({id: this.selectedSchool.id, ...form.value}).subscribe(() => {
         this.loadSchools();
         this.sidebarVisible = false;
         form.reset();
@@ -139,7 +139,7 @@ export class SchooltypeComponent {
     this.SchoolToDelete = item;
   }
 
-  confirmDeleteALL(item: any[]) {
+  confirmDeleteALL() {
     this.showDeleteAllConfirmation = true;
 
   }

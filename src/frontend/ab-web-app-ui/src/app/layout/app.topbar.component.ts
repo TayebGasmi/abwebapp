@@ -4,7 +4,7 @@ import {ButtonDirective} from 'primeng/button';
 import {InputTextModule} from 'primeng/inputtext';
 import {AppBreadcrumbComponent} from './app.breadcrumb.component';
 import {UserService} from "../core/service/user.service";
-import {User} from "../core/models/User";
+import {User} from "../core/models/user";
 import {NgOptimizedImage} from "@angular/common";
 
 @Component({

@@ -4,7 +4,7 @@
       <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
       <div class="p-fluid p-formgrid grid">
         <div class="field col-12 md:col-6">
-          <label htmlFor="firstname">Firstname</label>
+          <label for="firstname">Firstname</label>
           <input
             pInputText
             id="firstname"
@@ -17,7 +17,7 @@
           }
         </div>
         <div class="field col-12 md:col-6">
-          <label htmlFor="lastname">Lastname</label>
+          <label for="lastname">Lastname</label>
           <input
             pInputText
             id="lastname"
@@ -30,7 +30,7 @@
           }
         </div>
         <div class="field col-12">
-          <label htmlFor="email">Email</label>
+          <label for="email">Email</label>
           <input
             pInputText
             id="email"
@@ -41,8 +41,9 @@
           />
         </div>
         <div class="field col-12 ">
-          <label htmlFor="role">Select Role</label>
+          <label for="role">Select Role</label>
         <p-dropdown
+          id="role"
           formControlName="role"
           [options]="roles"
           (onChange)="onChange($event)"
@@ -54,8 +55,9 @@
         </div>
         @if(selectedRole==3){
         <div class="field col-12 ">
-          <label htmlFor="subject">Select Subject</label>
+          <label for="subject">Select Subject</label>
         <p-multiSelect
+          id="subject"
           formControlName="subject"
           placeholder="choose a subject"
           [options]="subjects"
@@ -67,8 +69,9 @@
         }
         @if(selectedRole==2){
         <div class="field col-12 md:col-6">
-          <label htmlFor="schoolYear">School Year</label>
+          <label for="schoolYear">School Year</label>
           <p-dropdown
+            id="schoolYear"
             formControlName="schoolYear"
             [options]="schoolYears"
             optionLabel="name"
@@ -78,8 +81,9 @@
           }
         </div>
         <div class="field col-12 md:col-6">
-          <label htmlFor="schoolType">School Type</label>
+          <label for="schoolType">School Type</label>
           <p-dropdown
+            id="schoolType"
             formControlName="schoolType"
             [options]="schoolTypes"
             optionLabel="name"

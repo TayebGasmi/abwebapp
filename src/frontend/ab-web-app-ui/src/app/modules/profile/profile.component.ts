@@ -4,7 +4,7 @@ import {DropdownModule} from 'primeng/dropdown';
 import {InputTextModule} from 'primeng/inputtext';
 import {Button, ButtonDirective} from 'primeng/button';
 import {InputSwitchChangeEvent, InputSwitchModule} from "primeng/inputswitch";
-import {User} from "../../core/models/User";
+import {User} from "../../core/models/user";
 import {SchoolType} from "../../core/models/school-type";
 import {SchoolYear} from "../../core/models/school-year";
 import {BrowserStorageService} from "../../core/service/browser-storage.service";

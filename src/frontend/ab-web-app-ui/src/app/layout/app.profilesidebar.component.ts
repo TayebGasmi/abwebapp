@@ -4,7 +4,7 @@ import {BadgeModule} from 'primeng/badge';
 import {SidebarModule} from 'primeng/sidebar';
 import {AuthService} from '../core/service/auth.service';
 import {UserService} from '../core/service/user.service';
-import {User} from "../core/models/User";
+import {User} from "../core/models/user";
 import {Router} from "@angular/router";
 
 @Component({
@@ -36,13 +36,10 @@ export class AppProfileSidebarComponent implements OnInit {
   }
 
   signOut() {
-    if (typeof window !== 'undefined' && window.localStorage) {
-      localStorage.clear();
-      this.router.navigate(['/auth/login']);
-    }
+    this.authService.logout()
   }
 
   goToProfile() {
-    this.router.navigate(['/profile']);
+    this.router.navigate(['profile/details']);
   }
 }
