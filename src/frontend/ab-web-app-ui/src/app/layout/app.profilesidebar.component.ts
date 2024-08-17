@@ -36,7 +36,9 @@ export class AppProfileSidebarComponent implements OnInit {
   }
 
   signOut() {
-    this.authService.logout()
+  //  this.authService.logout()
+    this.router.navigate(['/  auth/login']);
+
   }
 
   goToProfile() {

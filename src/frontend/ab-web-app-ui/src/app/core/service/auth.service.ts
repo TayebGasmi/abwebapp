@@ -58,10 +58,8 @@ export class AuthService {
 
   logout() {
     if (typeof window !== 'undefined' && window.localStorage) {
-      this.router.navigate(['auth/login']);
       this.browserStorage.clear();
     }
-
   }
 
   addToken(token: string) {
