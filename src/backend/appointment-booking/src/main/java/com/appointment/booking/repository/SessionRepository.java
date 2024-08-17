@@ -12,12 +12,12 @@ public interface SessionRepository extends BaseRepository<Session, Long> {
 
     @Query("SELECT COUNT(s) > 0 FROM Session s WHERE " +
            "(s.teacher.id = :teacherId OR s.student.id = :studentId) AND " +
-           "((s.startTime < :endTime AND s.endTime > :startTime))")
+           "((s.startDateTime < :endDateTime AND s.endDateTime > :startDateTime))")
     boolean existsConflictingSession(
         @Param("teacherId") Long teacherId,
         @Param("studentId") Long studentId,
-        @Param("startTime") ZonedDateTime startTime,
-        @Param("endTime") ZonedDateTime endTime
+        @Param("startDateTime") ZonedDateTime startDateTime,
+        @Param("endDateTime") ZonedDateTime endDateTime
     );
 
 

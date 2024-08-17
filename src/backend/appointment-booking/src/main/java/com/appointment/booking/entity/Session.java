@@ -30,9 +30,9 @@ public class Session extends BaseEntity<Long> {
     @Column(nullable = false)
     private String description;
     @Column(nullable = false)
-    private ZonedDateTime startTime;
+    private ZonedDateTime startDateTime;
     @Column(nullable = false)
-    private ZonedDateTime endTime;
+    private ZonedDateTime endDateTime;
     @Column(nullable = false)
     private String meetingLink;
 

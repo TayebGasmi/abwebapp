@@ -3,6 +3,7 @@ export interface SessionDto {
   title: string;
   description: string;
   startTime: Date;
+  endTime: Date;
   meetingLink: string;
   price: number;
   duration: number;

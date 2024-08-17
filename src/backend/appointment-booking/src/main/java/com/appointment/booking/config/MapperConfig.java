@@ -16,5 +16,9 @@ public class MapperConfig {
         objectMapper.registerModule(new JavaTimeModule());
         return objectMapper;
     }
+    @Bean
+    public JavaTimeModule dateTimeModule(){
+        return new JavaTimeModule();
+    }
 
 }

@@ -10,10 +10,14 @@ import com.appointment.booking.repository.SessionRepository;
 import com.google.api.services.calendar.model.Event;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class SessionService extends BaseServiceImpl<Session, Long, SessionDto> {
 
 
@@ -22,19 +26,21 @@ public class SessionService extends BaseServiceImpl<Session, Long, SessionDto> {
 
     @Override
     public SessionDto add(SessionDto sessionDto) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        log.info(authentication.getPrincipal().toString());
         if (sessionRepository.existsConflictingSession(
             sessionDto.getTeacher().getId(),
             sessionDto.getStudent().getId(),
-            sessionDto.getStartTime(),
-            sessionDto.getStartTime().plusMinutes(sessionDto.getDuration())
+            sessionDto.getStartDateTime(),
+            sessionDto.getStartDateTime().plusMinutes(60)
         )) {
             throw new SessionConflictException("A conflicting session exists for either the teacher or the student during this time.");
         }
         MeetingDto meetingDto = MeetingDto.builder()
             .summary(sessionDto.getTitle())
             .description(sessionDto.getDescription())
-            .startDate(sessionDto.getStartTime())
-            .endDate(sessionDto.getStartTime().plusMinutes(sessionDto.getDuration()))
+            .startDate(sessionDto.getStartDateTime())
+            .endDate(sessionDto.getStartDateTime().plusMinutes(sessionDto.getDuration()))
             .participants(Set.of(
                 MeetingParticipant.builder()
                     .email(sessionDto.getStudent().getEmail())

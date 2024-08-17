@@ -14,6 +14,14 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import {SessionService} from "../../core/service/session.service";
+import {SessionDto} from "../../core/models/session";
+import {MultiSelectModule} from "primeng/multiselect";
+import {NgClass} from "@angular/common";
+import {Subject} from "../../core/models/subject";
+import {Teacher} from "../../core/models/teacher";
+import {TeacherService} from "../../core/service/teacher.service";
+import {SubjectService} from "../../core/service/subject.service";
+import {NotificationService} from "../../core/service/notification.service";
 
 @Component({
   selector: 'app-session',
@@ -28,21 +36,27 @@ import {SessionService} from "../../core/service/session.service";
     InputTextareaModule,
     PaginatorModule,
     PrimeTemplate,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MultiSelectModule,
+    NgClass
   ],
   templateUrl: './session.component.html',
   styleUrl: './session.component.scss'
 })
-export class SessionComponent implements  OnInit{
+export class SessionComponent implements OnInit {
   calendarOptions: CalendarOptions = {};
   events: any[] = [];
   today: string = '';
   showDialog: boolean = false;
   clickedEvent: EventInput | null = null;
   view: 'display' | 'edit' | 'new' = 'display';
-  eventForm!: FormGroup;
+  sessionForm!: FormGroup;
+  selectedSession: SessionDto | null = null;
+  title: string = "";
+  subjects!: { label: string, value: Subject }[]
+  teachers!: { label: string, value: Teacher }[]
 
-  constructor(private fb: FormBuilder,private sessionService:SessionService) {
+  constructor(private fb: FormBuilder, private sessionService: SessionService, private teacherService: TeacherService, private subjectService: SubjectService, private notificationService: NotificationService) {
   }
 
   ngOnInit(): void {
@@ -65,18 +79,34 @@ export class SessionComponent implements  OnInit{
         {title: 'event 2', date: '2024-08-02'}
       ]
     };
-
+    this.teacherService.getALL().subscribe(
+      result => this.teachers = result.map(u => {
+          return {
+            label: `${u.firstName} ${u.lastName}`,
+            value: u
+          }
+        }
+      )
+    )
+    this.subjectService.getALL().subscribe(
+      result => this.subjects = result.map(u => {
+          return {
+            label: u.name,
+            value: u
+          }
+        }
+      )
+    )
     this.initializeForm();
   }
 
   initializeForm() {
-    this.eventForm = this.fb.group({
+    this.sessionForm = this.fb.group({
       title: ['', Validators.required],
-      location: [''],
-      description: [''],
-      start: ['', Validators.required],
-      end: ['', Validators.required],
-      tag: [null]
+      description: ['', Validators.required],
+      startDateTime: ['', Validators.required],
+      teacher: [null, Validators.required],
+      subject: [null, Validators.required]
     });
   }
 
@@ -85,56 +115,43 @@ export class SessionComponent implements  OnInit{
     this.view = 'display';
     this.showDialog = true;
     if (this.clickedEvent)
-      this.eventForm.patchValue({
+      this.sessionForm.patchValue({
         title: this.clickedEvent.title,
         location: this.clickedEvent.extendedProps?.['location'],
         description: this.clickedEvent.extendedProps?.['description'],
         start: this.clickedEvent.start,
         end: this.clickedEvent.end || this.clickedEvent.start,
-        tag: this.clickedEvent.extendedProps?.['tag']
       });
   }
 
   handleSave() {
-    if (this.eventForm.invalid) {
+    if (this.sessionForm.invalid) {
       return;
     }
-
-    const formValue = this.eventForm.value;
-
-    this.clickedEvent = {
-      ...this.clickedEvent,
-      title: formValue.title,
-      start: formValue.start,
-      end: formValue.end,
-      backgroundColor: formValue.tag.color,
-      borderColor: formValue.tag.color,
-      extendedProps: {
-        location: formValue.location,
-        description: formValue.description,
-        tag: formValue.tag
-      }
-    };
-
-    if (this.clickedEvent.id) {
-      this.updateEvent();
+    if (this.selectedSession) {
+      this.updateSession();
     } else {
-      this.addNewEvent();
+      this.addNewSession();
     }
+
 
     this.showDialog = false;
     this.resetEvent();
   }
 
-  updateEvent() {
-    this.events = this.events.map(event => event.id === this.clickedEvent?.id ? {...this.clickedEvent} : event);
+  updateSession() {
     this.updateCalendarEvents();
   }
 
-  addNewEvent() {
-    const newEvent = {...this.clickedEvent, id: Math.floor(Math.random() * 10000)};
-    this.events = [...this.events, newEvent];
-    this.updateCalendarEvents();
+  addNewSession() {
+    const formValue = this.sessionForm.value
+    this.sessionService.save(formValue).subscribe(
+      () => {
+        this.showDialog = false;
+        this.sessionForm.reset();
+        this.notificationService.showSuccess('Subject saved successfully');
+      }
+    )
   }
 
   updateCalendarEvents() {
@@ -147,12 +164,20 @@ export class SessionComponent implements  OnInit{
 
   resetEvent() {
     this.clickedEvent = null;
-    this.eventForm.reset();
+    this.sessionForm.reset();
   }
 
-  private onDateSelect(e: DateSelectArg) {
+  private onDateSelect(dateSelectArg: DateSelectArg) {
     this.view = 'new'
+    this.title = "New session"
     this.showDialog = true;
-   // this.clickedEvent = { ...e, title: null, description: null, location: null, backgroundColor: null, borderColor: null, textColor: null, tag: { color: null, name: null } };
+    this.sessionForm.get("startDateTime")?.patchValue(
+      dateSelectArg.start
+    )
+  }
+
+  fieldHasError(fieldName: string): boolean {
+    const control = this.sessionForm.get(fieldName);
+    return !!(control?.invalid && (control?.dirty || control?.touched));
   }
 }

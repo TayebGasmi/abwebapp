@@ -25,23 +25,20 @@ import lombok.experimental.SuperBuilder;
 @EqualsAndHashCode(callSuper = true)
 public class SessionDto extends BaseDto<Long> {
 
-    @NotBlank
-    @NotNull
-    String title;
-    String description;
+
+    private String title;
     @NotBlank
     @NotNull
     @FutureOrPresent
-    ZonedDateTime startTime;
-    @NotBlank
-    @NotNull
-    String meetingLink;
-    @NotNull
-    BigDecimal price;
-    @NotNull
-    Long duration;
-    SessionStatus status;
-    TeacherDto teacher;
-    @NotNull
-    StudentDto student;
+    private ZonedDateTime startDateTime;
+    private ZonedDateTime endDateTime;
+    private String meetingLink;
+    private BigDecimal price;
+    private SessionStatus status;
+    private TeacherDto teacher;
+    private StudentDto student;
+    private String description;
+    private Long duration;
+
+
 }
