@@ -1,27 +1,27 @@
-import {Component, OnInit} from '@angular/core';
-import {ButtonDirective} from "primeng/button";
-import {CalendarModule} from "primeng/calendar";
-import {DialogModule} from "primeng/dialog";
-import {DropdownModule} from "primeng/dropdown";
-import {FullCalendarModule} from "@fullcalendar/angular";
-import {InputTextModule} from "primeng/inputtext";
-import {InputTextareaModule} from "primeng/inputtextarea";
-import {PaginatorModule} from "primeng/paginator";
-import {PrimeTemplate} from "primeng/api";
-import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
-import {CalendarOptions, DateSelectArg, EventClickArg, EventInput} from "@fullcalendar/core";
-import dayGridPlugin from "@fullcalendar/daygrid";
-import interactionPlugin from "@fullcalendar/interaction";
-import timeGridPlugin from "@fullcalendar/timegrid";
-import {SessionService} from "../../core/service/session.service";
-import {SessionDto} from "../../core/models/session";
-import {MultiSelectModule} from "primeng/multiselect";
-import {NgClass} from "@angular/common";
-import {Subject} from "../../core/models/subject";
-import {Teacher} from "../../core/models/teacher";
-import {TeacherService} from "../../core/service/teacher.service";
-import {SubjectService} from "../../core/service/subject.service";
-import {NotificationService} from "../../core/service/notification.service";
+import { Component, OnInit } from '@angular/core';
+import { ButtonDirective } from 'primeng/button';
+import { CalendarModule } from 'primeng/calendar';
+import { DialogModule } from 'primeng/dialog';
+import { DropdownModule } from 'primeng/dropdown';
+import { FullCalendarModule } from '@fullcalendar/angular';
+import { InputTextModule } from 'primeng/inputtext';
+import { InputTextareaModule } from 'primeng/inputtextarea';
+import { PaginatorModule } from 'primeng/paginator';
+import { PrimeTemplate } from 'primeng/api';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { CalendarOptions, DateSelectArg, EventClickArg, EventInput } from '@fullcalendar/core';
+import dayGridPlugin from '@fullcalendar/daygrid';
+import interactionPlugin from '@fullcalendar/interaction';
+import timeGridPlugin from '@fullcalendar/timegrid';
+import { SessionService } from '../../core/service/session.service';
+import { SessionDto } from '../../core/models/session';
+import { MultiSelectModule } from 'primeng/multiselect';
+import { NgClass } from '@angular/common';
+import { Subject } from '../../core/models/subject';
+import { Teacher } from '../../core/models/teacher';
+import { TeacherService } from '../../core/service/teacher.service';
+import { SubjectService } from '../../core/service/subject.service';
+import { NotificationService } from '../../core/service/notification.service';
 
 @Component({
   selector: 'app-session',
@@ -41,7 +41,7 @@ import {NotificationService} from "../../core/service/notification.service";
     NgClass
   ],
   templateUrl: './session.component.html',
-  styleUrl: './session.component.scss'
+  styleUrls: ['./session.component.scss']
 })
 export class SessionComponent implements OnInit {
   calendarOptions: CalendarOptions = {};
@@ -55,11 +55,31 @@ export class SessionComponent implements OnInit {
   title: string = "";
   subjects!: { label: string, value: Subject }[]
   teachers!: { label: string, value: Teacher }[]
+  sessions!: SessionDto[];
 
-  constructor(private fb: FormBuilder, private sessionService: SessionService, private teacherService: TeacherService, private subjectService: SubjectService, private notificationService: NotificationService) {
-  }
+  constructor(
+    private fb: FormBuilder,
+    private sessionService: SessionService,
+    private teacherService: TeacherService,
+    private subjectService: SubjectService,
+    private notificationService: NotificationService
+  ) { }
 
   ngOnInit(): void {
+    this.initializeForm();
+    this.loadSessions();  // Load sessions when the component initializes
+    this.teacherService.getALL().subscribe(
+      result => this.teachers = result.map(u => ({
+        label: `${u.firstName} ${u.lastName}`,
+        value: u
+      }))
+    );
+    this.subjectService.getALL().subscribe(
+      result => this.subjects = result.map(u => ({
+        label: u.name,
+        value: u
+      }))
+    );
     this.calendarOptions = {
       initialView: 'dayGridMonth',
       plugins: [dayGridPlugin, interactionPlugin, timeGridPlugin],
@@ -74,30 +94,8 @@ export class SessionComponent implements OnInit {
       dayMaxEvents: true,
       eventClick: (e: EventClickArg) => this.onEventClick(e),
       select: (e: DateSelectArg) => this.onDateSelect(e),
-      events: [
-        {title: 'event 1', date: '2024-08-01', backgroundColor: "red"},
-        {title: 'event 2', date: '2024-08-02'}
-      ]
+      events: this.events
     };
-    this.teacherService.getALL().subscribe(
-      result => this.teachers = result.map(u => {
-          return {
-            label: `${u.firstName} ${u.lastName}`,
-            value: u
-          }
-        }
-      )
-    )
-    this.subjectService.getALL().subscribe(
-      result => this.subjects = result.map(u => {
-          return {
-            label: u.name,
-            value: u
-          }
-        }
-      )
-    )
-    this.initializeForm();
   }
 
   initializeForm() {
@@ -108,11 +106,26 @@ export class SessionComponent implements OnInit {
     });
   }
 
-  onEventClick(e: any) {
+  loadSessions() {
+    this.sessionService.getCurrentUserSessions().subscribe(
+      sessions => {
+        this.sessions = sessions;
+        this.events = sessions.map(session => ({
+          title: session.title,
+          start: "2024-08-15T12:00:00Z",
+          end: session.endDateTime
+        }));
+        console.log(this.events)
+        this.updateCalendarEvents();
+      },
+    );
+  }
+
+  onEventClick(e: EventClickArg) {
     this.clickedEvent = e.event.toPlainObject();
     this.view = 'display';
     this.showDialog = true;
-    if (this.clickedEvent)
+    if (this.clickedEvent) {
       this.sessionForm.patchValue({
         title: this.clickedEvent.title,
         location: this.clickedEvent.extendedProps?.['location'],
@@ -120,6 +133,7 @@ export class SessionComponent implements OnInit {
         start: this.clickedEvent.start,
         end: this.clickedEvent.end || this.clickedEvent.start,
       });
+    }
   }
 
   handleSave() {
@@ -131,8 +145,6 @@ export class SessionComponent implements OnInit {
     } else {
       this.addNewSession();
     }
-
-
     this.showDialog = false;
     this.resetEvent();
   }
@@ -142,18 +154,19 @@ export class SessionComponent implements OnInit {
   }
 
   addNewSession() {
-    const formValue = this.sessionForm.value
+    const formValue = this.sessionForm.value;
     this.sessionService.save(formValue).subscribe(
       () => {
         this.showDialog = false;
         this.sessionForm.reset();
         this.notificationService.showSuccess('Subject saved successfully');
+        this.loadSessions();  // Refresh the sessions list
       }
-    )
+    );
   }
 
   updateCalendarEvents() {
-    this.calendarOptions = {...this.calendarOptions, events: this.events};
+    this.calendarOptions = { ...this.calendarOptions, events: this.events };
   }
 
   onEditClick() {
@@ -166,12 +179,10 @@ export class SessionComponent implements OnInit {
   }
 
   private onDateSelect(dateSelectArg: DateSelectArg) {
-    this.view = 'new'
-    this.title = "New session"
+    this.view = 'new';
+    this.title = 'New session';
     this.showDialog = true;
-    this.sessionForm.get("startDateTime")?.patchValue(
-      dateSelectArg.start
-    )
+    this.sessionForm.get('startDateTime')?.patchValue(dateSelectArg.start);
   }
 
   fieldHasError(fieldName: string): boolean {

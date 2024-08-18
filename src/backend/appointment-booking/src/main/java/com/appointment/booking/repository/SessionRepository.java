@@ -3,6 +3,7 @@ package com.appointment.booking.repository;
 import com.appointment.booking.base.BaseRepository;
 import com.appointment.booking.entity.Session;
 import java.time.ZonedDateTime;
+import java.util.List;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -21,4 +22,7 @@ public interface SessionRepository extends BaseRepository<Session, Long> {
     );
 
 
+    List<Session> findByStudentId(Long id);
+
+    List<Session> findByTeacherId(Long id);
 }
