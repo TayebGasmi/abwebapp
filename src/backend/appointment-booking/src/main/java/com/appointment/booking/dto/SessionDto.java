@@ -3,7 +3,6 @@ package com.appointment.booking.dto;
 import com.appointment.booking.base.BaseDto;
 import com.appointment.booking.enums.SessionStatus;
 import jakarta.validation.constraints.FutureOrPresent;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
