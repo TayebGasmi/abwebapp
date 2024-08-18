@@ -50,7 +50,7 @@
 
           <div class="mt-4">
             <div class="text-900 font-semibold mb-2">Meeting Link</div>
-            <a [href]="selectedSession.meetingLink" target="_blank" class="p-button p-component p-button-text p-button-sm">
+            <a [href]="selectedSession.meetingLink" target="_blank" class="p-button p-component   p-button-sm">
               <span class="p-button-icon pi pi-external-link"></span>
               <span class="p-button-label">Join Session</span>
             </a>
@@ -61,7 +61,7 @@
               <div class="text-900 font-semibold mb-2">Price</div>
               <p class="flex align-items-center m-0">
                 <i class="pi pi-fw pi-dollar text-700 mr-2"></i>
-                <span>{{ selectedSession.price | currency }}</span>
+                <span>{{ selectedSession.price  }}</span>
               </p>
             </div>
             <div class="col-6">
@@ -133,10 +133,10 @@
 
     <ng-template pTemplate="footer">
       @if (view === 'display') {
-        <button pButton label="Edit" icon="pi pi-pencil" (click)="onEditClick()" class="p-button-primary" style="margin-right: .25rem"></button>
+        <button pButton label="Edit" icon="pi pi-pencil" (click)="onEditClick()" class="p-button-primary p-button-sm" style="margin-right: .25rem"></button>
       }
       @if (view !== 'display') {
-        <button pButton label="Save" icon="pi pi-check" (click)="handleSave()" class="p-button-primary"></button>
+        <button pButton label="Save" icon="pi pi-check" (click)="handleSave()" class="p-button-primary p-button-sm"></button>
       }
     </ng-template>
   </p-dialog>

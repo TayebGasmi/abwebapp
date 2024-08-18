@@ -1,6 +1,7 @@
 package com.appointment.booking.dto;
 
 import com.appointment.booking.base.BaseDto;
+import com.appointment.booking.entity.Subject;
 import com.appointment.booking.enums.SessionStatus;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotNull;
@@ -32,11 +33,11 @@ public class SessionDto extends BaseDto<Long> {
     private String meetingLink;
     private BigDecimal price;
     private SessionStatus status;
-    @NotNull
     private TeacherDto teacher;
     private StudentDto student;
     private String description;
     private Long duration;
-
+    @NotNull
+    private SubjectDto subject;
 
 }

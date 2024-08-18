@@ -150,8 +150,8 @@ export class SessionComponent implements OnInit {
       meetingLink: e.event.extendedProps['meetingLink'] || '',
       price: e.event.extendedProps['price'] || 0,
       duration: e.event.extendedProps['duration'] || 0,
-      teacher: e.event.extendedProps['teacher'],
-      subject: e.event.extendedProps['subject']
+      teacher: e.event.extendedProps['teacher'] ,
+      subject:e.event.extendedProps['subject']
     };
     this.view = 'display';
     this.showDialog = true;
@@ -197,7 +197,7 @@ export class SessionComponent implements OnInit {
     this.view = 'edit';
   }
 
-  resetEvent() {
+   resetEvent() {
     this.selectedSession = null;
     this.sessionForm.reset();
   }

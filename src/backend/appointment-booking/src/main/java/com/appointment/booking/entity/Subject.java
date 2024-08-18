@@ -1,10 +1,12 @@
 package com.appointment.booking.entity;
 
 import com.appointment.booking.base.BaseEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import lombok.AllArgsConstructor;
@@ -34,5 +36,8 @@ public class Subject extends BaseEntity<Long> {
         inverseJoinColumns = @JoinColumn(name = "teachers_id"))
     private Set<Teacher> teachers = new LinkedHashSet<>();
 
+
+    @OneToMany(mappedBy = "subject")
+    private Set<Session> sessions = new LinkedHashSet<>();
 
 }

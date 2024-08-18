@@ -58,4 +58,7 @@ public class Session extends BaseEntity<Long> {
     @OneToOne(mappedBy = "session", orphanRemoval = true)
     private Payment payment;
 
+    @ManyToOne
+    private Subject subject;
+
 }
