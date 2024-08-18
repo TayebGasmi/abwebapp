@@ -112,7 +112,7 @@ export class SessionComponent implements OnInit {
         this.sessions = sessions;
         this.events = sessions.map(session => ({
           title: session.title,
-          start: "2024-08-15T12:00:00Z",
+          start: session.startDateTime,
           end: session.endDateTime
         }));
         console.log(this.events)
