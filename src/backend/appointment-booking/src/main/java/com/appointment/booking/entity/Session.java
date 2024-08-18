@@ -26,7 +26,7 @@ import lombok.experimental.SuperBuilder;
 public class Session extends BaseEntity<Long> {
 
     @Column(nullable = false)
-    private String summary;
+    private String title;
     @Column(nullable = false)
     private String description;
     @Column(nullable = false)

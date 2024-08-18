@@ -6,10 +6,12 @@ import com.appointment.booking.dto.MeetingParticipant;
 import com.appointment.booking.dto.SessionDto;
 import com.appointment.booking.entity.Session;
 import com.appointment.booking.entity.Student;
+import com.appointment.booking.enums.SessionStatus;
 import com.appointment.booking.exceptions.SessionConflictException;
 import com.appointment.booking.mapper.StudentMapper;
 import com.appointment.booking.repository.SessionRepository;
 import com.google.api.services.calendar.model.Event;
+import java.math.BigDecimal;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,11 +34,21 @@ public class SessionService extends BaseServiceImpl<Session, Long, SessionDto> {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Student student = (Student) authentication.getPrincipal();
         sessionDto.setStudent(studentMapper.convertEntityToDto(student));
+        if (sessionDto.getTitle() == null || sessionDto.getTitle().isEmpty()) {
+            sessionDto.setTitle("Default Session Title");
+        }
+        if (sessionDto.getDescription() == null || sessionDto.getDescription().isEmpty()) {
+            sessionDto.setDescription("No description provided.");
+        }
+        sessionDto.setDuration(60L);
+        sessionDto.setEndDateTime(sessionDto.getStartDateTime().plusMinutes(60));
+        sessionDto.setPrice(new BigDecimal(25));
+        sessionDto.setStatus(SessionStatus.ACCEPTED_BY_TEACHER);
         if (sessionRepository.existsConflictingSession(
             sessionDto.getTeacher().getId(),
             sessionDto.getStudent().getId(),
             sessionDto.getStartDateTime(),
-            sessionDto.getStartDateTime().plusMinutes(60)
+            sessionDto.getEndDateTime()
         )) {
             throw new SessionConflictException("A conflicting session exists for either the teacher or the student during this time.");
         }
