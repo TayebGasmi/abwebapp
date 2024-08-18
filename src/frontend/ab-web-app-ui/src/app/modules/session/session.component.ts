@@ -102,8 +102,6 @@ export class SessionComponent implements OnInit {
 
   initializeForm() {
     this.sessionForm = this.fb.group({
-      title: ['', Validators.required],
-      description: ['', Validators.required],
       startDateTime: ['', Validators.required],
       teacher: [null, Validators.required],
       subject: [null, Validators.required]

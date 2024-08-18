@@ -27,14 +27,13 @@ public class SessionDto extends BaseDto<Long> {
 
 
     private String title;
-    @NotBlank
-    @NotNull
     @FutureOrPresent
     private ZonedDateTime startDateTime;
     private ZonedDateTime endDateTime;
     private String meetingLink;
     private BigDecimal price;
     private SessionStatus status;
+    @NotNull
     private TeacherDto teacher;
     private StudentDto student;
     private String description;

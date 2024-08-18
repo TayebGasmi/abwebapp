@@ -5,7 +5,9 @@ import com.appointment.booking.dto.MeetingDto;
 import com.appointment.booking.dto.MeetingParticipant;
 import com.appointment.booking.dto.SessionDto;
 import com.appointment.booking.entity.Session;
+import com.appointment.booking.entity.Student;
 import com.appointment.booking.exceptions.SessionConflictException;
+import com.appointment.booking.mapper.StudentMapper;
 import com.appointment.booking.repository.SessionRepository;
 import com.google.api.services.calendar.model.Event;
 import java.util.Set;
@@ -23,11 +25,13 @@ public class SessionService extends BaseServiceImpl<Session, Long, SessionDto> {
 
     private final GoogleCalendarService googleCalendarService;
     private final SessionRepository sessionRepository;
+    private final StudentMapper studentMapper;
 
     @Override
     public SessionDto add(SessionDto sessionDto) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        log.info(authentication.getPrincipal().toString());
+        Student student = (Student) authentication.getPrincipal();
+        sessionDto.setStudent(studentMapper.convertEntityToDto(student));
         if (sessionRepository.existsConflictingSession(
             sessionDto.getTeacher().getId(),
             sessionDto.getStudent().getId(),
@@ -40,7 +44,7 @@ public class SessionService extends BaseServiceImpl<Session, Long, SessionDto> {
             .summary(sessionDto.getTitle())
             .description(sessionDto.getDescription())
             .startDate(sessionDto.getStartDateTime())
-            .endDate(sessionDto.getStartDateTime().plusMinutes(sessionDto.getDuration()))
+            .endDate(sessionDto.getStartDateTime().plusMinutes(60))
             .participants(Set.of(
                 MeetingParticipant.builder()
                     .email(sessionDto.getStudent().getEmail())
