@@ -1,4 +1,4 @@
-import {Component, inject, OnInit} from '@angular/core';
+import {afterNextRender, Component, inject, Injector, OnInit} from '@angular/core';
 import {LayoutService} from './service/app.layout.service';
 import {BadgeModule} from 'primeng/badge';
 import {SidebarModule} from 'primeng/sidebar';
@@ -6,6 +6,7 @@ import {AuthService} from '../core/service/auth.service';
 import {UserService} from '../core/service/user.service';
 import {User} from "../core/models/user";
 import {Router} from "@angular/router";
+import {BrowserStorageService} from "../core/service/browser-storage.service";
 
 @Component({
   selector: 'app-profilemenu',
@@ -14,10 +15,11 @@ import {Router} from "@angular/router";
   imports: [SidebarModule, BadgeModule]
 })
 export class AppProfileSidebarComponent implements OnInit {
-  router = inject(Router)
   currentUser: User | null = null;
+  injector = inject(Injector);
 
-  constructor(public layoutService: LayoutService, private authService: AuthService, private userService: UserService) {
+
+  constructor(public router:Router,public browserStorage:BrowserStorageService,public layoutService: LayoutService, private authService: AuthService, private userService: UserService) {
 
   }
 
@@ -36,9 +38,11 @@ export class AppProfileSidebarComponent implements OnInit {
   }
 
   signOut() {
-  //  this.authService.logout()
-    this.router.navigate(['/  auth/login']);
-
+    window.location.reload();
+    if (typeof window !== "undefined") {
+      this.browserStorage.clear()
+      this.router.navigate(['/auth/login']);
+    }
   }
 
   goToProfile() {

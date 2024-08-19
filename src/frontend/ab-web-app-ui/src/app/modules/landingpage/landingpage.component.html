@@ -1,0 +1,156 @@
+<div class="relative overflow-hidden flex flex-column justify-content-center">
+  <div class="bg-circle opacity-50" style="top: -200px; left: -700px;"></div>
+  <div class="bg-circle hidden lg:flex" style="top: 50px; right:-800px; transform: rotate(60deg)"></div>
+  <div class="landing-wrapper">
+    <div class="py-4 px-4 mx-0 md:mx-6 lg:mx-8 lg:px-8 z-2">
+      <div id="home" class="grid grid-nogutter justify-content-between align-items-center mb-6 py-6 md:mb-8 md:py-8">
+        <div class="col-12 md:col-4 flex flex-column gap-4 flex-order-1 md:flex-order-0 align-items-center md:align-items-start text-center md:text-left">
+          <span class="block text-900 font-bold text-4xl">Doowi: Empower Your Learning Journey</span>
+          <span class="block text-700 text-lg">Your gateway to a modern, comprehensive, and accessible e-learning platform.</span>
+          <ul class="flex flex-wrap gap-5 list-none p-0">
+            <li class="flex align-items-center">
+              <div class="p-1 border-circle bg-green-400 inline-block mr-2"></div>
+              <span class="text-900 font-semibold">Interactive Courses</span>
+            </li>
+            <li class="flex align-items-center">
+              <div class="p-1 border-circle bg-green-400 inline-block mr-2"></div>
+              <span class="text-900 font-semibold">Personalized Learning</span>
+            </li>
+            <li class="flex align-items-center">
+              <div class="p-1 border-circle bg-green-400 inline-block mr-2"></div>
+              <span class="text-900 font-semibold">Expert Instructors</span>
+            </li>
+          </ul>
+          <button pButton pRipple type="button" label="Explore Courses" icon="pi pi-arrow-right" iconPos="right" class="w-12rem p-button-outlined"></button>
+        </div>
+
+        <div class="col-12 md:col-7 flex-order-0 md:flex-order-1 mb-6 md:mb-0 border-round">
+          <img animateEnter="moveinright" src="assets/demo/images/landing/{{darkMode ? 'dashboard-dark' : 'dashboard-light'}}.png" alt="" class="w-full h-full border-round shadow-2 animation-duration-1000 animation-ease-out">
+        </div>
+      </div>
+
+      <div id="apps" class="my-6 md:my-8">
+        <span class="text-900 block font-bold text-5xl mb-4 text-center">Key Features</span>
+        <span class="text-700 block text-xl mb-8 text-center line-height-3">Discover how Doowi enhances your learning experience.</span>
+
+        <div class="flex flex-column lg:flex-row align-items-center justify-content-between mt-8 gap-8">
+          <div class="flex flex-column align-items-center">
+            <img animateEnter="scalein" src="assets/demo/images/landing/{{darkMode ? 'chat-dark' : 'chat-light'}}.png" alt="chat" class="w-full h-full border-round surface-border shadow-2 animation-duration-500 origin-top">
+            <span class="block text-900 text-lg font-semibold mt-4">Interactive Chat</span>
+          </div>
+          <div class="flex flex-column align-items-center">
+            <img animateEnter="scalein" src="assets/demo/images/landing/{{darkMode ? 'mail-dark' : 'mail-light'}}.png" alt="chat" class="w-full h-full border-round surface-border shadow-2 animation-duration-500 origin-top">
+            <span class="block text-900 text-lg font-semibold mt-4">Course Updates</span>
+          </div>
+          <div class="flex flex-column align-items-center">
+            <img animateEnter="scalein" src="assets/demo/images/landing/{{darkMode ? 'kanban-dark' : 'kanban-light'}}.png" alt="chat" class="w-full h-full border-round surface-border shadow-2 animation-duration-500 origin-top">
+            <span class="block text-900 text-lg font-semibold mt-4">Task Management</span>
+          </div>
+        </div>
+      </div>
+
+      <div id="pricing" class="my-6 py-6 md:my-8 md:py-8">
+        <div class="text-900 font-bold text-5xl mb-4 text-center">Flexible Pricing</div>
+        <div class="text-700 text-xl mb-8 text-center line-height-3">Choose a plan that fits your learning goals and budget.</div>
+
+        <div class="grid grid-nogutter justify-content-center mt-8">
+          <div class="col-12 lg:col-6 xl:col-4">
+            <div class="p-3 h-full">
+              <div class="shadow-2 p-6 h-full flex flex-column surface-card" style="border-radius: 6px">
+                <span class="text-900 block font-medium text-xl mb-2 text-center">Basic Plan</span>
+                <span class="font-bold block text-2xl text-900 text-center">$29</span>
+
+                <ul class="list-none p-0 m-0 flex-grow-1 mt-6">
+                  <li class="flex align-items-center mb-3">
+                    <i class="pi pi-check text-green-500 mr-2"></i>
+                    <span>Access to 10 Courses</span>
+                  </li>
+                  <li class="flex align-items-center mb-3">
+                    <i class="pi pi-check text-green-500 mr-2"></i>
+                    <span>Community Support</span>
+                  </li>
+                  <li class="flex align-items-center mb-3">
+                    <i class="pi pi-check text-green-500 mr-2"></i>
+                    <span>Basic Analytics</span>
+                  </li>
+                  <li class="flex align-items-center mb-3">
+                    <i class="pi pi-times text-red-500 mr-2"></i>
+                    <span>Advanced Features</span>
+                  </li>
+                </ul>
+
+                <button pButton pRipple label="Choose Plan" class="px-5 w-full mt-6 p-button-outlined" icon="pi pi-arrow-right" iconPos="right"></button>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12 lg:col-6 xl:col-4">
+            <div class="p-3 h-full">
+              <div class="shadow-2 p-6 h-full flex flex-column surface-card" style="border-radius: 6px">
+                <span class="text-900 block font-medium text-xl mb-2 text-center">Premium Plan</span>
+                <span class="font-bold block text-2xl text-900 text-center">$49</span>
+
+                <ul class="list-none p-0 m-0 flex-grow-1 mt-6">
+                  <li class="flex align-items-center mb-3">
+                    <i class="pi pi-check text-green-500 mr-2"></i>
+                    <span>Unlimited Course Access</span>
+                  </li>
+                  <li class="flex align-items-center mb-3">
+                    <i class="pi pi-check text-green-500 mr-2"></i>
+                    <span>Dedicated Support</span>
+                  </li>
+                  <li class="flex align-items-center mb-3">
+                    <i class="pi pi-check text-green-500 mr-2"></i>
+                    <span>Advanced Analytics</span>
+                  </li>
+                  <li class="flex align-items-center mb-3">
+                    <i class="pi pi-times text-red-500 mr-2"></i>
+                    <span>Custom Integrations</span>
+                  </li>
+                </ul>
+
+                <button pButton pRipple label="Choose Plan" class="px-5 w-full mt-6 p-button-outlined" icon="pi pi-arrow-right" iconPos="right"></button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="features" class="my-6 py-6 md:my-8 md:py-8">
+        <span class="text-900 block font-bold text-5xl mb-4 text-center">Why Choose Doowi?</span>
+        <span class="text-700 block text-xl mb-8 text-center line-height-3">Doowi is built to empower learners and instructors with a seamless and effective learning experience.</span>
+
+        <div class="grid mt-8">
+          <div class="col-12 md:col-6 xl:col-3 flex justify-content-center p-3">
+            <div class="box p-4 w-full surface-card surface-border border-1 border-round">
+              <img src="assets/demo/images/landing/icon-components.svg" alt="components icon" class="block mb-3" />
+              <span class="text-900 block font-semibold mb-3 text-lg">Comprehensive Course Library</span>
+              <p class="m-0 text-secondary text-700">Access a wide range of courses tailored to various learning paths.</p>
+            </div>
+          </div>
+          <div class="col-12 md:col-6 xl:col-3 flex justify-content-center p-3">
+            <div class="box p-4 w-full surface-card surface-border border-1 border-round">
+              <img src="assets/demo/images/landing/icon-accessibility.svg" alt="accessibility icon" class="block mb-3" />
+              <span class="text-900 block font-semibold mb-3 text-lg">Expert Instructors</span>
+              <p class="m-0 text-secondary text-700">Learn from industry professionals and subject matter experts.</p>
+            </div>
+          </div>
+          <div class="col-12 md:col-6 xl:col-3 flex justify-content-center p-3">
+            <div class="box p-4 w-full surface-card surface-border border-1 border-round">
+              <img src="assets/demo/images/landing/icon-theming.svg" alt="theming icon" class="block mb-3" />
+              <span class="text-900 block font-semibold mb-3 text-lg">Flexible Learning</span>
+              <p class="m-0 text-secondary text-700">Learn at your own pace with flexible course scheduling.</p>
+            </div>
+          </div>
+          <div class="col-12 md:col-6 xl:col-3 flex justify-content-center p-3">
+            <div class="box p-4 w-full surface-card surface-border border-1 border-round">
+              <img src="assets/demo/images/landing/icon-templates.svg" alt="templates icon" class="block mb-3" />
+              <span class="text-900 block font-semibold mb-3 text-lg">Seamless Integration</span>
+              <p class="m-0 text-secondary text-700">Easily integrate with other tools and platforms you already use.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

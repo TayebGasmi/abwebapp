@@ -42,7 +42,11 @@ export class AuthService {
     }
     return false;
   }
-
+  setSignout(): void {
+    if (typeof window !== 'undefined' && window.localStorage) {
+      this.browserStorage.clear();
+    }
+  }
   hasRoles(roles: string[]): boolean {
     if (roles.length === 0) {
       return true;
