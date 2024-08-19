@@ -27,6 +27,12 @@ export const routes: Routes = [
         loadChildren: () => import('./modules/settings/settings.routes').then(m => m.routes),
         canActivate: [authGuard],
         data: {roles: ['ADMIN']}
+      },
+      {
+        path: 'landing',
+        loadComponent: () => import('./modules/landingpage/landingpage.component').then(m => m.LandingpageComponent),
+        canActivate: [authGuard],
+        data: {roles: ['STUDENT,ADMIN','TEACHER']}
       }
       , {
         path: 'profile',

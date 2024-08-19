@@ -1,26 +1,16 @@
 <div class="col-12">
   <div class="card">
     <h5>Complete profile</h5>
-
-    <div class="border-1 surface-border flex justify-content-between align-items-center py-2 px-3 border-round">
-      <span class="text-900 font-bold p-3">Become a teacher</span>
-      <p-inputSwitch
-        (onChange)="handleChange($event)"
-        [(ngModel)]="checked"
-        [disabled]="switch"
-        id="teat"
-      ></p-inputSwitch>
-    </div>
-    <form (ngSubmit)="onSubmit()" [formGroup]="profileForm">
+    <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
       <div class="p-fluid p-formgrid grid">
         <div class="field col-12 md:col-6">
           <label htmlFor="firstname">Firstname</label>
           <input
-            [ngClass]="{'ng-dirty ng-invalid': isFieldInvalid('firstName')}"
-            formControlName="firstName"
-            id="firstname"
             pInputText
+            id="firstname"
             type="text"
+            formControlName="firstName"
+            [ngClass]="{'ng-dirty ng-invalid': isFieldInvalid('firstName')}"
           />
           @if (isFieldInvalid("firstName")) {
             <div class="mb-2 ng-invalid p-error">first name is required</div>
@@ -29,11 +19,11 @@
         <div class="field col-12 md:col-6">
           <label htmlFor="lastname">Lastname</label>
           <input
-            [ngClass]="{'ng-dirty ng-invalid': isFieldInvalid('lastName')}"
-            formControlName="lastName"
-            id="lastname"
             pInputText
+            id="lastname"
             type="text"
+            formControlName="lastName"
+            [ngClass]="{'ng-dirty ng-invalid': isFieldInvalid('lastName')}"
           />
           @if (isFieldInvalid("firstName")) {
             <div class="mb-2 ng-invalid p-error">Last name is required</div>
@@ -42,43 +32,60 @@
         <div class="field col-12">
           <label htmlFor="email">Email</label>
           <input
-            [disabled]="true"
-            formControlName="email"
-            id="email"
             pInputText
-            readonly
+            id="email"
             type="text"
+            formControlName="email"
+            [disabled]="true"
+            readonly
           />
         </div>
-        <div class="field col-12 md:col-6">
-          <label htmlFor="schoolYear">School Year</label>
-          <p-dropdown
-            [options]="schoolYears"
-            formControlName="schoolYear"
-            optionLabel="name"
-          ></p-dropdown>
-          @if (isFieldInvalid("schoolYear")) {
-            <div class="mb-2 ng-invalid p-error">School Year is required</div>
-          }
-        </div>
-        <div class="field col-12 md:col-6">
-          <label htmlFor="schoolType">School Type</label>
-          <p-dropdown
-            [options]="schoolTypes"
-            formControlName="schoolType"
-            optionLabel="name"
-          ></p-dropdown>
-          @if (isFieldInvalid("schoolType")) {
-            <div class="mb-2 ng-invalid p-error">School Type is required</div>
-          }
-        </div>
+        @if(selectedRole=='TEACHER'){
+          <div class="field col-12 ">
+            <label htmlFor="subject">Subject</label>
+            <p-multiSelect
+              formControlName="subject"
+              placeholder="choose a subject"
+              [options]="subjects"
+              [(ngModel)]="selectedSubjects"
+            ></p-multiSelect>
+            @if (isFieldInvalid("subject")) {
+              <div class="mb-2 ng-invalid p-error">Subject is required</div>
+            }
+          </div>
+        }
+        @if(selectedRole=='STUDENT'){
+          <div class="field col-12 md:col-6">
+            <label htmlFor="schoolYear">School Year</label>
+            <p-dropdown
+              formControlName="schoolYear"
+              [options]="schoolYears"
+              optionLabel="name"
+            ></p-dropdown>
+            @if (isFieldInvalid("schoolYear")) {
+              <div class="mb-2 ng-invalid p-error">School Year is required</div>
+            }
+          </div>
+          <div class="field col-12 md:col-6">
+            <label htmlFor="schoolType">School Type</label>
+            <p-dropdown
+              formControlName="schoolType"
+              [options]="schoolTypes"
+              optionLabel="name"
+            ></p-dropdown>
+            @if (isFieldInvalid("schoolType")) {
+              <div class="mb-2 ng-invalid p-error">School Type is required</div>
+            }
+          </div>
+        }
       </div>
       <button
-        icon="pi pi-check"
-        label="Submit"
         pButton
         type="submit"
+        label="Submit"
+        icon="pi pi-check"
       ></button>
     </form>
   </div>
 </div>
+
