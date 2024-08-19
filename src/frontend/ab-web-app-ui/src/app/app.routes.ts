@@ -17,7 +17,7 @@ export const routes: Routes = [
     children: [
       {
         path: 'calendar',
-        loadComponent: () => import('./shared/components/calendar/calendar.component').then(m => m.CalendarComponent),
+        loadComponent: () => import('./modules/session/session.component').then(m => m.SessionComponent),
         canActivate: [authGuard],
         data: {roles: ['STUDENT', 'TEACHER']}
       },
@@ -34,11 +34,11 @@ export const routes: Routes = [
         canActivate: [authGuard],
         data: {roles: ['STUDENT,ADMIN','TEACHER']}
       }
-      ,{
-      path:'profile',
+      , {
+        path: 'profile',
         loadChildren: () => import('./modules/profile/profile.routes').then(m => m.routes),
         canActivate: [authGuard],
-        data: {roles: ['STUDENT','TEACHER']}
+        data: {roles: ['STUDENT', 'TEACHER']}
       }
 
     ],

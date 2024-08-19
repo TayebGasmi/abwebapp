@@ -61,9 +61,10 @@ export class AuthService {
   }
 
   logout() {
-    if (typeof window !== 'undefined' && window.localStorage) {
-      this.browserStorage.clear();
-    }
+    this.router.navigate(["/auth/login"]).then(() => this.browserStorage.clear()
+    )
+
+
   }
 
   addToken(token: string) {
@@ -112,7 +113,7 @@ export class AuthService {
         return false
       }
       const user = JSON.parse(userJson) as User
-      if(!user){
+      if (!user) {
         return false
       }
       return user?.isCompleted

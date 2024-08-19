@@ -6,6 +6,7 @@ import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.gson.GsonFactory;
+import com.google.api.client.util.DateTime;
 import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.CalendarScopes;
 import com.google.api.services.calendar.model.ConferenceData;
@@ -19,6 +20,8 @@ import com.google.auth.http.HttpCredentialsAdapter;
 import com.google.auth.oauth2.GoogleCredentials;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -59,14 +62,20 @@ public class GoogleCalendarServiceImpl implements GoogleCalendarService {
                 .setDescription(meetingDto.getDescription())
                 .setVisibility("private")
                 .setAnyoneCanAddSelf(false);
-
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssXXX");
+            String formattedStartDateTime = meetingDto.getStartDate()
+                .withZoneSameInstant(ZoneOffset.UTC)
+                .format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+            String formattedEndDateTime = meetingDto.getEndDate()
+                .withZoneSameInstant(ZoneOffset.UTC)
+                .format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
             EventDateTime start = new EventDateTime()
-                .setDateTime(new com.google.api.client.util.DateTime(meetingDto.getStartDate().toString()))
+                .setDateTime(DateTime.parseRfc3339("2024-08-19T22:00:00Z"))
                 .setTimeZone(meetingDto.getStartDate().getZone().toString());
             event.setStart(start);
 
             EventDateTime end = new EventDateTime()
-                .setDateTime(new com.google.api.client.util.DateTime(meetingDto.getEndDate().toString()))
+                .setDateTime(DateTime.parseRfc3339("2024-08-19T22:00:00Z"))
                 .setTimeZone(meetingDto.getEndDate().getZone().toString());
             event.setEnd(end);
 

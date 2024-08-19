@@ -35,4 +35,6 @@ public class SubjectDto extends BaseDto<Long> {
     @NotNull
     @NotEmpty
     private Set<SchoolYearDto> schoolYears;
+
+
 }

@@ -26,13 +26,13 @@ import lombok.experimental.SuperBuilder;
 public class Session extends BaseEntity<Long> {
 
     @Column(nullable = false)
-    private String summary;
+    private String title;
     @Column(nullable = false)
     private String description;
     @Column(nullable = false)
-    private ZonedDateTime startTime;
+    private ZonedDateTime startDateTime;
     @Column(nullable = false)
-    private ZonedDateTime endTime;
+    private ZonedDateTime endDateTime;
     @Column(nullable = false)
     private String meetingLink;
 
@@ -57,5 +57,8 @@ public class Session extends BaseEntity<Long> {
 
     @OneToOne(mappedBy = "session", orphanRemoval = true)
     private Payment payment;
+
+    @ManyToOne
+    private Subject subject;
 
 }
