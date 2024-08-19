@@ -27,7 +27,6 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class SessionService extends BaseServiceImpl<Session, Long, SessionDto> {
 
-
     private final GoogleCalendarService googleCalendarService;
     private final SessionRepository sessionRepository;
     private final StudentMapper studentMapper;
@@ -38,46 +37,15 @@ public class SessionService extends BaseServiceImpl<Session, Long, SessionDto> {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Student student = (Student) authentication.getPrincipal();
         sessionDto.setStudent(studentMapper.convertEntityToDto(student));
-        if (sessionDto.getTitle() == null || sessionDto.getTitle().isEmpty()) {
-            sessionDto.setTitle("Default Session Title");
-        }
-        if (sessionDto.getDescription() == null || sessionDto.getDescription().isEmpty()) {
-            sessionDto.setDescription("No description provided.");
-        }
-        sessionDto.setDuration(60L);
-        sessionDto.setEndDateTime(sessionDto.getStartDateTime().plusMinutes(60));
-        sessionDto.setPrice(new BigDecimal(25));
-        sessionDto.setStatus(SessionStatus.ACCEPTED_BY_TEACHER);
-        if (sessionRepository.existsConflictingSession(
-            sessionDto.getTeacher().getId(),
-            sessionDto.getStudent().getId(),
-            sessionDto.getStartDateTime(),
-            sessionDto.getEndDateTime()
-        )) {
-            throw new SessionConflictException("A conflicting session exists for either the teacher or the student during this time.");
-        }
-        MeetingDto meetingDto = MeetingDto.builder()
-            .summary(sessionDto.getTitle())
-            .description(sessionDto.getDescription())
-            .startDate(sessionDto.getStartDateTime())
-            .endDate(sessionDto.getStartDateTime().plusMinutes(60))
-            .participants(Set.of(
-                MeetingParticipant.builder()
-                    .email(sessionDto.getStudent().getEmail())
-                    .displayName(String.format("%s %s",
-                        sessionDto.getStudent().getFirstName(),
-                        sessionDto.getStudent().getLastName()))
-                    .build(),
-                MeetingParticipant.builder()
-                    .email(sessionDto.getTeacher().getEmail())
-                    .displayName(String.format("%s %s",
-                        sessionDto.getTeacher().getFirstName(),
-                        sessionDto.getTeacher().getLastName()))
-                    .build()
-            ))
-            .build();
+
+        setDefaultValuesIfNeeded(sessionDto);
+
+        validateSessionConflict(sessionDto);
+
+        MeetingDto meetingDto = buildMeetingDto(sessionDto);
         Event event = googleCalendarService.createSimpleMeeting(meetingDto);
         sessionDto.setMeetingLink(event.getHangoutLink());
+
         return super.add(sessionDto);
     }
 
@@ -95,5 +63,74 @@ public class SessionService extends BaseServiceImpl<Session, Long, SessionDto> {
         }
 
         return sessionMapper.convertEntitiesToDtos(sessions);
+    }
+
+    private void setDefaultValuesIfNeeded(SessionDto sessionDto) {
+        if (sessionDto.getTitle() == null || sessionDto.getTitle().isEmpty()) {
+            sessionDto.setTitle(String.format("%s session",
+                sessionDto.getSubject().getName()
+            ));
+        }
+
+        if (sessionDto.getDescription() == null || sessionDto.getDescription().isEmpty()) {
+            sessionDto.setDescription(String.format(
+                """
+                    Session for subject '%s'.
+                    """,
+                sessionDto.getSubject().getName()
+            ));
+        }
+
+        if (sessionDto.getDuration() == null) {
+            sessionDto.setDuration(60L);
+        }
+
+        if (sessionDto.getPrice() == null) {
+            sessionDto.setPrice(new BigDecimal(25));
+        }
+
+        if (sessionDto.getEndDateTime() == null) {
+            sessionDto.setEndDateTime(sessionDto.getStartDateTime().plusMinutes(sessionDto.getDuration()));
+        }
+
+        if (sessionDto.getStatus() == null) {
+            sessionDto.setStatus(SessionStatus.ACCEPTED_BY_TEACHER);
+        }
+    }
+
+
+    private void validateSessionConflict(SessionDto sessionDto) {
+        boolean conflictingSessionExists = sessionRepository.existsConflictingSession(
+            sessionDto.getTeacher().getId(),
+            sessionDto.getStudent().getId(),
+            sessionDto.getStartDateTime(),
+            sessionDto.getEndDateTime()
+        );
+        if (conflictingSessionExists) {
+            throw new SessionConflictException("A conflicting session exists for either the teacher or the student during this time.");
+        }
+    }
+
+    private MeetingDto buildMeetingDto(SessionDto sessionDto) {
+        return MeetingDto.builder()
+            .summary(sessionDto.getTitle())
+            .description(sessionDto.getDescription())
+            .startDate(sessionDto.getStartDateTime())
+            .endDate(sessionDto.getEndDateTime())
+            .participants(Set.of(
+                MeetingParticipant.builder()
+                    .email(sessionDto.getStudent().getEmail())
+                    .displayName(String.format("%s %s",
+                        sessionDto.getStudent().getFirstName(),
+                        sessionDto.getStudent().getLastName()))
+                    .build(),
+                MeetingParticipant.builder()
+                    .email(sessionDto.getTeacher().getEmail())
+                    .displayName(String.format("%s %s",
+                        sessionDto.getTeacher().getFirstName(),
+                        sessionDto.getTeacher().getLastName()))
+                    .build()
+            ))
+            .build();
     }
 }
