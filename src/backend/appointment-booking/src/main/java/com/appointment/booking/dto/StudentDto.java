@@ -28,4 +28,5 @@ public class StudentDto extends UserDto {
         this.schoolType = schoolType;
         this.schoolYear = schoolYear;
     }
+
 }
