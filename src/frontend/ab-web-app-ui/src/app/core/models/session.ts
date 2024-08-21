@@ -14,5 +14,7 @@ export interface SessionDto {
   status: string;
   teacher?:Teacher;
   student?:Student;
-  subject:Subject
+  subject:Subject;
+  createdDate:Date;
+
 }
