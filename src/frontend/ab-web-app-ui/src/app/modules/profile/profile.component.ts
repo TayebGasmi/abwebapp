@@ -89,14 +89,21 @@ export class ProfileComponent implements OnInit{
       const subjectControl = this.profileForm.get("subject");
       const roleControl = this.profileForm.get("role");
       if(subjectControl && this.user!=null && this.selectedRole=="TEACHER"){
+        this.user.firstName=this.profileForm.get("firstName")?.value
+        this.user.lastName=this.profileForm.get("lastName")?.value
+        console.log(this.user)
         this.teacherService.update({...this.user as User,subjects:this.selectedSubjects,payRate:0}).subscribe(user => {
           this.notificationService.showSuccess("Teacher Updated successfully !")
-          console.log("Student saved successfully", user);
+          this.browserStorage.setItem("user",JSON.stringify(this.user))
+          console.log("Teacher saved successfully", user);
         });
       }
       if (schoolTypeControl && schoolYearControl && this.user !=null && this.selectedRole=="STUDENT") {
+        this.user.firstName=this.profileForm.get("firstName")?.value
+        this.user.lastName=this.profileForm.get("lastName")?.value
         this.studentService.update({...this.user as User,schoolType:schoolTypeControl.value['value'],schoolYear:schoolYearControl.value['value']}).subscribe(user => {
           this.notificationService.showSuccess("Student Updated successfully !")
+          this.browserStorage.setItem("user",JSON.stringify(this.user))
           console.log("Student saved successfully", user);
         });
       }

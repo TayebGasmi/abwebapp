@@ -66,7 +66,7 @@ export class LoginComponent implements OnInit {
       next: response => {
         this.authService.addToken(response.accessToken);
         this.authService.addUser(response.user);
-        this.router.navigate(['']);
+        this.router.navigate(['/landing']);
         this.authService.addRoles(response.roles);
       }
     });

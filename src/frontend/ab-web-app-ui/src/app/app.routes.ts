@@ -31,7 +31,6 @@ export const routes: Routes = [
       {
         path: 'landing',
         loadComponent: () => import('./modules/landingpage/landingpage.component').then(m => m.LandingpageComponent),
-        canActivate: [authGuard],
         data: {roles: ['STUDENT,ADMIN','TEACHER']}
       }
       , {

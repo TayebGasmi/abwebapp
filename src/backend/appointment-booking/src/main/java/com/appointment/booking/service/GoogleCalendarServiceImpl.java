@@ -70,12 +70,12 @@ public class GoogleCalendarServiceImpl implements GoogleCalendarService {
                 .withZoneSameInstant(ZoneOffset.UTC)
                 .format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
             EventDateTime start = new EventDateTime()
-                .setDateTime(DateTime.parseRfc3339("2024-08-19T22:00:00Z"))
+                .setDateTime(DateTime.parseRfc3339(formattedStartDateTime))
                 .setTimeZone(meetingDto.getStartDate().getZone().toString());
             event.setStart(start);
 
             EventDateTime end = new EventDateTime()
-                .setDateTime(DateTime.parseRfc3339("2024-08-19T22:00:00Z"))
+                .setDateTime(DateTime.parseRfc3339(formattedEndDateTime))
                 .setTimeZone(meetingDto.getEndDate().getZone().toString());
             event.setEnd(end);
 
