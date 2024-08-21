@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Subscription} from "rxjs";
 import {LayoutService} from "../../layout/service/app.layout.service";
 import {TagModule} from "primeng/tag";
@@ -37,7 +37,7 @@ interface MonthlyPayment {
   templateUrl: './landingpage.component.html',
   styleUrl: './landingpage.component.scss'
 })
-export class LandingpageComponent {
+export class LandingpageComponent  implements OnDestroy{
   subscription: Subscription;
 
   darkMode: boolean = false;
