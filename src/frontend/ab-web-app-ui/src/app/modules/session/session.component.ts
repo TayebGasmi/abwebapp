@@ -55,6 +55,7 @@ export class SessionComponent implements OnInit {
   title = '';
   subjects: { label: string, value: Subject }[] = [];
   teachers: { label: string, value: Teacher }[] = [];
+  disableEdit = false
 
   constructor(
     private fb: FormBuilder,
@@ -95,7 +96,8 @@ export class SessionComponent implements OnInit {
           duration: session.duration,
           status: session.status,
           teacher: session.teacher,
-          subject: session.subject
+          subject: session.subject,
+          createdDate: new Date(session.createdDate)
         }
       }));
       this.updateCalendarEvents();
@@ -150,12 +152,18 @@ export class SessionComponent implements OnInit {
       meetingLink: e.event.extendedProps['meetingLink'] || '',
       price: e.event.extendedProps['price'] || 0,
       duration: e.event.extendedProps['duration'] || 0,
-      teacher: e.event.extendedProps['teacher'] ,
-      subject:e.event.extendedProps['subject']
+      teacher: e.event.extendedProps['teacher'],
+      subject: e.event.extendedProps['subject'],
+      createdDate: e.event.extendedProps['createdDate']
     };
     this.view = 'display';
     this.showDialog = true;
     this.title = this.selectedSession.title;
+    const createdDate = this.selectedSession.createdDate
+    const currentDate = new Date();
+    const timeDifference = currentDate.getTime() - createdDate.getTime();
+    const oneDayInMilliseconds = 24 * 60 * 60 * 1000;
+    this.disableEdit = timeDifference >= oneDayInMilliseconds;
   }
 
   handleSave() {
@@ -197,14 +205,14 @@ export class SessionComponent implements OnInit {
     this.view = 'edit';
   }
 
-   resetEvent() {
+  resetEvent() {
     this.selectedSession = null;
     this.sessionForm.reset();
   }
 
   private onDateSelect(dateSelectArg: DateSelectArg) {
     const today = new Date();
-    if(dateSelectArg.start < today){
+    if (dateSelectArg.start < today) {
       this.notificationService.showError("Selected date cannot be in the past.")
       return;
     }
@@ -213,6 +221,7 @@ export class SessionComponent implements OnInit {
     this.showDialog = true;
     this.sessionForm.get('startDateTime')?.patchValue(dateSelectArg.start);
   }
+
 
   fieldHasError(fieldName: string): boolean {
     const control = this.sessionForm.get(fieldName);
