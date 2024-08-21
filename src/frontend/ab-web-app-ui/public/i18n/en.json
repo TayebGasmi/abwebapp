@@ -1,0 +1,31 @@
+{
+  "error": {
+    "session": {
+      "conflict": "There is a conflict with the current session."
+    },
+    "bad": {
+      "credentials": "The credentials provided are incorrect."
+    },
+    "validation": "There was a validation error. Please check your input and try again.",
+    "entity": {
+      "not": {
+        "found": "The requested entity was not found."
+      },
+      "exist": "The entity already exists."
+    },
+    "unknown": "An unknown error occurred. Please try again later.",
+    "unique": {
+      "constraint": {
+        "violation": "A unique constraint violation occurred."
+      }
+    },
+    "user": {
+      "already": {
+        "verified": "This user has already been verified."
+      }
+    },
+    "google": {
+      "calendar": "An error occurred with Google Calendar integration."
+    }
+  }
+}

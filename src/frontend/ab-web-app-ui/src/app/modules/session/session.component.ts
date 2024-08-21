@@ -203,6 +203,11 @@ export class SessionComponent implements OnInit {
   }
 
   private onDateSelect(dateSelectArg: DateSelectArg) {
+    const today = new Date();
+    if(dateSelectArg.start < today){
+      this.notificationService.showError("Selected date cannot be in the past.")
+      return;
+    }
     this.view = 'new';
     this.title = 'New session';
     this.showDialog = true;

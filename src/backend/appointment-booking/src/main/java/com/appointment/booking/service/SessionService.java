@@ -40,7 +40,15 @@ public class SessionService extends BaseServiceImpl<Session, Long, SessionDto> {
 
         setDefaultValuesIfNeeded(sessionDto);
 
-        validateSessionConflict(sessionDto);
+        boolean conflictingSessionExists = sessionRepository.existsConflictingSession(
+            sessionDto.getTeacher().getId(),
+            sessionDto.getStudent().getId(),
+            sessionDto.getStartDateTime(),
+            sessionDto.getEndDateTime()
+        );
+        if (conflictingSessionExists) {
+            throw new SessionConflictException("A conflicting session exists for either the teacher or the student during this time.");
+        }
 
         MeetingDto meetingDto = buildMeetingDto(sessionDto);
         Event event = googleCalendarService.createSimpleMeeting(meetingDto);
@@ -99,17 +107,6 @@ public class SessionService extends BaseServiceImpl<Session, Long, SessionDto> {
     }
 
 
-    private void validateSessionConflict(SessionDto sessionDto) {
-        boolean conflictingSessionExists = sessionRepository.existsConflictingSession(
-            sessionDto.getTeacher().getId(),
-            sessionDto.getStudent().getId(),
-            sessionDto.getStartDateTime(),
-            sessionDto.getEndDateTime()
-        );
-        if (conflictingSessionExists) {
-            throw new SessionConflictException("A conflicting session exists for either the teacher or the student during this time.");
-        }
-    }
 
     private MeetingDto buildMeetingDto(SessionDto sessionDto) {
         return MeetingDto.builder()
