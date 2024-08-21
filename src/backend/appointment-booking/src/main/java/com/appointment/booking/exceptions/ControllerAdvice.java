@@ -137,7 +137,7 @@ public class ControllerAdvice {
     }
 
     @ExceptionHandler(SessionConflictException.class)
-    public ResponseEntity<ErrorResponse> handleSessionConflictException(GoogleCalendarException ex) {
+    public ResponseEntity<ErrorResponse> handleSessionConflictException(SessionConflictException ex) {
         log.error("error {}", ex.getMessage(), ex);
         return createErrorResponse(HttpStatus.BAD_REQUEST, ex, KeyExceptionMessageConstants.SESSION_CONFLICT);
     }
