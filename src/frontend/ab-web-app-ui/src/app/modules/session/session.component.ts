@@ -22,6 +22,7 @@ import {Teacher} from '../../core/models/teacher';
 import {TeacherService} from '../../core/service/teacher.service';
 import {SubjectService} from '../../core/service/subject.service';
 import {NotificationService} from '../../core/service/notification.service';
+import {AuthService} from "../../core/service/auth.service";
 
 @Component({
   selector: 'app-session',
@@ -62,7 +63,8 @@ export class SessionComponent implements OnInit {
     private sessionService: SessionService,
     private teacherService: TeacherService,
     private subjectService: SubjectService,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private authService:AuthService
   ) {
   }
 
@@ -142,6 +144,9 @@ export class SessionComponent implements OnInit {
   }
 
   private onEventClick(e: EventClickArg) {
+    if(this.authService.hasRoles(["TEACHER"])){
+      return;
+    }
     this.selectedSession = {
       id: parseInt(e.event.id),
       status: '',
@@ -211,6 +216,9 @@ export class SessionComponent implements OnInit {
   }
 
   private onDateSelect(dateSelectArg: DateSelectArg) {
+    if(this.authService.hasRoles(["TEACHER"])){
+      return;
+    }
     const today = new Date();
     if (dateSelectArg.start < today) {
       this.notificationService.showError("Selected date cannot be in the past.")
