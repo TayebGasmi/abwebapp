@@ -28,6 +28,8 @@ import {UserService} from "../../../core/service/user.service";
 import {MultiSelectModule} from "primeng/multiselect";
 import {InputSwitchChangeEvent, InputSwitchModule} from "primeng/inputswitch";
 import {SchoolYearService} from "../../../core/service/school-year.service";
+import {SessionBookLandingService} from "../../../core/service/session-book-landing.service";
+import {SessionDto} from "../../../core/models/session";
 
 
 @Component({
@@ -64,8 +66,9 @@ export class CompleteProfileComponent implements OnInit{
   schoolYears!: { name: string, value: SchoolYear }[];
   subjects!:{ label: string, value: Subject }[];
   checked: boolean = true;
+  sessionDto!:SessionDto;
   selectedRole: number | null = null;
-  constructor(private teacherService:TeacherService,private subjectService:SubjectService,private roleService:RoleService,private browserStorage:BrowserStorageService,private router:Router,private studentService:StudentService,private fb: FormBuilder,private userService:UserService,private authService:AuthService ,private schoolTypeService: SchoolService, private SchoolYearService: SchoolYearService) {
+  constructor(private sessionBookingLanding:SessionBookLandingService,private teacherService:TeacherService,private subjectService:SubjectService,private roleService:RoleService,private browserStorage:BrowserStorageService,private router:Router,private studentService:StudentService,private fb: FormBuilder,private userService:UserService,private authService:AuthService ,private schoolTypeService: SchoolService, private SchoolYearService: SchoolYearService) {
     this.schoolTypeService.getALL().subscribe(schoolTypes => {
         this.schoolTypes = schoolTypes.map(schoolType => ({name: schoolType.name, value: schoolType}));
       }
@@ -100,6 +103,7 @@ export class CompleteProfileComponent implements OnInit{
       schoolType: [{ value: '', disabled: !this.isEditing }, Validators.required],
       subject: [{ value: '', disabled: !this.isEditing }, Validators.required]
     });
+    this.sessionBookingLanding.currentMessage.subscribe(session=>this.sessionDto=session)
   }
   isFieldInvalid(field: string): undefined | false | true {
     const control = this.profileForm.get(field);
@@ -118,27 +122,29 @@ export class CompleteProfileComponent implements OnInit{
         this.user.roles=[roleControl?.value['value']]
         // Now save the student entity
         console.log(subjectControl.value)
-        this.userService.deleteById(this.user.id).subscribe(response=>{
-          this.browserStorage.setItem('user', JSON.stringify(this.user))
-        })
-        this.user.id=0;
+        // this.userService.deleteById(this.user.id).subscribe(response=>{
+        //   this.browserStorage.setItem('user', JSON.stringify(this.user))
+        // })
+        // this.user.id=0;
         this.teacherService.save({...this.user as User,subjects:subjectControl.value,payRate:0}).subscribe(user => {
           this.browserStorage.setItem('user', JSON.stringify(user))
           this.browserStorage.setItem('roles',JSON.stringify(user.roles.map(role=>role.name)))
-          this.router.navigate(['/']);
+          this.router.navigate(['/profile/details']);
           console.log("Student saved successfully", user);
         });
       }
       if (schoolTypeControl && schoolYearControl && this.user !=null && this.selectedRole==2) {
         this.user.isCompleted=true;
         this.user.roles=[roleControl?.value['value']]
-        this.userService.deleteById(this.user.id).subscribe(response=>{
-          this.browserStorage.setItem('user', JSON.stringify(this.user))
-        })
+        // this.userService.deleteById(this.user.id).subscribe(response=>{
+        //   this.browserStorage.setItem('user', JSON.stringify(this.user))
+        // })
         this.studentService.save({...this.user as User,schoolType:schoolTypeControl.value['value'],schoolYear:schoolYearControl.value['value']}).subscribe(user => {
           this.browserStorage.setItem('user', JSON.stringify(user))
           this.browserStorage.setItem('roles',JSON.stringify(user.roles.map(role=>role.name)))
-          this.router.navigate(['/']);
+          this.sessionBookingLanding.changeMessage(this.sessionDto,true);
+          console.log(this.sessionDto)
+          this.router.navigate(['/profile/details']);
           console.log("Student saved successfully", user);
         });
       }
