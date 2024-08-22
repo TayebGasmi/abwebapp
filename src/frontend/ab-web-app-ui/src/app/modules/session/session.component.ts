@@ -22,6 +22,7 @@ import {Teacher} from '../../core/models/teacher';
 import {TeacherService} from '../../core/service/teacher.service';
 import {SubjectService} from '../../core/service/subject.service';
 import {NotificationService} from '../../core/service/notification.service';
+import {AuthService} from "../../core/service/auth.service";
 
 @Component({
   selector: 'app-session',
@@ -55,13 +56,15 @@ export class SessionComponent implements OnInit {
   title = '';
   subjects: { label: string, value: Subject }[] = [];
   teachers: { label: string, value: Teacher }[] = [];
+  disableEdit = false
 
   constructor(
     private fb: FormBuilder,
     private sessionService: SessionService,
     private teacherService: TeacherService,
     private subjectService: SubjectService,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private authService:AuthService
   ) {
   }
 
@@ -95,7 +98,8 @@ export class SessionComponent implements OnInit {
           duration: session.duration,
           status: session.status,
           teacher: session.teacher,
-          subject: session.subject
+          subject: session.subject,
+          createdDate: new Date(session.createdDate)
         }
       }));
       this.updateCalendarEvents();
@@ -140,6 +144,9 @@ export class SessionComponent implements OnInit {
   }
 
   private onEventClick(e: EventClickArg) {
+    if(this.authService.hasRoles(["TEACHER"])){
+      return;
+    }
     this.selectedSession = {
       id: parseInt(e.event.id),
       status: '',
@@ -150,12 +157,18 @@ export class SessionComponent implements OnInit {
       meetingLink: e.event.extendedProps['meetingLink'] || '',
       price: e.event.extendedProps['price'] || 0,
       duration: e.event.extendedProps['duration'] || 0,
-      teacher: e.event.extendedProps['teacher'] ,
-      subject:e.event.extendedProps['subject']
+      teacher: e.event.extendedProps['teacher'],
+      subject: e.event.extendedProps['subject'],
+      createdDate: e.event.extendedProps['createdDate']
     };
     this.view = 'display';
     this.showDialog = true;
     this.title = this.selectedSession.title;
+    const createdDate = this.selectedSession.createdDate
+    const currentDate = new Date();
+    const timeDifference = currentDate.getTime() - createdDate.getTime();
+    const oneDayInMilliseconds = 24 * 60 * 60 * 1000;
+    this.disableEdit = timeDifference >= oneDayInMilliseconds;
   }
 
   handleSave() {
@@ -197,17 +210,26 @@ export class SessionComponent implements OnInit {
     this.view = 'edit';
   }
 
-   resetEvent() {
+  resetEvent() {
     this.selectedSession = null;
     this.sessionForm.reset();
   }
 
   private onDateSelect(dateSelectArg: DateSelectArg) {
+    if(this.authService.hasRoles(["TEACHER"])){
+      return;
+    }
+    const today = new Date();
+    if (dateSelectArg.start < today) {
+      this.notificationService.showError("Selected date cannot be in the past.")
+      return;
+    }
     this.view = 'new';
     this.title = 'New session';
     this.showDialog = true;
     this.sessionForm.get('startDateTime')?.patchValue(dateSelectArg.start);
   }
+
 
   fieldHasError(fieldName: string): boolean {
     const control = this.sessionForm.get(fieldName);

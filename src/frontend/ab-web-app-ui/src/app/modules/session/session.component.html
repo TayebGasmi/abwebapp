@@ -43,7 +43,7 @@
               <div class="text-900 font-semibold mb-2">Subject</div>
               <p class="flex align-items-center m-0">
                 <i class="pi pi-fw pi-book text-700 mr-2"></i>
-                <span>{{ selectedSession.subject?.name }}</span>
+                <span>{{ selectedSession.subject.name }}</span>
               </p>
             </div>
           </div>
@@ -133,7 +133,9 @@
 
     <ng-template pTemplate="footer">
       @if (view === 'display') {
-        <button pButton label="Edit" icon="pi pi-pencil" (click)="onEditClick()" class="p-button-primary p-button-sm" style="margin-right: .25rem"></button>
+        <button pButton label="Edit" icon="pi pi-pencil" (click)="onEditClick()" class="p-button-primary p-button-sm" style="margin-right: .25rem"
+         [disabled]="disableEdit"
+        ></button>
       }
       @if (view !== 'display') {
         <button pButton label="Save" icon="pi pi-check" (click)="handleSave()" class="p-button-primary p-button-sm"></button>
