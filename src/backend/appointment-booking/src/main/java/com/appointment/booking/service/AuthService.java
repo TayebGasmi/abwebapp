@@ -84,7 +84,7 @@ public class AuthService {
         User user = userRepository.findByEmail(email)
             .orElseGet(() -> {
                 User newUser = buildNewSocialUser(email, firstName, lastName, profilePicture);
-                userRepository.save(newUser);
+//                userRepository.save(newUser);
                 return newUser;
             });
         if (user.getRoles() != null && !user.getRoles().isEmpty()) {

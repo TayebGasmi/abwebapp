@@ -32,6 +32,10 @@ import {Teacher} from "../../core/models/teacher";
 import {Student} from "../../core/models/student";
 import {SelectItem} from "primeng/api";
 import {NotificationService} from "../../core/service/notification.service";
+import {SessionBookLandingService} from "../../core/service/session-book-landing.service";
+import {SessionService} from "../../core/service/session.service";
+import {SessionDto} from "../../core/models/session";
+import {Subscription} from "rxjs";
 
 @Component({
   selector: 'app-profile',
@@ -70,7 +74,9 @@ export class ProfileComponent implements OnInit{
   selectedRole: any = null;
   teacher!:null | Teacher;
   student!:null | Student;
-  constructor(private notificationService:NotificationService,private teacherService:TeacherService,private subjectService:SubjectService,private roleService:RoleService,private browserStorage:BrowserStorageService,private router:Router,private studentService:StudentService,private fb: FormBuilder,private userService:UserService,private authService:AuthService ,private schoolTypeService: SchoolService, private SchoolYearService: SchoolYearService) {
+  sessionDto!:SessionDto;
+  iscomplete!:boolean;
+  constructor(private sessionService:SessionService,private sessionLanding:SessionBookLandingService,private notificationService:NotificationService,private teacherService:TeacherService,private subjectService:SubjectService,private roleService:RoleService,private browserStorage:BrowserStorageService,private router:Router,private studentService:StudentService,private fb: FormBuilder,private userService:UserService,private authService:AuthService ,private schoolTypeService: SchoolService, private SchoolYearService: SchoolYearService) {
 
   }
   toggleEdit() {
@@ -132,6 +138,15 @@ export class ProfileComponent implements OnInit{
   ];
  selectedSubjects: undefined | Array<Subject>;
   ngOnInit(): void {
+    this.sessionLanding.completed.subscribe(complete=>this.iscomplete=complete)
+    if(this.iscomplete){
+      this.sessionLanding.currentMessage.subscribe(session=>this.sessionDto=session)
+      console.log("###",this.sessionDto)
+      this.sessionService.save(this.sessionDto).subscribe(response=>{
+        this.notificationService.showSuccess("you have successfully booked a session")
+      })
+      this.sessionLanding.changeMessage("",false)
+    }
     this.schoolTypeService.getALL().subscribe(schoolTypes => {
         this.schoolTypes = schoolTypes.map(schoolType => ({name: schoolType.name, value: schoolType}));
       }

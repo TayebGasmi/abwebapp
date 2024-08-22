@@ -117,7 +117,54 @@
           </div>
         </div>
       </div>
+      <div id="booksession" class="my-6 md:my-8">
+        <span class="text-900 block font-bold text-5xl mb-4 text-center">Book Your session Now!</span>
+        <span class="text-700 block text-xl mb-8 text-center line-height-3">Get your first session for free .</span>
 
+        <form [formGroup]="sessionForm">
+          <div class="grid p-fluid formgrid">
+            <div class="col-12 field">
+              <label class="mb-2" for="teacher">teacher</label>
+              <p-dropdown [filter]="true" [ngClass]="{'ng-invalid ng-dirty': fieldHasError('schoolTypes')}" [options]="teachers"
+                          [showClear]="true"
+                          formControlName="teacher"
+                          id="teacher"
+                          placeholder="choose a teacher"
+                          styleClass="w-full  mb-2"
+              >
+              </p-dropdown>
+              @if (fieldHasError('teacher')) {
+                <div class="mb-2 ng-invalid p-error">teacher is required</div>
+              }
+            </div>
+
+            <div class="col-12 field">
+              <label class="mb-2" for="subject">subject</label>
+              <p-dropdown [filter]="true" [ngClass]="{'ng-invalid ng-dirty': fieldHasError('subject')}" [options]="subjects"
+                          [showClear]="true"
+                          formControlName="subject"
+                          id="subject"
+                          placeholder="choose a subject"
+                          styleClass="w-full"
+                          [virtualScroll]="true"
+
+              >
+              </p-dropdown>
+              @if (fieldHasError('subject')) {
+                <div class="ng-invalid p-error">subject is required</div>
+              }
+            </div>
+            <div class="col-12 field">
+              <label for="startTime" class="text-900 font-semibold">Start Time</label>
+              <p-calendar id="startTime" formControlName="startDateTime" [showTime]="true" placeholder="Select Start Time"></p-calendar>
+              @if (fieldHasError('startTime')) {
+                <div class="mb-2 ng-invalid p-error">Start Time is required</div>
+              }
+            </div>
+          </div>
+        </form>
+        <button pButton label="Book Session" icon="pi pi-check" (click)="handleSave()" class="p-button-primary p-button-sm"></button>
+      </div>
       <div id="pricing" class="my-6 py-6 md:my-8 md:py-8">
         <div class="text-900 font-bold text-5xl mb-4 text-center">Flexible Pricing</div>
         <div class="text-700 text-xl mb-8 text-center line-height-3">Choose a plan that fits your learning goals and budget.</div>

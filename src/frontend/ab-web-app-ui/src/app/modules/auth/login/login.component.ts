@@ -13,6 +13,9 @@ import {AuthService} from '../../../core/service/auth.service';
 import {Login} from '../../../core/models/login';
 import {BackgroundComponent} from "../../../shared/components/background/background.component";
 import {map, switchMap} from "rxjs";
+import {SessionComponent} from "../../session/session.component";
+import {SessionBookLandingService} from "../../../core/service/session-book-landing.service";
+import {SessionDto} from "../../../core/models/session";
 
 @Component({
   selector: 'app-login',
@@ -36,11 +39,12 @@ export class LoginComponent implements OnInit {
   loginForm: FormGroup;
   router = inject(Router);
   private socialAuthService = inject(SocialAuthService);
-
+  sessionDto!:SessionDto;
   constructor(
     private fb: FormBuilder,
     private layoutService: LayoutService,
-    private authService: AuthService
+    private authService: AuthService,
+    private session:SessionBookLandingService
   ) {
     this.loginForm = this.fb.group({
       email: [''],
@@ -53,6 +57,8 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.session.currentMessage.subscribe(session => this.sessionDto=session)
+    console.log(this.sessionDto)
     this.socialAuthService.authState.pipe(
       map((user) => {
           return {
@@ -83,4 +89,6 @@ export class LoginComponent implements OnInit {
       }
     });
   }
+
+  protected readonly Object = Object;
 }

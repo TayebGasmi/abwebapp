@@ -3,7 +3,14 @@
   <div class="border-1 surface-border surface-card border-round py-5 px-4 md:px-7 z-1">
     <div class="mb-4">
       <div class="text-900 text-xl font-bold mb-2">Log in</div>
+      @if (Object.keys(sessionDto).length != 0){
+            <span class="text-600 font-medium">Please login with google account</span>
+              <br>
+           <span class="text-600 font-medium">to complete session booking ! </span>
+      }
+      @else{
       <span class="text-600 font-medium">Please enter your details</span>
+      }
     </div>
     <form (ngSubmit)="loginUser()" [formGroup]="loginForm">
       <div class="flex flex-column">

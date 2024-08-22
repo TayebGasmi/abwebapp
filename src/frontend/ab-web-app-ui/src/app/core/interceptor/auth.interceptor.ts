@@ -6,7 +6,7 @@ import {catchError, throwError} from "rxjs";
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);
   const token = authService.getAccessToken();
-  if (token) {
+  if (token && authService.isProfileComplete()) {
     req = req.clone({
       setHeaders: {
         Authorization: `Bearer ${token}`

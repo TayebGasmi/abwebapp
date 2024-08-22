@@ -30,6 +30,12 @@ public class WebSecurityConfig {
         "/appointment-booking/v3/api-docs/**",
         "/swagger-ui/**",
         "/appointment-booking/auth/**",
+            "/appointment-booking/role",
+            "/appointment-booking/subject",
+            "/appointment-booking/school-year",
+            "/appointment-booking/school-type",
+            "/appointment-booking/teacher",
+            "/appointment-booking/student",
     };
     private final UserDetailsService userDetailsService;
     private final JwtTokenFilter jwtTokenFilter;
