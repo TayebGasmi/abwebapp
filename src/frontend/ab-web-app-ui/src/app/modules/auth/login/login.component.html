@@ -12,30 +12,14 @@
       <span class="text-600 font-medium">Please enter your details</span>
       }
     </div>
+
     <form (ngSubmit)="loginUser()" [formGroup]="loginForm">
       <div class="flex flex-column">
-        <span class="p-input-icon-left w-full mb-4">
-          <i class="pi pi-envelope"></i>
-          <input class="w-full md:w-25rem" formControlName="email" id="email" pInputText placeholder="Email" type="email">
-        </span>
-        <span class="p-input-icon-left w-full mb-4">
-          <i class="pi pi-lock"></i>
-          <input class="w-full md:w-25rem" formControlName="password" id="password" pInputText placeholder="Password" type="password">
-        </span>
-        <div class="mb-4 flex ">
-          <a class="text-600 hover:text-primary cursor-pointer ml-auto transition-colors transition-duration-300" routerLink="/auth/new-password">Reset
-            password</a>
-        </div>
-        <button class="w-full mb-4" label="Log In" pButton pRipple type="submit"></button>
-        <p-divider align="center" layout="horizontal" type="solid">Other log in options</p-divider>
         <div class="flex flex-wrap align-items-center justify-content-center w-full">
           <asl-google-signin-button class="google-login" data-use_fedcm_for_prompt="true" locale="en" size="large" type='standard'></asl-google-signin-button>
         </div>
-        <div class="text-center mt-4">
-          <span class="text-600">Don't have an account?</span>
-          <a class="text-primary cursor-pointer ml-2" routerLink="/auth/register">Sign up</a>
-        </div>
       </div>
     </form>
+
   </div>
 </div>

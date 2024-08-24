@@ -61,7 +61,7 @@
               <div class="text-900 font-semibold mb-2">Price</div>
               <p class="flex align-items-center m-0">
                 <i class="pi pi-fw pi-dollar text-700 mr-2"></i>
-                <span>{{ selectedSession.price  }}</span>
+                <span>{{ selectedSession.price }}</span>
               </p>
             </div>
             <div class="col-6">
@@ -85,61 +85,80 @@
             </p>
           </div>
         </div>
-      } @else {
+      }
+      @if (view === 'new') {
+        <p-steps styleClass="mb-3" [readonly]="true" [model]="sessionSteps" [(activeIndex)]="activeStep"></p-steps>
         <form [formGroup]="sessionForm">
           <div class="grid p-fluid formgrid">
-            <div class="col-12 field">
-              <label class="mb-2" for="teacher">teacher</label>
-              <p-dropdown [filter]="true" [ngClass]="{'ng-invalid ng-dirty': fieldHasError('schoolTypes')}" [options]="teachers"
-                          [showClear]="true"
-                          formControlName="teacher"
-                          id="teacher"
-                          placeholder="choose a teacher"
-                          styleClass="w-full  mb-2"
-              >
-              </p-dropdown>
-              @if (fieldHasError('teacher')) {
-                <div class="mb-2 ng-invalid p-error">teacher is required</div>
-              }
-            </div>
+            @if (activeStep === 0) {
+              <div class="col-12 field">
+                <label class="mb-2" for="subject">subject</label>
+                <p-dropdown [filter]="true" [ngClass]="{'ng-invalid ng-dirty': fieldHasError('subject')}" [options]="subjects"
+                            [showClear]="true"
+                            formControlName="subject"
+                            id="subject"
+                            placeholder="choose a subject"
+                            styleClass="w-full"
+                            [virtualScroll]="true"
 
-            <div class="col-12 field">
-              <label class="mb-2" for="subject">subject</label>
-              <p-dropdown [filter]="true" [ngClass]="{'ng-invalid ng-dirty': fieldHasError('subject')}" [options]="subjects"
-                          [showClear]="true"
-                          formControlName="subject"
-                          id="subject"
-                          placeholder="choose a subject"
-                          styleClass="w-full"
-                          [virtualScroll]="true"
+                >
+                </p-dropdown>
+                @if (fieldHasError('subject')) {
+                  <div class="ng-invalid p-error">subject is required</div>
+                }
+              </div>
+              <div class="col-12 field">
+                <label for="startTime" class="text-900 font-semibold">Start Time</label>
+                <p-calendar id="startTime" formControlName="startDateTime" [showTime]="true" placeholder="Select Start Time"></p-calendar>
+                @if (fieldHasError('startTime')) {
+                  <div class="mb-2 ng-invalid p-error">Start Time is required</div>
+                }
+              </div>
+            }
+            @if (activeStep === 1) {
+              <div class="col-12 field">
+                <label class="mb-2" for="teacher">teacher</label>
+                <p-dropdown [filter]="true" [ngClass]="{'ng-invalid ng-dirty': fieldHasError('schoolTypes')}" [options]="teachers"
+                            [showClear]="true"
+                            formControlName="teacher"
+                            id="teacher"
+                            placeholder="choose a teacher"
+                            styleClass="w-full  mb-2"
+                >
+                </p-dropdown>
+                @if (fieldHasError('teacher')) {
+                  <div class="mb-2 ng-invalid p-error">teacher is required</div>
+                }
+              </div>
+            }
 
-              >
-              </p-dropdown>
-              @if (fieldHasError('subject')) {
-                <div class="ng-invalid p-error">subject is required</div>
-              }
-            </div>
-            <div class="col-12 field">
-              <label for="startTime" class="text-900 font-semibold">Start Time</label>
-              <p-calendar id="startTime" formControlName="startDateTime" [showTime]="true" placeholder="Select Start Time"></p-calendar>
-              @if (fieldHasError('startTime')) {
-                <div class="mb-2 ng-invalid p-error">Start Time is required</div>
-              }
-            </div>
+
           </div>
         </form>
+      }
+      @if (view === 'edit') {
+
       }
     </ng-template>
 
     <ng-template pTemplate="footer">
+      @if (activeStep > 0) {
+        <button pButton pRipple label="Back" icon="pi pi-angle-left" (click)="prevStep()" class="p-button-primary p-button-sm"></button>
+      }
+      @if (!isLastStep()) {
+        <button pButton pRipple label="Next" icon="pi pi-angle-right" class="p-button-primary p-button-sm" (click)="nextStep()"
+                [disabled]="isNextDisabled()"></button>
+      }
+      @if (isLastStep()) {
+        <button pButton pRipple label="Save" icon="pi pi-check" (click)="handleSave()" class="p-button-primary p-button-sm"
+                [disabled]="sessionForm.invalid"></button>
+      }
       @if (view === 'display') {
-        <button pButton label="Edit" icon="pi pi-pencil" (click)="onEditClick()" class="p-button-primary p-button-sm" style="margin-right: .25rem"
-         [disabled]="disableEdit"
+        <button pRipple pButton label="Edit" icon="pi pi-pencil" (click)="onEditClick()" class="p-button-primary p-button-sm"
+                [disabled]="disableEdit"
         ></button>
       }
-      @if (view !== 'display') {
-        <button pButton label="Save" icon="pi pi-check" (click)="handleSave()" class="p-button-primary p-button-sm"></button>
-      }
+
     </ng-template>
   </p-dialog>
 </div>

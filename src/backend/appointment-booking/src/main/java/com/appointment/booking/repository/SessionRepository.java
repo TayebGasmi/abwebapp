@@ -22,7 +22,15 @@ public interface SessionRepository extends BaseRepository<Session, Long> {
     );
 
 
-    List<Session> findByStudentId(Long id);
+    @Query("SELECT s FROM Session s WHERE s.student.id = :studentId AND " +
+           "(s.startDateTime BETWEEN :startDate AND :endDate OR s.endDateTime BETWEEN :startDate AND :endDate)")
+    List<Session> findByStudentIdAndDateRange(@Param("studentId") Long studentId,
+        @Param("startDate") ZonedDateTime startDate,
+        @Param("endDate") ZonedDateTime endDate);
 
-    List<Session> findByTeacherId(Long id);
+    @Query("SELECT s FROM Session s WHERE s.teacher.id = :teacherId AND " +
+           "(s.startDateTime BETWEEN :startDate AND :endDate OR s.endDateTime BETWEEN :startDate AND :endDate)")
+    List<Session> findByTeacherIdAndDateRange(@Param("teacherId") Long teacherId,
+        @Param("startDate") ZonedDateTime startDate,
+        @Param("endDate") ZonedDateTime endDate);
 }
