@@ -34,6 +34,11 @@ export class AppMenuComponent implements OnInit {
             label: "calendar",
             icon: "pi pi-fw pi-calendar",
             routerLink: "calendar"
+          },
+          {
+            label: "session",
+            icon: "pi pi-fw pi-calendar",
+            routerLink: "session-settings"
           }
         ]
       },
