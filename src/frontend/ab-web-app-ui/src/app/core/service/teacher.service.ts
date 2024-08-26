@@ -6,6 +6,8 @@ import {environment} from "../../../environments/environment";
 import {AuthService} from "./auth.service";
 import {BrowserStorageService} from "./browser-storage.service";
 import {map, Observable} from "rxjs";
+import {Router} from "@angular/router";
+import {NotificationService} from "./notification.service";
 
 const baseUrl = environment.APPOINTMENT_BOOKING_URL;
 
@@ -15,6 +17,8 @@ const baseUrl = environment.APPOINTMENT_BOOKING_URL;
 export class TeacherService extends BaseService<Teacher, number> {
   authService = inject(AuthService);
   browserStorage:BrowserStorageService =inject(BrowserStorageService);
+  notificationService:NotificationService=inject(NotificationService)
+  router:Router= inject(Router)
   teacher!:Teacher ;
   constructor(http: HttpClient) {
     const url = `${baseUrl}/teacher`;
@@ -25,7 +29,11 @@ export class TeacherService extends BaseService<Teacher, number> {
 
     return this.findById(JSON.parse(<string>this.browserStorage?.getItem("user"))["id"]).pipe(
       map(teacher => {
-          return !!teacher?.confirmedByAdmin
+        if(!teacher.confirmedByAdmin){
+          this.router.navigate(['/auth/login'])
+          this.notificationService.showWarn("your account should be confimed by admin")
+        }
+        return !!teacher?.confirmedByAdmin
         }
       )
     )
