@@ -20,9 +20,8 @@ export const authGuard: CanActivateFn = (route) => {
     router.navigate(['/complete'])
     return false
   }
-  if(!teacherService.isConfirmedByAdmin().subscribe(teacher=>teacher.confirmedByAdmin)){
-    router.navigate(['/auth/login'])
-    return false
+  if (authService.hasRoles(["TEACHER"])) {
+    return teacherService.isConfirmedByAdmin()
   }
 
   return true
