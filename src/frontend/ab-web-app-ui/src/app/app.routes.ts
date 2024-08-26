@@ -42,7 +42,7 @@ export const routes: Routes = [
         path: 'profile',
         loadChildren: () => import('./modules/profile/profile.routes').then(m => m.routes),
         canActivate: [authGuard],
-        data: {roles: ['STUDENT', 'TEACHER']}
+        data: {roles: ['STUDENT', 'TEACHER','ADMIN']}
       }
       , {
         path: 'session-settings',
