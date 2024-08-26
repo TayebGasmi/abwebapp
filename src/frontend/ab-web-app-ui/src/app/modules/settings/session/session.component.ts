@@ -24,6 +24,7 @@ import {TeacherService} from "../../../core/service/teacher.service";
 import {SubjectService} from "../../../core/service/subject.service";
 import {BrowserStorageService} from "../../../core/service/browser-storage.service";
 import {User} from "../../../core/models/user";
+import {AuthService} from "../../../core/service/auth.service";
 interface GlobalFilter {
   keys: string[];
   value: string;
@@ -50,6 +51,7 @@ interface GlobalFilter {
   styleUrl: './session.component.scss'
 })
 export class SessionComponent {
+  visibleEdit:boolean=true;
   sidebarVisible = false;
   data: SessionDto[] = [];
   totalRecords: number = 0;
@@ -69,7 +71,7 @@ export class SessionComponent {
   currentUser!:User ;
   subjects: { label: string, value: Subject }[] = [];
   teachers: { label: string, value: Teacher }[] = [];
-  constructor( private browserStorage:BrowserStorageService, private teacherService: TeacherService,
+  constructor(private authService:AuthService, private browserStorage:BrowserStorageService, private teacherService: TeacherService,
                private subjectService: SubjectService,private sessionService: SessionService, private notificationService: NotificationService, private fb: FormBuilder) {
     this.initForm();
     this.currentUser=JSON.parse(<string>this.browserStorage.getItem('user'));
@@ -98,13 +100,21 @@ export class SessionComponent {
     }
     if (this.selectedSession) {
       this.updateSession();
+    }else{
+      this.addNewSession();
+      this.sidebarVisible=false;
     }
     this.resetEvent();
   }
   onLazyLoad(event: any): void {
     this.pageLink.page = event.first! / event.rows!;
     this.pageLink.pageSize = event.rows!;
-    this.pageLink.globalFilter= {keys:["student.email"],value:this.currentUser?.email}
+    if(this.authService.hasRoles(["STUDENT"])){
+      this.pageLink.globalFilter= {keys:["student.email"],value:this.currentUser?.email}
+    }else if(this.authService.hasRoles(["TEACHER"])){
+      this.visibleEdit=false;
+      this.pageLink.globalFilter= {keys:["teacher.email"],value:this.currentUser?.email}
+    }
     if (event.sortField) {
       this.pageLink.sortProperty = event.sortField;
       this.pageLink.sortOrder = event.sortOrder === 1 ? SortOrder.ASC : SortOrder.DESC;
@@ -118,7 +128,13 @@ export class SessionComponent {
     }
     this.loadSessions();
   }
-
+  private addNewSession() {
+    const formValue = this.form.value;
+    this.sessionService.save(formValue).subscribe(() => {
+      this.notificationService.showSuccess('Session saved successfully');
+      this.loadSessions();
+    });
+  }
   onGlobalFilter(value: string) {
     this.pageLink.globalFilter = {keys: ['key', 'value', 'description'], value};
     this.loadSessions();
@@ -171,5 +187,11 @@ export class SessionComponent {
         value: u
       }));
     });
+  }
+  add(){
+    this.view = 'edit';
+    this.sidebarVisible = true;
+    this.loadTeachers();
+    this.loadSubjects();
   }
 }

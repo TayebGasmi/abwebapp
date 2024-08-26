@@ -1,4 +1,11 @@
 <div class="card">
+  <div class="mb-4 flex align-items-center justify-content-start gap-2">
+    @if (visibleEdit){
+    <button (click)="add()" icon="pi pi-plus" label="New" pButton pRipple type="button"></button>
+    }@else{
+      <button disabled="true" (click)="add()" icon="pi pi-plus" label="New" pButton pRipple type="button"></button>
+    }
+  </div>
   <app-table
     #table
     (onGlobalFilter)="onGlobalFilter($event)"
@@ -10,9 +17,11 @@
     [rowsPerPageOptions]="rowsPerPageOptions"
     [totalRecords]="totalRecords"
   >
-    <ng-template #actions let-item>
-      <button (click)="edit(item)" class="mr-2 p-button-rounded p-button-outlined" icon="pi pi-pencil" pButton pRipple type="button"></button>
-    </ng-template>
+    @if (visibleEdit){
+      <ng-template #actions let-item>
+        <button (click)="edit(item)" class="mr-2 p-button-rounded p-button-outlined" icon="pi pi-pencil" pButton pRipple type="button"></button>
+      </ng-template>
+    }
   </app-table>
 
   <p-dialog [(visible)]="sidebarVisible" [style]="{width: '36rem'}" [modal]="true" [closable]="true" (onHide)="resetEvent()">
