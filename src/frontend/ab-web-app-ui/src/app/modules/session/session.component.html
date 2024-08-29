@@ -87,10 +87,11 @@
         </div>
       }
       @if (view === 'new') {
+        <p-steps styleClass="mb-3" [readonly]="true" [model]="sessionSteps" [(activeIndex)]="activeStep"></p-steps>
         <form [formGroup]="sessionForm">
           <div class="grid p-fluid formgrid">
-
-            <div class="col-12 field">
+            @if (activeStep === 0) {
+              <div class="col-12 field">
                 <label class="mb-2" for="subject">subject</label>
                 <p-dropdown [filter]="true" [ngClass]="{'ng-invalid ng-dirty': fieldHasError('subject')}" [options]="subjects"
                             [showClear]="true"
@@ -113,9 +114,9 @@
                   <div class="mb-2 ng-invalid p-error">Start Time is required</div>
                 }
               </div>
-
-
-            <div class="col-12 field">
+            }
+            @if (activeStep === 1) {
+              <div class="col-12 field">
                 <label class="mb-2" for="teacher">teacher</label>
                 <p-dropdown [filter]="true" [ngClass]="{'ng-invalid ng-dirty': fieldHasError('schoolTypes')}" [options]="teachers"
                             [showClear]="true"
@@ -129,6 +130,7 @@
                   <div class="mb-2 ng-invalid p-error">teacher is required</div>
                 }
               </div>
+            }
 
 
           </div>
@@ -140,8 +142,21 @@
     </ng-template>
 
     <ng-template pTemplate="footer">
+      @if (view === 'new') {
+        @if (activeStep > 0) {
+          <button pButton pRipple label="Back" icon="pi pi-angle-left" (click)="prevStep()" class="p-button-primary p-button-sm"></button>
+        }
+        @if (!isLastStep()) {
+          <button pButton pRipple label="Next" icon="pi pi-angle-right" class="p-button-primary p-button-sm" (click)="nextStep()"
+          ></button>
+        }
+        @if (isLastStep()) {
+          <button pButton pRipple label="Save" icon="pi pi-check" (click)="handleSave()" class="p-button-primary p-button-sm"
+                  [disabled]="sessionForm.invalid"></button>
+        }
+      }
 
-    @if (view === 'display') {
+      @if (view === 'display') {
         <button pRipple pButton label="Edit" icon="pi pi-pencil" (click)="onEditClick()" class="p-button-primary p-button-sm"
                 [disabled]="disableEdit"
         ></button>

@@ -26,6 +26,7 @@ import {AuthService} from "../../core/service/auth.service";
 import {StepsModule} from "primeng/steps";
 import {Ripple} from "primeng/ripple";
 import {distinctUntilChanged, map, of, switchMap} from "rxjs";
+import {filter} from "rxjs/operators";
 
 @Component({
   selector: 'app-session',
@@ -83,7 +84,7 @@ export class SessionComponent implements OnInit {
 
   private initializeForm() {
     this.sessionForm = this.fb.group({
-      startDateTime: ['', Validators.required],
+      startDateTime: [null, Validators.required],
       teacher: [null, Validators.required],
       subject: [null, Validators.required]
     });
@@ -104,6 +105,7 @@ export class SessionComponent implements OnInit {
   private loadTeachers() {
     this.sessionForm.get('subject')?.valueChanges
     .pipe(
+      filter(subject => !!subject),
       map(subject => subject.name),
       distinctUntilChanged(),
       switchMap(subjectName => subjectName ? this.teacherService.getTeachersBySubjectName(subjectName) : of([]))
@@ -298,7 +300,7 @@ export class SessionComponent implements OnInit {
     this.view = 'new';
     this.title = 'New Event';
     this.sessionForm.patchValue({
-      startDateTime: selectInfo.startStr
+      startDateTime: selectInfo.start
     });
   }
 }
