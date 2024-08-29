@@ -41,7 +41,16 @@ export class AppMenuComponent implements OnInit {
             routerLink: "session-settings"
           }
         ]
-      },
+      },{
+      label: "Profile Dashboard",
+      visible: this.authService.hasRoles(["ADMIN"]),
+      items:[
+        {
+          label: "Dashboard",
+          icon: "pi pi-fw pi-cog",
+          routerLink: "dashAdmin"
+        },
+      ]},
       {
         label: "settings",
         visible: this.authService.hasRoles(["ADMIN"]),
@@ -71,6 +80,7 @@ export class AppMenuComponent implements OnInit {
             icon: "pi pi-fw pi-cog",
             routerLink: "settings/teacher"
           },
+
         ]
       }
     ];
