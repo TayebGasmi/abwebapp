@@ -7,7 +7,7 @@ import {FullCalendarModule} from '@fullcalendar/angular';
 import {InputTextModule} from 'primeng/inputtext';
 import {InputTextareaModule} from 'primeng/inputtextarea';
 import {PaginatorModule} from 'primeng/paginator';
-import {PrimeTemplate} from 'primeng/api';
+import {MenuItem} from 'primeng/api';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {CalendarOptions, DateSelectArg, EventClickArg, EventInput} from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
@@ -23,6 +23,10 @@ import {TeacherService} from '../../core/service/teacher.service';
 import {SubjectService} from '../../core/service/subject.service';
 import {NotificationService} from '../../core/service/notification.service';
 import {AuthService} from "../../core/service/auth.service";
+import {StepsModule} from "primeng/steps";
+import {Ripple} from "primeng/ripple";
+import {distinctUntilChanged, map, of, switchMap} from "rxjs";
+import {filter} from "rxjs/operators";
 
 @Component({
   selector: 'app-session',
@@ -36,12 +40,13 @@ import {AuthService} from "../../core/service/auth.service";
     InputTextModule,
     InputTextareaModule,
     PaginatorModule,
-    PrimeTemplate,
     ReactiveFormsModule,
     MultiSelectModule,
     NgClass,
     DatePipe,
-    CurrencyPipe
+    CurrencyPipe,
+    StepsModule,
+    Ripple
   ],
   templateUrl: './session.component.html',
   styleUrls: ['./session.component.scss']
@@ -56,7 +61,9 @@ export class SessionComponent implements OnInit {
   title = '';
   subjects: { label: string, value: Subject }[] = [];
   teachers: { label: string, value: Teacher }[] = [];
-  disableEdit = false
+  disableEdit = false;
+  sessionSteps: MenuItem[] = [];
+  activeStep = 0;
 
   constructor(
     private fb: FormBuilder,
@@ -64,64 +71,79 @@ export class SessionComponent implements OnInit {
     private teacherService: TeacherService,
     private subjectService: SubjectService,
     private notificationService: NotificationService,
-    private authService:AuthService
+    private authService: AuthService
   ) {
   }
 
   ngOnInit(): void {
     this.initializeForm();
-    this.loadSessions();
-    this.loadTeachers();
-    this.loadSubjects();
+    this.loadInitialData();
     this.setupCalendarOptions();
+    this.initializeSteps();
   }
 
   private initializeForm() {
     this.sessionForm = this.fb.group({
-      startDateTime: ['', Validators.required],
+      startDateTime: [null, Validators.required],
       teacher: [null, Validators.required],
       subject: [null, Validators.required]
     });
   }
 
-  private loadSessions() {
-    this.sessionService.getCurrentUserSessions().subscribe(sessions => {
-      this.events = sessions.map(session => ({
-        id: session.id.toString(),
-        title: session.title,
-        start: session.startDateTime,
-        end: session.endDateTime,
-        extendedProps: {
-          description: session.description,
-          meetingLink: session.meetingLink,
-          price: session.price,
-          duration: session.duration,
-          status: session.status,
-          teacher: session.teacher,
-          subject: session.subject,
-          createdDate: new Date(session.createdDate)
-        }
-      }));
+  private loadInitialData() {
+    this.loadTeachers();
+    this.loadSubjects();
+  }
+
+  private loadSessions(startDate: string = '', endDate: string = '') {
+    this.sessionService.getCurrentUserSessionByDateRange(startDate, endDate).subscribe(sessions => {
+      this.events = sessions.map(this.mapSessionToEvent);
       this.updateCalendarEvents();
     });
   }
 
   private loadTeachers() {
-    this.teacherService.getALL().subscribe(result => {
-      this.teachers = result.map(u => ({
-        label: `${u.firstName} ${u.lastName}`,
-        value: u
+    this.sessionForm.get('subject')?.valueChanges
+    .pipe(
+      filter(subject => !!subject),
+      map(subject => subject.name),
+      distinctUntilChanged(),
+      switchMap(subjectName => subjectName ? this.teacherService.getTeachersBySubjectName(subjectName) : of([]))
+    )
+    .subscribe(teachers => {
+      this.teachers = teachers.map(teacher => ({
+        label: `${teacher.firstName} ${teacher.lastName}`,
+        value: teacher
       }));
     });
   }
 
   private loadSubjects() {
-    this.subjectService.getALL().subscribe(result => {
-      this.subjects = result.map(u => ({
-        label: u.name,
-        value: u
+    this.subjectService.getCurrentUserSubject().subscribe(subjects => {
+      this.subjects = subjects.map(subject => ({
+        label: subject.name,
+        value: subject
       }));
     });
+  }
+
+  private mapSessionToEvent(session: SessionDto): EventInput {
+    return {
+      id: session.id.toString(),
+      title: session.title,
+      start: session.startDateTime,
+      end: session.endDateTime,
+      extendedProps: {
+        description: session.description,
+        meetingLink: session.meetingLink,
+        price: session.price,
+        duration: session.duration,
+        status: session.status,
+        teacher: session.teacher,
+        subject: session.subject,
+        createdDate: new Date(session.createdDate)
+      }
+    };
   }
 
   private setupCalendarOptions() {
@@ -139,54 +161,58 @@ export class SessionComponent implements OnInit {
       dayMaxEvents: true,
       eventClick: (e: EventClickArg) => this.onEventClick(e),
       select: (e: DateSelectArg) => this.onDateSelect(e),
-      events: this.events
+      events: this.events,
+      datesSet: (dateInfo) => this.onDateRangeChange(dateInfo)
     };
   }
 
-  private onEventClick(e: EventClickArg) {
-    if(this.authService.hasRoles(["TEACHER"])){
+  private initializeSteps() {
+    this.sessionSteps = [
+      {label: 'Choose Subject & Time'},
+      {label: 'Choose Teacher'}
+    ];
+  }
+
+  nextStep() {
+    if (this.activeStep === 0 && this.isFirstStepInvalid()) {
       return;
     }
-    this.selectedSession = {
-      id: parseInt(e.event.id),
-      status: '',
-      title: e.event.title || '',
-      startDateTime: e.event.start || new Date(),
-      endDateTime: e.event.end || new Date(),
-      description: e.event.extendedProps['description'] || '',
-      meetingLink: e.event.extendedProps['meetingLink'] || '',
-      price: e.event.extendedProps['price'] || 0,
-      duration: e.event.extendedProps['duration'] || 0,
-      teacher: e.event.extendedProps['teacher'],
-      subject: e.event.extendedProps['subject'],
-      createdDate: e.event.extendedProps['createdDate']
-    };
-    this.view = 'display';
-    this.showDialog = true;
-    this.title = this.selectedSession.title;
-    const createdDate = this.selectedSession.createdDate
-    const currentDate = new Date();
-    const timeDifference = currentDate.getTime() - createdDate.getTime();
-    const oneDayInMilliseconds = 24 * 60 * 60 * 1000;
-    this.disableEdit = timeDifference >= oneDayInMilliseconds;
+    this.activeStep++;
+  }
+
+  prevStep() {
+    this.activeStep--;
+  }
+
+  private isFirstStepInvalid(): boolean {
+    if (this.sessionForm.get('subject')?.invalid) {
+      this.notificationService.showError("Please choose a subject.");
+      return true;
+    }
+    if (this.sessionForm.get('startDateTime')?.invalid) {
+      this.notificationService.showError("Please select a start time.");
+      return true;
+    }
+    return false;
   }
 
   handleSave() {
     if (this.sessionForm.invalid) {
       return;
     }
+
     if (this.selectedSession) {
       this.updateSession();
     } else {
       this.addNewSession();
     }
+
     this.showDialog = false;
     this.resetEvent();
   }
 
   private addNewSession() {
-    const formValue = this.sessionForm.value;
-    this.sessionService.save(formValue).subscribe(() => {
+    this.sessionService.save(this.sessionForm.value).subscribe(() => {
       this.notificationService.showSuccess('Session saved successfully');
       this.loadSessions();
     });
@@ -206,6 +232,10 @@ export class SessionComponent implements OnInit {
     this.calendarOptions = {...this.calendarOptions, events: this.events};
   }
 
+  private onDateRangeChange(viewInfo: any) {
+    this.loadSessions(viewInfo.startStr, viewInfo.endStr);
+  }
+
   onEditClick() {
     this.view = 'edit';
   }
@@ -215,24 +245,62 @@ export class SessionComponent implements OnInit {
     this.sessionForm.reset();
   }
 
-  private onDateSelect(dateSelectArg: DateSelectArg) {
-    if(this.authService.hasRoles(["TEACHER"])){
-      return;
-    }
-    const today = new Date();
-    if (dateSelectArg.start < today) {
-      this.notificationService.showError("Selected date cannot be in the past.")
-      return;
-    }
-    this.view = 'new';
-    this.title = 'New session';
-    this.showDialog = true;
-    this.sessionForm.get('startDateTime')?.patchValue(dateSelectArg.start);
-  }
-
-
   fieldHasError(fieldName: string): boolean {
     const control = this.sessionForm.get(fieldName);
     return !!(control?.invalid && (control?.dirty || control?.touched));
+  }
+
+  isLastStep(): boolean {
+    return this.activeStep === this.sessionSteps.length - 1;
+  }
+
+  isNextDisabled(): boolean {
+    if (this.activeStep === 0) {
+      return this.isFirstStepInvalid();
+    }
+    return false;
+  }
+
+  private onEventClick(e: EventClickArg) {
+    if (this.authService.hasRoles(["TEACHER"])) {
+      return;
+    }
+
+    this.selectedSession = {
+      id: parseInt(e.event.id),
+      status: '',
+      title: e.event.title || '',
+      startDateTime: e.event.start || new Date(),
+      endDateTime: e.event.end || new Date(),
+      description: e.event.extendedProps['description'] || '',
+      meetingLink: e.event.extendedProps['meetingLink'] || '',
+      price: e.event.extendedProps['price'] || 0,
+      duration: e.event.extendedProps['duration'] || 0,
+      teacher: e.event.extendedProps['teacher'],
+      subject: e.event.extendedProps['subject'],
+      createdDate: e.event.extendedProps['createdDate']
+    };
+
+    this.title = this.selectedSession.title;
+    this.disableEditIfNecessary();
+    this.view = 'display';
+    this.showDialog = true;
+  }
+
+  private disableEditIfNecessary() {
+    const createdDate = this.selectedSession?.createdDate;
+    const currentDate = new Date();
+    if (createdDate)
+      this.disableEdit = createdDate && createdDate < currentDate;
+  }
+
+  private onDateSelect(selectInfo: DateSelectArg) {
+    this.resetEvent();
+    this.showDialog = true;
+    this.view = 'new';
+    this.title = 'New Event';
+    this.sessionForm.patchValue({
+      startDateTime: selectInfo.start
+    });
   }
 }

@@ -3,6 +3,7 @@ import {BaseService} from "./base.service";
 import {Teacher} from "../models/teacher";
 import {HttpClient} from "@angular/common/http";
 import {environment} from "../../../environments/environment";
+import {Observable} from "rxjs";
 
 const baseUrl = environment.APPOINTMENT_BOOKING_URL;
 
@@ -11,8 +12,11 @@ const baseUrl = environment.APPOINTMENT_BOOKING_URL;
 })
 export class TeacherService extends BaseService<Teacher, number> {
 
-  constructor(http: HttpClient) {
+  constructor(private http: HttpClient) {
     const url = `${baseUrl}/teacher`;
     super(http, url);
+  }
+  getTeachersBySubjectName(subjectName: string): Observable<Teacher[]> {
+    return this.http.get<Teacher[]>(`${baseUrl}/teacher/subject/${subjectName}`);
   }
 }

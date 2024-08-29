@@ -14,6 +14,7 @@ import com.appointment.booking.mapper.StudentMapper;
 import com.appointment.booking.repository.SessionRepository;
 import com.google.api.services.calendar.model.Event;
 import java.math.BigDecimal;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
@@ -57,15 +58,15 @@ public class SessionService extends BaseServiceImpl<Session, Long, SessionDto> {
         return super.add(sessionDto);
     }
 
-    public List<SessionDto> getCurrentUserSessions() {
+    public List<SessionDto> getCurrentUserSessionsWithinDateRange(ZonedDateTime startDate, ZonedDateTime endDate) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Object principal = authentication.getPrincipal();
 
         List<Session> sessions;
         if (principal instanceof Student student) {
-            sessions = sessionRepository.findByStudentId(student.getId());
+            sessions = sessionRepository.findByStudentIdAndDateRange(student.getId(), startDate, endDate);
         } else if (principal instanceof Teacher teacher) {
-            sessions = sessionRepository.findByTeacherId(teacher.getId());
+            sessions = sessionRepository.findByTeacherIdAndDateRange(teacher.getId(), startDate, endDate);
         } else {
             throw new IllegalStateException("Unexpected user type: " + principal.getClass().getSimpleName());
         }

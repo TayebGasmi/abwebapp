@@ -1,4 +1,4 @@
-import {Component, OnInit, WritableSignal} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {StepperModule} from "primeng/stepper";
 import {Button, ButtonDirective} from "primeng/button";
 import {NgClass} from "@angular/common";
@@ -12,7 +12,7 @@ import {ToastModule} from "primeng/toast";
 import {StepsModule} from "primeng/steps";
 import {DropdownChangeEvent, DropdownModule} from "primeng/dropdown";
 import {SchoolType} from "../../../core/models/school-type";
-import {Role, RoleName} from "../../../core/models/role";
+import {Role} from "../../../core/models/role";
 import {User} from "../../../core/models/user";
 import {SchoolYear} from "../../../core/models/school-year";
 import {Subject} from "../../../core/models/subject"
@@ -26,7 +26,7 @@ import {AuthService} from "../../../core/service/auth.service";
 import {StudentService} from "../../../core/service/student.service";
 import {UserService} from "../../../core/service/user.service";
 import {MultiSelectModule} from "primeng/multiselect";
-import {InputSwitchChangeEvent, InputSwitchModule} from "primeng/inputswitch";
+import {InputSwitchModule} from "primeng/inputswitch";
 import {SchoolYearService} from "../../../core/service/school-year.service";
 import {SessionBookLandingService} from "../../../core/service/session-book-landing.service";
 import {SessionDto} from "../../../core/models/session";
@@ -88,9 +88,6 @@ export class CompleteProfileComponent implements OnInit{
 
     this.user=authService.getUser();
   }
-  toggleEdit() {
-    this.isEditing = !this.isEditing;
-  }
 
   ngOnInit(): void {
 
@@ -120,32 +117,22 @@ export class CompleteProfileComponent implements OnInit{
         this.user.isCompleted=true;
 
         this.user.roles=[roleControl?.value['value']]
-        // Now save the student entity
-        console.log(subjectControl.value)
-        // this.userService.deleteById(this.user.id).subscribe(response=>{
-        //   this.browserStorage.setItem('user', JSON.stringify(this.user))
-        // })
-        // this.user.id=0;
-        this.teacherService.save({...this.user as User,subjects:subjectControl.value,payRate:0}).subscribe(user => {
+        this.teacherService.save({...this.user, subjects: subjectControl.value, payRate: 0}).subscribe(user => {
           this.browserStorage.setItem('user', JSON.stringify(user))
           this.browserStorage.setItem('roles',JSON.stringify(user.roles.map(role=>role.name)))
           this.router.navigate(['/profile/details']);
-          console.log("Student saved successfully", user);
         });
       }
       if (schoolTypeControl && schoolYearControl && this.user !=null && this.selectedRole==2) {
         this.user.isCompleted=true;
         this.user.roles=[roleControl?.value['value']]
-        // this.userService.deleteById(this.user.id).subscribe(response=>{
-        //   this.browserStorage.setItem('user', JSON.stringify(this.user))
-        // })
-        this.studentService.save({...this.user as User,schoolType:schoolTypeControl.value['value'],schoolYear:schoolYearControl.value['value']}).subscribe(user => {
+
+        this.studentService.save({...this.user, schoolType: schoolTypeControl.value['value'], schoolYear: schoolYearControl.value['value']}).subscribe(user => {
           this.browserStorage.setItem('user', JSON.stringify(user))
           this.browserStorage.setItem('roles',JSON.stringify(user.roles.map(role=>role.name)))
           this.sessionBookingLanding.changeMessage(this.sessionDto,true);
           console.log(this.sessionDto)
           this.router.navigate(['/profile/details']);
-          console.log("Student saved successfully", user);
         });
       }
     }
