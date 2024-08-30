@@ -10,4 +10,7 @@
 
   <include file="db/migration/changes/config-changelog.sql"/>
 
+  <include file="db/migration/changes/admin-account-changelog.sql"/>
+
+
 </databaseChangeLog>
