@@ -1,6 +1,6 @@
 import {Component, inject, OnInit} from '@angular/core';
 import {AppMenuitemComponent} from './app.menuitem.component';
-import {MenuModel} from "../core/models/MenuModel";
+import {MenuModel} from "../core/models/menu-model";
 import {AuthService} from "../core/service/auth.service";
 
 @Component({
@@ -17,35 +17,23 @@ export class AppMenuComponent implements OnInit {
     this.model = [
       {
         label: "profile",
-        visible: this.authService.hasRoles(["STUDENT","TEACHER"]),
+        visible: this.authService.hasRoles(["STUDENT", "TEACHER"]),
         items: [
           {
             label: "Profile",
             icon: "pi pi-fw pi-user",
-            routerLink: "profile",
+            routerLink: "profile/details",
           }
         ]
       },
       {
         label: "booking",
-        visible: this.authService.hasRoles(["STUDENT","TEACHER"]),
+        visible: this.authService.hasRoles(["STUDENT", "TEACHER"]),
         items: [
           {
             label: "calendar",
             icon: "pi pi-fw pi-calendar",
             routerLink: "calendar"
-          }
-        ]
-      },
-      {
-        label: "session",
-        visible: this.authService.hasRoles(["STUDENT","TEACHER"]),
-
-        items: [
-          {
-            label: "Sessions",
-            icon: "pi pi-fw pi-list",
-            routerLink: "sessionlist"
           }
         ]
       },
@@ -66,7 +54,7 @@ export class AppMenuComponent implements OnInit {
           {
             label: "School Year",
             icon: "pi pi-fw pi-calendar",
-            routerLink: "settings/schoolyear"
+            routerLink: "settings/school-year"
           },
           {
             label: "Configuration",

@@ -1,6 +1,7 @@
 package com.appointment.booking.security;
 
 
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,6 +20,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
@@ -28,8 +30,14 @@ public class WebSecurityConfig {
 
     private static final String[] WHITE_LIST = {
         "/appointment-booking/v3/api-docs/**",
-        "/swagger-ui/**",
+        "/appointment-booking/swagger-ui/**",
         "/appointment-booking/auth/**",
+        "/appointment-booking/role",
+        "/appointment-booking/subject",
+        "/appointment-booking/school-year",
+        "/appointment-booking/school-type",
+        "/appointment-booking/teacher",
+        "/appointment-booking/student",
     };
     private final UserDetailsService userDetailsService;
     private final JwtTokenFilter jwtTokenFilter;
@@ -71,13 +79,16 @@ public class WebSecurityConfig {
 
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
-        return request -> {
-            var cors = new CorsConfiguration();
-            cors.setAllowedOrigins(java.util.List.of("*"));
-            cors.setAllowedMethods(java.util.List.of("*"));
-            cors.setAllowedHeaders(java.util.List.of("*"));
-            return cors;
-        };
+        CorsConfiguration corsConfig = new CorsConfiguration();
+        corsConfig.setAllowedOrigins(List.of("http://localhost:4200", "https://your-domain.com"));
+        corsConfig.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        corsConfig.setAllowedHeaders(List.of("*"));
+        corsConfig.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", corsConfig);
+
+        return source;
     }
 
 

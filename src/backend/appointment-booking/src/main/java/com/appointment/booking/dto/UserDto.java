@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import java.util.Set;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -31,5 +32,10 @@ public class UserDto extends BaseDto<Long> {
     private String profilePicture;
     @NotNull
     private Set<RoleDTO> roles;
+    @Builder.Default
+    private Boolean isCompleted = false;
+    @Builder.Default
+    private Boolean isVerified = false;
+
 
 }

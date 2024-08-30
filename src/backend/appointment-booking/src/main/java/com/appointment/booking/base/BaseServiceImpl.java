@@ -9,9 +9,11 @@ import com.appointment.booking.utils.FilterUtil;
 import com.appointment.booking.utils.PaginationUtil;
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
-import java.util.*;
-import java.util.stream.Collectors;
-
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -21,7 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 
 @Slf4j
-public class BaseServiceImpl<E extends BaseEntity<I>, I extends Serializable, D extends BaseDto> implements BaseService<E, I, D> {
+public abstract class BaseServiceImpl<E extends BaseEntity<I>, I extends Serializable, D extends BaseDto<I>> implements BaseService<E, I, D> {
 
     public static final String ENTITY_NOT_FOUND_FORMAT = "%s with id: %s not found";
     private final String entityClassName = ((Class<E>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0]).getSimpleName();
@@ -35,15 +37,18 @@ public class BaseServiceImpl<E extends BaseEntity<I>, I extends Serializable, D 
 
     @Override
     @Transactional
-    public D add(D dto) throws Exception {
+    public D add(D dto) {
         E entity = mapper.convertDtoToEntity(dto);
         return mapper.convertEntityToDto(repository.save(entity));
     }
 
     @Override
     @Transactional
-    public D updateById(I id, D dto) {
-        repository.findById(id).orElseThrow(() -> new NotFoundException(String.format(ENTITY_NOT_FOUND_FORMAT, entityClassName, id)));
+    public D update(D dto) {
+        Objects.requireNonNull(dto.getId(), "null id ");
+        if (!repository.existsById(dto.getId())) {
+            throw new NotFoundException(String.format(ENTITY_NOT_FOUND_FORMAT, dto.getId(), entityClassName));
+        }
         E entity = mapper.convertDtoToEntity(dto);
         return mapper.convertEntityToDto(repository.save(entity));
     }
@@ -78,7 +83,7 @@ public class BaseServiceImpl<E extends BaseEntity<I>, I extends Serializable, D 
 
     @Override
     public List<D> getAll() {
-        return repository.findAll().stream().map(mapper::convertEntityToDto).collect(Collectors.toList());
+        return repository.findAll().stream().map(mapper::convertEntityToDto).toList();
     }
 
     @Override
@@ -95,8 +100,6 @@ public class BaseServiceImpl<E extends BaseEntity<I>, I extends Serializable, D 
         Page<E> resultPage = repository.findAll(specification, pageable);
         return PaginationUtil.paginate(resultPage, mapper);
     }
-
-
 
 
 }

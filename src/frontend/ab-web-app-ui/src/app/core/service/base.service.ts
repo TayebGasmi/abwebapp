@@ -3,8 +3,6 @@ import {Observable} from "rxjs";
 import {IBaseService} from "./base.service.interface";
 import {PageData} from "../models/page-data";
 import {PageLink} from "../models/page-link";
-import {inject} from "@angular/core";
-import {Router} from "@angular/router";
 
 export class BaseService<T, I> implements IBaseService<T, I> {
 
@@ -12,8 +10,8 @@ export class BaseService<T, I> implements IBaseService<T, I> {
 
   }
 
-  updateById(t: T, id: I): Observable<T> {
-    return this.httpClient.patch<T>(`${this.url}/${id}`, t);
+  update(t: T): Observable<T> {
+    return this.httpClient.patch<T>(`${this.url}`, t);
   }
 
   findById(id: I): Observable<T> {
@@ -21,11 +19,13 @@ export class BaseService<T, I> implements IBaseService<T, I> {
   }
 
   deleteAll(): Observable<void> {
-    return this.httpClient.delete<void>(`${this.url}/deleteall`);
+    return this.httpClient.delete<void>(`${this.url}/all`);
   }
-  deleteAllByIds(t:T[]): Observable<void> {
-    return this.httpClient.post<void>(`${this.url}/deleteallByIds`,t);
+
+  deleteAllByIds(t: T[]): Observable<void> {
+    return this.httpClient.post<void>(`${this.url}/delete`, t);
   }
+
   deleteById(id: I): Observable<void> {
     return this.httpClient.delete<void>(`${this.url}/${id}`)
   }
@@ -37,7 +37,8 @@ export class BaseService<T, I> implements IBaseService<T, I> {
   save(t: T): Observable<T> {
     return this.httpClient.post<T>(`${this.url}`, t)
   }
-  getALL():Observable<T[]>{
+
+  getALL(): Observable<T[]> {
     return this.httpClient.get<T[]>(`${this.url}`);
   }
 

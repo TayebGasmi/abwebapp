@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "gmailapi-ictlab",
+  "private_key_id": "32ec5864b0214ca1e5afd745152f47490d6d035e",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQC3x84hvFuVlOeI\nw/HtTp+RleNtFCrWj8C8QTHi1SMdZxtp88Db1oAmQxDyryI2xIKbLQBfHTcIBDo6\n7blf+tV8wscOU01aShW1C6RXCcojDYXKndPVY4fa5NDw+w1lLdPX32Kf1ybf4Mkd\nUmDrE7ilwsJERDJmGKEzfHaL3XQheXH/cARYQ4EWDO5Cwutt78B+E/Cw19grgbe2\noC1AWW5er54wgFecfbgSWr/aeP6dHvTeTArbi2+O8i4zWjAheWcikQM7M3HsgX8P\nwvkS1+S5hZ3OdtHmSBqrPfyLRGXmtgPE77a4YaHNFhUUsNU3/X3reV0NSUK90tiP\nBXEom1uPAgMBAAECggEAHdGYAwZGT99gr+KnGstyfZM12ul2R+j8Ky9i0jyl3Wvw\n2UCZDrJfiZXBJrc+1GcPD/F9yXD6kFzrO8t9k/KleAA8fvkKKHezzPPOHucyOnzD\ntAvmpo1nKh+NPURmuH92i2St4mRs5M9aolzO5+WDxLV0gtIT4Vfms+1iaLAuWw3M\nCGJJ3420S8TeN/HCoVhwW+Pjdn9FvgWs6o89aF2zz5Ov4VBHCX7bnbR67qELGMnr\nuQ9Xc8+IACQQ6fareZpmcz4ugp6COe1sTL9K8eObyI9yN25+QSNgZROWAQw3AnGi\nUD77AvtvUF7/UAf6AE4BQVdty6WbBUhU0tWCjULoAQKBgQD0thVYobJLve9ZuBbM\n+rYIp0cbH6+hXBvjAoBCywfMVl/5ddXnFezx6DUIZ/xOdB/pQ6rbsP0VCPYKklNS\nWzyZppS4ao2TJrGlTLuTv1bwaAD0+knrz8HFiFfsU37h5+Ndj2ZIAVKHOq7DhBP3\nC4lUpTqb/2PdUoAVIk221TLIAQKBgQDAQij8cKC9gyIkibW5F6ey/fnblqcL9juF\nUrngF2yd2UfqnlNssPCW3jmWSyMl9mP3g5ajn+vgfu3r8XJl7FOyUw4Z/vrDCj25\nCj12m4jPhynawD+Wo0Z2D1ByvbHYVnzsrdscvbeMZwmK6RfLFmm/VjC3FeEYQxLd\nvAlL0+WjjwKBgCvD+PNeD+497PXF18YXPME1caEnPJkGSTKDev73ItDnzchmy7fF\nkxf8qKd1OYmqeR6V7JPYBpthe+eOHfrHuIHeahDFdcaQkAr5Oz8EZH8girNFpDzZ\nblVuuhLZKAMtHtvXzrooCmOHGkR7dbqkRI5v8ph9x5WIsMGW3gFKBggBAoGAVcrw\nOT4VLJxg1wcwtYjtx7z4C1pd7sORafwxf+NUD9hO9E50kdMfeWNvNTcQVzdtAp2Q\n0jFh88sQZrJWx06/RpszdrxGsFRYmMMODGh5k4oQTlJtzc3MepB46Mrnms91bbRj\nS58JUjkElB1SBclZpQ1ULc8wpEACIjpvt4u2NNcCgYEAtvdbGHnpugYV/TNLzIFj\nZ1HSS2zzVr7VrC8O57Za5YaERUM1aQIOJZomqyQfhkR3Esgyrg1An6qTiwAQKoz/\nuoI1bGHDFT/cENxvWwfVTRnr6//zWlLF0OC8NCL/SnqrzjwXpykVtE6CBunLRo7v\n6LanQMVmL+Ibj6319Rkof9U=\n-----END PRIVATE KEY-----\n",
+  "client_email": "doowi-backend@gmailapi-ictlab.iam.gserviceaccount.com",
+  "client_id": "110567863901728134059",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/doowi-backend%40gmailapi-ictlab.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}

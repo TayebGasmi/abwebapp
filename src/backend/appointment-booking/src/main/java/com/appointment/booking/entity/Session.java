@@ -10,7 +10,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -30,7 +30,9 @@ public class Session extends BaseEntity<Long> {
     @Column(nullable = false)
     private String description;
     @Column(nullable = false)
-    private LocalDateTime startTime;
+    private ZonedDateTime startDateTime;
+    @Column(nullable = false)
+    private ZonedDateTime endDateTime;
     @Column(nullable = false)
     private String meetingLink;
 
@@ -55,5 +57,8 @@ public class Session extends BaseEntity<Long> {
 
     @OneToOne(mappedBy = "session", orphanRemoval = true)
     private Payment payment;
+
+    @ManyToOne
+    private Subject subject;
 
 }

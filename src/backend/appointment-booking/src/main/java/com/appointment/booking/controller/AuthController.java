@@ -1,9 +1,9 @@
 package com.appointment.booking.controller;
 
 import com.appointment.booking.dto.LoginDTO;
+import com.appointment.booking.dto.LoginDtoResponse;
 import com.appointment.booking.dto.Oauth2Dto;
 import com.appointment.booking.dto.RegisterDTO;
-import com.appointment.booking.dto.LoginDtoResponse;
 import com.appointment.booking.exceptions.ExistException;
 import com.appointment.booking.service.AuthService;
 import com.nimbusds.jose.JOSEException;

@@ -4,7 +4,7 @@ import {ButtonDirective} from 'primeng/button';
 import {InputTextModule} from 'primeng/inputtext';
 import {AppBreadcrumbComponent} from './app.breadcrumb.component';
 import {UserService} from "../core/service/user.service";
-import {User} from "../core/models/User";
+import {User} from "../core/models/user";
 import {NgOptimizedImage} from "@angular/common";
 
 @Component({
@@ -15,17 +15,18 @@ import {NgOptimizedImage} from "@angular/common";
   styleUrls: ['./app.topbar.component.scss']
 })
 export class AppTopbarComponent implements OnInit {
+  @ViewChild('menubutton') menuButton!: ElementRef;
+  currentUser: User | null = null;
+
+  constructor(public layoutService: LayoutService, private userServices: UserService) {
+  }
+
   ngOnInit(): void {
     this.userServices.getUserDetails().subscribe(user => {
       this.currentUser = user;
     });
   }
 
-  @ViewChild('menubutton') menuButton!: ElementRef;
-
-  constructor(public layoutService: LayoutService,private userServices:UserService) {
-  }
-  currentUser!:User
   onMenuButtonClick() {
     this.layoutService.onMenuToggle();
   }
@@ -34,8 +35,5 @@ export class AppTopbarComponent implements OnInit {
     this.layoutService.showProfileSidebar();
   }
 
-  onConfigButtonClick() {
-    this.layoutService.showConfigSidebar();
-  }
 
 }

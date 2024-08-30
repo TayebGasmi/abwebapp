@@ -8,7 +8,7 @@ export interface IBaseService<T, I> {
 
   save(t: T): Observable<T>;
 
-  updateById(t: T, id: I): Observable<T>;
+  update(t: T): Observable<T>;
 
   deleteById(id: I): Observable<void>;
 

@@ -2,6 +2,7 @@ package com.appointment.booking.dto;
 
 import com.appointment.booking.base.BaseDto;
 import com.appointment.booking.entity.Config;
+import com.appointment.booking.enums.ConfigType;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -34,4 +35,7 @@ public class ConfigDto extends BaseDto<Long> implements Serializable {
     @NotNull
     @NotBlank
     private String description;
+
+    private ConfigType valueType;
+
 }

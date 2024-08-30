@@ -14,7 +14,7 @@ export const routes: Routes = [
     loadComponent: () => import('./config/config/config.component').then(m => m.ConfigComponent)
   },
   {
-    path: 'schoolyear',
+    path: 'school-year',
     loadComponent: () => import('./school-year/school-year.component').then(m => m.SchoolYearComponent)
   },
 ];

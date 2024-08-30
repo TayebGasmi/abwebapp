@@ -22,4 +22,5 @@ public class LoginDtoResponse {
     private String accessToken;
     private String refreshToken;
     private Set<RoleType> roles;
+    private UserDto user;
 }

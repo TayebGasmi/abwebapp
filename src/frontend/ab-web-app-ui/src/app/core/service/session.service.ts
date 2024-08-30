@@ -1,20 +1,28 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {environment} from "../../../environments/environment";
-import {GenericPaginationService} from "./generic-pagination.service";
-import {PaginationRequest} from "../models/pagination-request.model";
-import {Observable} from "rxjs";
 import {BaseService} from "./base.service";
-import {Subject} from "../models/subject";
 import {HttpClient} from "@angular/common/http";
 import {SessionDto} from "../models/session";
+import {Observable} from 'rxjs';
+
 const baseUrl = environment.APPOINTMENT_BOOKING_URL;
+
 @Injectable({
   providedIn: 'root'
 })
-export class SessionService extends BaseService<SessionDto, number>{
+export class SessionService extends BaseService<SessionDto, number> {
 
   constructor(private http: HttpClient) {
     const url = `${baseUrl}/session`;
     super(http, url);
+  }
+
+  getCurrentUserSessionByDateRange(startDate: string, endDate: string): Observable<SessionDto[]> {
+    return this.http.get<SessionDto[]>(`${baseUrl}/session/current`, {
+      params: {
+        startDate: startDate,
+        endDate: endDate
+      }
+    });
   }
 }

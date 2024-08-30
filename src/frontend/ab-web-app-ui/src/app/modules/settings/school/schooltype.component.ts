@@ -1,5 +1,4 @@
-import { Component } from '@angular/core';
-import {School} from "../../../core/models/School";
+import {Component} from '@angular/core';
 import {PageLink} from "../../../core/models/page-link";
 import {TableColumn} from "../../../core/models/table-cloumn";
 import {SchoolService} from "../../../core/service/school.service";
@@ -7,16 +6,13 @@ import {NotificationService} from "../../../core/service/notification.service";
 import {SortOrder} from "../../../core/enum/sort-order.enum";
 import {FormGroup} from "@angular/forms";
 import {ButtonDirective} from "primeng/button";
-import {
-  DeleteConfirmationComponent
-} from "../../../shared/components/delete-confirmation/delete-confirmation.component";
+import {DeleteConfirmationComponent} from "../../../shared/components/delete-confirmation/delete-confirmation.component";
 import {FormComponent} from "../../../shared/components/form/form.component";
 import {FormSideBarComponent} from "../../../shared/components/form-side-bar/form-side-bar.component";
 import {Ripple} from "primeng/ripple";
 import {TableComponent} from "../../../shared/components/table/table.component";
 import {schoolTypeForm} from "../../../core/forms/schoolType.form";
-import {SchoolType} from "../../../core/models/SchoolType";
-import {flush} from "@angular/core/testing";
+import {SchoolType} from "../../../core/models/school-type";
 
 @Component({
   selector: 'app-school',
@@ -40,18 +36,17 @@ export class SchooltypeComponent {
   pageSize = 10;
   pageLink: PageLink = {page: 0, pageSize: this.pageSize};
   selectedSchool: SchoolType | null = null;
-  protected readonly formFields = schoolTypeForm;
   SchoolToDelete: SchoolType | null = null;
-
   columns: TableColumn[] = [
     {field: 'name', header: 'Name', type: 'text', sortable: true, filterable: true},
     {field: 'description', header: 'Description', type: 'text', sortable: true, filterable: true},
   ];
-
   currentPageReportTemplate = "Showing {first} to {last} of {totalRecords} entries";
   rowsPerPageOptions = [10, 25, 50];
-  showDeleteConfirmation=false;
-  showDeleteAllConfirmation:boolean=false;
+  showDeleteConfirmation = false;
+  showDeleteAllConfirmation: boolean = false;
+  protected readonly formFields = schoolTypeForm;
+
   constructor(private SchoolService: SchoolService, private notificationService: NotificationService) {
   }
 
@@ -98,7 +93,7 @@ export class SchooltypeComponent {
       return;
     }
     if (this.selectedSchool) {
-      this.SchoolService.updateById({id: this.selectedSchool.id, ...form.value}, this.selectedSchool.id).subscribe(() => {
+      this.SchoolService.update({id: this.selectedSchool.id, ...form.value}).subscribe(() => {
         this.loadSchools();
         this.sidebarVisible = false;
         form.reset();
@@ -143,7 +138,8 @@ export class SchooltypeComponent {
     this.showDeleteConfirmation = true;
     this.SchoolToDelete = item;
   }
-  confirmDeleteALL(item:any[]){
+
+  confirmDeleteALL() {
     this.showDeleteAllConfirmation = true;
 
   }

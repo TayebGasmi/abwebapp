@@ -1,9 +1,11 @@
 package com.appointment.booking.dto;
 
-import com.appointment.booking.base.BaseDto;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotNull;
-import java.util.Set;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
 
 /**
@@ -11,14 +13,20 @@ import lombok.experimental.SuperBuilder;
  */
 @Data
 @SuperBuilder
-public class StudentDto extends BaseDto<Long> {
+@EqualsAndHashCode(callSuper = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class StudentDto extends UserDto {
 
-    @NotNull
-    private UserDto user;
     @NotNull
     private SchoolTypeDto schoolType;
     @NotNull
     private SchoolYearDto schoolYear;
-    @NotNull
-    private Set<SessionDto> sessions;
+
+    @JsonCreator
+    public StudentDto(@JsonProperty("schoolType") SchoolTypeDto schoolType,
+        @JsonProperty("schoolYear") SchoolYearDto schoolYear) {
+        this.schoolType = schoolType;
+        this.schoolYear = schoolYear;
+    }
+
 }

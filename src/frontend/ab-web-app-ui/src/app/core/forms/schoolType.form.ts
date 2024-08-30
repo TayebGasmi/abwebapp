@@ -1,4 +1,4 @@
-import  {FormField} from "../models/form-field";
+import {FormField} from "../models/form-field";
 import {Validators} from "@angular/forms";
 
 export const schoolTypeForm: FormField[] = [

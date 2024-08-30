@@ -1,47 +1,46 @@
 <div class="card">
   <div class="mb-4 flex align-items-center justify-content-start gap-2">
-    <button pRipple pButton type="button" label="New" icon="pi pi-plus" (click)="add()"></button>
-    <app-delete-confirmation message="Are you sure to delete this selected School types !" [(showDeleteConfirmation)]="showDeleteAllConfirmation" >
+    <button (click)="add()" icon="pi pi-plus" label="New" pButton pRipple type="button"></button>
+    <app-delete-confirmation [(showDeleteConfirmation)]="showDeleteAllConfirmation" message="Are you sure to delete this selected School types !">
       <ng-template #confirmButton>
-        <button pButton pRipple icon="pi pi-check" label="Yes" class="p-button-danger" (click)="deleteAll(table.selectedItems)"></button>
-
-        <!--        <button pButton pRipple icon="pi pi-check" label="Yes" class="p-button-danger" (click)="deleteAll(table.selectedItems)"></button>-->
+        <button (click)="deleteAll(table.selectedItems)" class="p-button-danger" icon="pi pi-check" label="Yes" pButton pRipple></button>
       </ng-template>
     </app-delete-confirmation>
-    <button pRipple pButton type="button" label="Delete" icon="pi pi-trash" class="p-button-danger" (click)="confirmDeleteALL(table.selectedItems)"
-            [disabled]="!table.selectedItems.length"
+    <button (click)="confirmDeleteALL()" [disabled]="!table.selectedItems.length" class="p-button-danger" icon="pi pi-trash" label="Delete"
+            pButton pRipple
+            type="button"
     ></button>
   </div>
   <app-table
-    [columns]="columns"
-    [data]="data"
-    [totalRecords]="totalRecords"
-    [pageSize]="pageSize"
-    [currentPageReportTemplate]="currentPageReportTemplate"
-    [rowsPerPageOptions]="rowsPerPageOptions"
-    (onLazyLoad)="onLazyLoad($event)"
-    (onGlobalFilter)="onGlobalFilter($event)"
     #table
+    (onGlobalFilter)="onGlobalFilter($event)"
+    (onLazyLoad)="onLazyLoad($event)"
+    [columns]="columns"
+    [currentPageReportTemplate]="currentPageReportTemplate"
+    [data]="data"
+    [pageSize]="pageSize"
+    [rowsPerPageOptions]="rowsPerPageOptions"
+    [totalRecords]="totalRecords"
   >
     <ng-template #actions let-item>
-      <button pRipple pButton type="button" icon="pi pi-pencil" class="mr-2 p-button-rounded p-button-outlined" (click)="editSchool(item)"></button>
-      <button pRipple pButton type="button" icon="pi pi-trash" class="p-button-rounded p-button-outlined p-button-danger"
-              (click)="confirmDelete(item)"></button>
+      <button (click)="editSchool(item)" class="mr-2 p-button-rounded p-button-outlined" icon="pi pi-pencil" pButton pRipple type="button"></button>
+      <button (click)="confirmDelete(item)" class="p-button-rounded p-button-outlined p-button-danger" icon="pi pi-trash" pButton pRipple
+              type="button"></button>
     </ng-template>
   </app-table>
 
-  <app-form-side-bar [title]="formTitle" [(sidebarVisible)]="sidebarVisible">
+  <app-form-side-bar [(sidebarVisible)]="sidebarVisible" [title]="formTitle">
     <div ngProjectAs="content">
       <app-form #form [fields]="formFields" [formData]="selectedSchool"></app-form>
     </div>
     <footer class="flex justify-content-end p-3 gap-2">
-      <button pRipple pButton type="button" label="Cancel" class="p-button-outlined" icon="pi pi-times" (click)="onCancel(form.form)"></button>
-      <button pRipple pButton type="button" label="Save" icon="pi pi-check" (click)="save(form.form)" [disabled]="form.form.invalid" ></button>
+      <button (click)="onCancel(form.form)" class="p-button-outlined" icon="pi pi-times" label="Cancel" pButton pRipple type="button"></button>
+      <button (click)="save(form.form)" [disabled]="form.form.invalid" icon="pi pi-check" label="Save" pButton pRipple type="button"></button>
     </footer>
   </app-form-side-bar>
-  <app-delete-confirmation  [(showDeleteConfirmation)]="showDeleteConfirmation" >
+  <app-delete-confirmation [(showDeleteConfirmation)]="showDeleteConfirmation">
     <ng-template #confirmButton>
-      <button pButton pRipple icon="pi pi-check" label="Yes" class="p-button-danger" (click)="delete()"></button>
+      <button (click)="delete()" class="p-button-danger" icon="pi pi-check" label="Yes" pButton pRipple></button>
     </ng-template>
   </app-delete-confirmation>
 </div>
