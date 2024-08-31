@@ -59,7 +59,6 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     const sessionSubscription = this.session.currentMessage.subscribe(session => this.sessionDto = session);
-    console.log(this.sessionDto);
 
     const authSubscription = this.socialAuthService.authState.pipe(
       map((user) => ({
