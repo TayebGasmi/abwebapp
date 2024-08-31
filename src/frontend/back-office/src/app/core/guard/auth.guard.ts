@@ -14,10 +14,5 @@ export const authGuard: CanActivateFn = (route) => {
     router.navigate(['auth/login']);
     return false
   }
-  if (!authService.isProfileComplete()){
-    router.navigate(['/complete'])
-    return false
-  }
-
   return true
 };

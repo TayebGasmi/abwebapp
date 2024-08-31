@@ -13,7 +13,6 @@ import {Login} from '../../../core/models/login';
 import {BackgroundComponent} from "../../../shared/components/background/background.component";
 import {Subscription} from "rxjs";
 import {SessionBookLandingService} from "../../../core/service/session-book-landing.service";
-import {SessionDto} from "../../../core/models/session";
 
 @Component({
   selector: 'app-login',
@@ -35,7 +34,6 @@ import {SessionDto} from "../../../core/models/session";
 export class LoginComponent implements OnInit, OnDestroy {
   loginForm: FormGroup;
   router = inject(Router);
-  sessionDto!: SessionDto;
   private subscriptions: Subscription[] = [];
 
   constructor(
@@ -55,11 +53,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    const sessionSubscription = this.session.currentMessage.subscribe(session => this.sessionDto = session);
-    console.log(this.sessionDto);
 
-
-    this.subscriptions.push(sessionSubscription);
   }
 
   loginUser(): void {
@@ -80,5 +74,4 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
 
-  protected readonly Object = Object;
 }
