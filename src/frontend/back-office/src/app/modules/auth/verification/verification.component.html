@@ -1,0 +1,27 @@
+<app-background [dark]="false"></app-background>
+<div class="px-5 min-h-screen flex justify-content-center align-items-center">
+  <div class="border-1 surface-border surface-card border-round py-7 px-4 md:px-7 z-1">
+    <form (ngSubmit)="verifyCode()" [formGroup]="verificationForm">
+      <div class="mb-4">
+        <div class="text-900 text-xl font-bold mb-2">Verification</div>
+        <span class="text-600 font-medium">We have sent a code to your email:</span>
+        <div class="flex align-items-center mt-1">
+          <i class="pi pi-envelope text-600"></i>
+          <span class="text-900 font-bold ml-2">{{ email }}</span>
+        </div>
+      </div>
+      <div class="flex flex-column">
+        <div class="flex justify-content-between w-full align-items-center mb-4 gap-3">
+          <input (keyup)="onDigitInput($event)" class="w-3rem text-center" formControlName="digit1" maxlength="1" pInputText pKeyFilter="num" type="text">
+          <input (keyup)="onDigitInput($event)" class="w-3rem text-center " formControlName="digit2" maxlength="1" pInputText pKeyFilter="num" type="text">
+          <input (keyup)="onDigitInput($event)" class="w-3rem text-center " formControlName="digit3" maxlength="1" pInputText pKeyFilter="num" type="text">
+          <input (keyup)="onDigitInput($event)" class="w-3rem text-center " formControlName="digit4" maxlength="1" pInputText pKeyFilter="num" type="text">
+        </div>
+        <div class="flex flex-wrap gap-2 justify-content-between">
+          <button [routerLink]="['/']" class="flex-auto p-button-outlined" label="Cancel" pButton pRipple type="submit"></button>
+          <button [disabled]="verificationForm.invalid" class="flex-auto" label="Verify" pButton pRipple type="submit"></button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

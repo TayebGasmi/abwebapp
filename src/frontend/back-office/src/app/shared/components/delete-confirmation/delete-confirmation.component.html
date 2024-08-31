@@ -1,0 +1,10 @@
+<p-dialog [(visible)]="showDeleteConfirmation" [modal]="true" [style]="{width:'450px'}" header="Confirm">
+  <div class="flex align-items-center justify-content-center">
+    <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
+    <span>{{ message }}</span>
+  </div>
+  <ng-template pTemplate="footer">
+    <button (click)="showDeleteConfirmation = false" class="p-button-text" icon="pi pi-times" label="No" pButton pRipple></button>
+    <ng-container *ngTemplateOutlet="confirmButton"></ng-container>
+  </ng-template>
+</p-dialog>

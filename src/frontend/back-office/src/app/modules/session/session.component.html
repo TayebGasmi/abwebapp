@@ -1,0 +1,167 @@
+<div class="card">
+  <full-calendar [options]="calendarOptions"></full-calendar>
+
+  <p-dialog [(visible)]="showDialog" [style]="{width: '36rem'}" [modal]="true" [closable]="true" (onHide)="resetEvent()">
+    <ng-template pTemplate="header">
+      <span class="text-900 font-semibold text-xl">{{ title }}</span>
+    </ng-template>
+
+    <ng-template pTemplate="content">
+      @if (view === "display" && selectedSession) {
+        <div>
+          <div class="mb-4">
+            <div class="text-900 font-semibold mb-2">Description</div>
+            <p>{{ selectedSession.description }}</p>
+          </div>
+
+          <div class="grid">
+            <div class="col-6">
+              <div class="text-900 font-semibold mb-2">Start Time</div>
+              <p class="flex align-items-center m-0">
+                <i class="pi pi-fw pi-clock text-700 mr-2"></i>
+                <span>{{ selectedSession.startDateTime | date: 'yyyy-MM-dd HH:mm' }}</span>
+              </p>
+            </div>
+            <div class="col-6">
+              <div class="text-900 font-semibold mb-2">End Time</div>
+              <p class="flex align-items-center m-0">
+                <i class="pi pi-fw pi-clock text-700 mr-2"></i>
+                <span>{{ selectedSession.endDateTime | date: 'yyyy-MM-dd HH:mm' }}</span>
+              </p>
+            </div>
+          </div>
+
+          <div class="grid mt-4">
+            <div class="col-6">
+              <div class="text-900 font-semibold mb-2">Teacher</div>
+              <p class="flex align-items-center m-0">
+                <i class="pi pi-fw pi-user text-700 mr-2"></i>
+                <span>{{ selectedSession.teacher?.firstName }} {{ selectedSession.teacher?.lastName }}</span>
+              </p>
+            </div>
+            <div class="col-6">
+              <div class="text-900 font-semibold mb-2">Subject</div>
+              <p class="flex align-items-center m-0">
+                <i class="pi pi-fw pi-book text-700 mr-2"></i>
+                <span>{{ selectedSession.subject.name }}</span>
+              </p>
+            </div>
+          </div>
+
+          <div class="mt-4">
+            <div class="text-900 font-semibold mb-2">Meeting Link</div>
+            <a [href]="selectedSession.meetingLink" target="_blank" class="p-button p-component   p-button-sm">
+              <span class="p-button-icon pi pi-external-link"></span>
+              <span class="p-button-label">Join Session</span>
+            </a>
+          </div>
+
+          <div class="grid mt-4">
+            <div class="col-6">
+              <div class="text-900 font-semibold mb-2">Price</div>
+              <p class="flex align-items-center m-0">
+                <i class="pi pi-fw pi-dollar text-700 mr-2"></i>
+                <span>{{ selectedSession.price }}</span>
+              </p>
+            </div>
+            <div class="col-6">
+              <div class="text-900 font-semibold mb-2">Duration</div>
+              <p class="flex align-items-center m-0">
+                <i class="pi pi-fw pi-clock text-700 mr-2"></i>
+                <span>{{ selectedSession.duration }} minutes</span>
+              </p>
+            </div>
+          </div>
+
+          <div class="mt-4">
+            <div class="text-900 font-semibold mb-2">Status</div>
+            <p class="flex align-items-center m-0">
+              <i class="pi pi-fw" [ngClass]="{
+                'pi-check-circle text-green-600': selectedSession.status === 'Confirmed',
+                'pi-exclamation-triangle text-orange-500': selectedSession.status === 'Pending',
+                'pi-times-circle text-red-500': selectedSession.status === 'Cancelled'
+              }"></i>
+              <span class="ml-2">{{ selectedSession.status }}</span>
+            </p>
+          </div>
+        </div>
+      }
+      @if (view === 'new') {
+        <p-steps styleClass="mb-3" [readonly]="true" [model]="sessionSteps" [(activeIndex)]="activeStep"></p-steps>
+        <form [formGroup]="sessionForm">
+          <div class="grid p-fluid formgrid">
+            @if (activeStep === 0) {
+              <div class="col-12 field">
+                <label class="mb-2" for="subject">subject</label>
+                <p-dropdown [filter]="true" [ngClass]="{'ng-invalid ng-dirty': fieldHasError('subject')}" [options]="subjects"
+                            [showClear]="true"
+                            formControlName="subject"
+                            id="subject"
+                            placeholder="choose a subject"
+                            styleClass="w-full"
+                            [virtualScroll]="true"
+
+                >
+                </p-dropdown>
+                @if (fieldHasError('subject')) {
+                  <div class="ng-invalid p-error">subject is required</div>
+                }
+              </div>
+              <div class="col-12 field">
+                <label for="startTime" class="text-900 font-semibold">Start Time</label>
+                <p-calendar id="startTime" formControlName="startDateTime" [showTime]="true" placeholder="Select Start Time"></p-calendar>
+                @if (fieldHasError('startTime')) {
+                  <div class="mb-2 ng-invalid p-error">Start Time is required</div>
+                }
+              </div>
+            }
+            @if (activeStep === 1) {
+              <div class="col-12 field">
+                <label class="mb-2" for="teacher">teacher</label>
+                <p-dropdown [filter]="true" [ngClass]="{'ng-invalid ng-dirty': fieldHasError('schoolTypes')}" [options]="teachers"
+                            [showClear]="true"
+                            formControlName="teacher"
+                            id="teacher"
+                            placeholder="choose a teacher"
+                            styleClass="w-full  mb-2"
+                >
+                </p-dropdown>
+                @if (fieldHasError('teacher')) {
+                  <div class="mb-2 ng-invalid p-error">teacher is required</div>
+                }
+              </div>
+            }
+
+
+          </div>
+        </form>
+      }
+      @if (view === 'edit') {
+
+      }
+    </ng-template>
+
+    <ng-template pTemplate="footer">
+      @if (view === 'new') {
+        @if (activeStep > 0) {
+          <button pButton pRipple label="Back" icon="pi pi-angle-left" (click)="prevStep()" class="p-button-primary p-button-sm"></button>
+        }
+        @if (!isLastStep()) {
+          <button pButton pRipple label="Next" icon="pi pi-angle-right" class="p-button-primary p-button-sm" (click)="nextStep()"
+          ></button>
+        }
+        @if (isLastStep()) {
+          <button pButton pRipple label="Save" icon="pi pi-check" (click)="handleSave()" class="p-button-primary p-button-sm"
+                  [disabled]="sessionForm.invalid"></button>
+        }
+      }
+
+      @if (view === 'display') {
+        <button pRipple pButton label="Edit" icon="pi pi-pencil" (click)="onEditClick()" class="p-button-primary p-button-sm"
+                [disabled]="disableEdit"
+        ></button>
+      }
+
+    </ng-template>
+  </p-dialog>
+</div>
