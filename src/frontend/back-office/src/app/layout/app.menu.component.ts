@@ -27,17 +27,6 @@ export class AppMenuComponent implements OnInit {
         ]
       },
       {
-        label: "booking",
-        visible: this.authService.hasRoles(["STUDENT", "TEACHER"]),
-        items: [
-          {
-            label: "calendar",
-            icon: "pi pi-fw pi-calendar",
-            routerLink: "calendar"
-          }
-        ]
-      },
-      {
         label: "settings",
         visible: this.authService.hasRoles(["ADMIN"]),
         items: [
