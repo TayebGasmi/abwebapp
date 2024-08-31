@@ -10,7 +10,7 @@ INSERT INTO app_user (password,
                       created_date,
                       last_modified_date
                       )
-VALUES ('$2a$10$7QxjRT5g1Z1.pMSM0pFZ.eSH8k6dOvU1JYy/hw.pGBFbV7x/YaYuS', -- 'admin123' bcrypt hashed password
+VALUES ('$2a$12$ghiNaEsHtx8v9Wx2JPxPAOp213hXFN9.1DejvFxRYXCHoZzXo.qCi', -- 'admin123' bcrypt hashed password
         'Admin',
         'User',
         NULL,
