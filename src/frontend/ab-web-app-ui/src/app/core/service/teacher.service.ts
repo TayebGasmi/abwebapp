@@ -15,6 +15,8 @@ const baseUrl = environment.APPOINTMENT_BOOKING_URL;
   providedIn: 'root'
 })
 export class TeacherService extends BaseService<Teacher, number> {
+
+  constructor(private http: HttpClient) {
   authService = inject(AuthService);
   browserStorage:BrowserStorageService =inject(BrowserStorageService);
   notificationService:NotificationService=inject(NotificationService)
@@ -23,6 +25,9 @@ export class TeacherService extends BaseService<Teacher, number> {
   constructor(http: HttpClient) {
     const url = `${baseUrl}/teacher`;
     super(http, url);
+  }
+  getTeachersBySubjectName(subjectName: string): Observable<Teacher[]> {
+    return this.http.get<Teacher[]>(`${baseUrl}/teacher/subject/${subjectName}`);
   }
 
   isConfirmedByAdmin(): Observable<boolean> {

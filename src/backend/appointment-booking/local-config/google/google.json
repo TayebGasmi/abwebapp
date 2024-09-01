@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "doowi-432310",
+  "private_key_id": "39edfbfc4c8ff30ca33022979d5769e55b019cf7",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCM3xi1bH3fnlbg\nkzPI1TIeZ2MNqAqc/vUUInlSlBT93GfCktZD6QDChpk3vOET7WD8BiYmYOqdyYTy\nNhbc48VjReQ0shsZG1fm4UFwCWC30V4LrtK33VBZMBMJyirh0leKtw+5tVKdJtQY\nVR9b2R93NgGaoYpthED7IELcXR5NilMth+VM9tk7OX67RwsoiMRF6AOamHJwITmF\n9WLshVGSbZFYFdWfNe+sIIwzgVfTXuuJ2d1Qafmgf8jGluNilQoXzrHNpQR1Ei9t\nn45/JjeiXNH4Gl2QLLZoAHoSZl2WtZ2Z8Mhtx4D0mZi/027LUsXlWwisCCUJqHKM\nrBujMAnjAgMBAAECggEAN6wDa8+Qf0toMiB6mqgGwpVBRChg6WKpIGfvYn87PIha\nST8WhogS0M24x5pRqTpq1a7obMpobisx6zcNGga5/12jrl+k7essdgYXgltyabLI\nY/2XMSq5kkW5gGjxQYWLKzrlcBMEry6lK2iYmAfas5YYVC/7MQTPWW+KfOQgEaw+\n0HPCb2IYJq/tqU2/d/DWd/O9nXM2r3e+F3rYq0ohMQ7ac21/DjjxjLfEf+uCMIIA\nGknEaYq0zotMfeJkIRi9kzmFM6iolL4ijYOy5S6/f3AbLoH5UqY3hX8Am/tlU5Rc\npRCZoxnsgTT+Q2hZUpMQgtvux2mBzbTCf+c7FOhcAQKBgQC/Ne/AX7pv0HFRXHUE\nG7dMf9W+4H+yPgSkX4Dapx0dnJPB+WGE6X1jBg+y7gc89BPX2xHC7/85r/uf65zW\n+bQOogYJHwBobAIrwwJ9HCvkNjdux7CZ29g7qeR+TPIVcxo4eONId4RWtV/e9G3t\nhGjiuwQ6xpeCGzOeEdqeoioKYwKBgQC8mp4+b7OotSZPhJVzIGzm+4rrPmDTJZgU\nbS1TRVb/8Cg3VDAovbUSiwJ8IEXbLbFQDWn6orBuAdUPqKhYhdnCm1Alm0Br04rm\nuqSnqCaZqFMlIVaXQk+OMo82S65jRXkncBMCHqI3EMFNYYfvKPsECnfXO77oNR9j\norGXnF5agQKBgF+lzGNvv2QVYcnwNPy0HJHg1Hwh8t6nlUzgFSXLOI5Kd8MtSzHg\nVn+FVa8M0IQWGCL/C7h2szYZKQaLJq6GxCIZvGktn9ecR826Q/FveSk0UbBRpa6h\nQV4/EvR26xX9uN0M46ypVILHQcjWfnK0rH7WTDxWgQ1tK/njNnfp6Ju/AoGBAKp0\n17Y4QFimuCRAAM5XLPWpvAkWjG3o2UUE02UiExonlEFFPm1j32YN6sYCaQBJkKp4\nJSNXrDsQPt7zIIs5FfFTa6FBanzJaQ1U/IFmcNSJE/RH6Dm2va4XteVtiwO/g1sI\naLWOuC8qXnowPqoBELS7PUpyffziHidvoDAVLBWBAoGAMUxx6DSGcN7eY2SCs6jg\nuYkafrhs8Mwe0wuLj9syu//hXbt5zqGYVrt8fXNOlpiokUtNKTa4DLMDH+eMq5X7\npCG9VuLMaYVNFf71FvkMcr+pcRQd6MK0DdIjrRJt0HBaqtdM7t4SCuUuIMxEqQrN\nrM0qNQLWLW01zci4oUKrQic=\n-----END PRIVATE KEY-----\n",
+  "client_email": "doowi-meet@doowi-432310.iam.gserviceaccount.com",
+  "client_id": "116144704023540155945",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/doowi-meet%40doowi-432310.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}

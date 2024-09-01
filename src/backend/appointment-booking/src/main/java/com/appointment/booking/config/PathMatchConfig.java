@@ -17,4 +17,5 @@ public class PathMatchConfig implements WebMvcConfigurer {
             HandlerTypePredicate.forAnnotation(RestController.class));
     }
 
+
 }
