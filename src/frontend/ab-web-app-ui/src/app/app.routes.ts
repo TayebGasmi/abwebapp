@@ -38,7 +38,12 @@ export const routes: Routes = [
         canActivate: [authGuard],
         data: {roles: ['STUDENT', 'TEACHER']}
       }
-
+      , {
+        path: 'session-settings',
+        loadComponent: () => import('./modules/settings/session/session.component').then(m => m.SessionComponent),
+        canActivate: [authGuard],
+        data: {roles: ['STUDENT', 'TEACHER']}
+      }
     ],
   },
 
