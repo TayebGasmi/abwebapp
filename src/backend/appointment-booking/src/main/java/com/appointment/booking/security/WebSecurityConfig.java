@@ -30,7 +30,7 @@ public class WebSecurityConfig {
 
     private static final String[] WHITE_LIST = {
         "/appointment-booking/v3/api-docs/**",
-        "/appointment-booking/swagger-ui/**",
+        "/swagger-ui/**",
         "/appointment-booking/auth/**",
         "/appointment-booking/role",
         "/appointment-booking/subject",
