@@ -1,0 +1,13 @@
+$primaryColor: #1a276d !default; // Updated to match logo blue color
+$primaryLightColor: lighten(#1a276d, 30%) !default; // Adjust the light color accordingly
+$primaryDarkColor: darken(#1a276d, 10%) !default; // Adjust the dark color accordingly
+$primaryDarkerColor: darken(#1a276d, 20%) !default; // Adjust the darker color accordingly
+$primaryTextColor: #ffffff !default; // Keeping the text color white for contrast
+$primary500: #1a276d !default; // Updated to match logo blue color
+
+$highlightBg: #EFF6FF !default; // Keeping highlight background the same
+$highlightTextColor: $primaryDarkerColor !default; // Adjust hi
+
+@import '../_variables';
+@import '../../theme-base/_components';
+@import '../_extensions';

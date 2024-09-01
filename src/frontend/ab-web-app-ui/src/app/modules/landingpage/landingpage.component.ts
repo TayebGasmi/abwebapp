@@ -1,11 +1,8 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {Subscription} from "rxjs";
-import {LayoutService} from "../../layout/service/app.layout.service";
+import {Component, OnInit} from '@angular/core';
 import {TagModule} from "primeng/tag";
 import {CurrencyPipe, NgClass} from "@angular/common";
 import {TableModule} from "primeng/table";
 import {InputNumberModule} from "primeng/inputnumber";
-import {User} from "../../core/models/user";
 import {AuthService} from "../../core/service/auth.service";
 import {AppConfigComponent} from "../../layout/config/app.config.component";
 import {Router} from "@angular/router";
@@ -16,13 +13,14 @@ import {Ripple} from "primeng/ripple";
 import {CalendarModule} from "primeng/calendar";
 import {DropdownModule} from "primeng/dropdown";
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
-import {SessionService} from "../../core/service/session.service";
 import {TeacherService} from "../../core/service/teacher.service";
 import {SubjectService} from "../../core/service/subject.service";
 import {Subject} from "../../core/models/subject";
 import {Teacher} from "../../core/models/teacher";
-import {EventInput} from "@fullcalendar/core";
 import {SessionBookLandingService} from "../../core/service/session-book-landing.service";
+import {GoogleSigninButtonModule, SocialAuthService} from "@abacritt/angularx-social-login";
+import {map, switchMap} from "rxjs";
+
 interface MonthlyPayment {
   name?: string;
   amount?: number;
@@ -46,25 +44,25 @@ interface MonthlyPayment {
     CalendarModule,
     DropdownModule,
     ReactiveFormsModule,
-    NgClass
+    NgClass,
+    GoogleSigninButtonModule
   ],
   templateUrl: './landingpage.component.html',
   styleUrl: './landingpage.component.scss'
 })
-export class LandingpageComponent  implements OnDestroy ,OnInit{
-  subscription: Subscription;
+export class LandingpageComponent implements OnInit {
   sessionForm!: FormGroup;
   subjects: { label: string, value: Subject }[] = [];
   teachers: { label: string, value: Teacher }[] = [];
-  darkMode: boolean = false;
-  events: EventInput[] = [];
-  constructor(private sessionBook:SessionBookLandingService,private fb: FormBuilder, private sessionService: SessionService,
+
+
+  constructor(private sessionBook: SessionBookLandingService, private fb: FormBuilder,
+              private socialAuthService: SocialAuthService,
               private teacherService: TeacherService,
-              private subjectService: SubjectService,public router: Router, private layoutService: LayoutService) {
-    this.subscription = this.layoutService.configUpdate$.subscribe(config => {
-      this.darkMode = config.colorScheme === 'dark' || config.colorScheme === 'dim' ? true : false;
-    });
+              private authService: AuthService,
+              private subjectService: SubjectService, public router: Router) {
   }
+
   private initializeForm() {
     this.sessionForm = this.fb.group({
       startDateTime: ['', Validators.required],
@@ -72,11 +70,24 @@ export class LandingpageComponent  implements OnDestroy ,OnInit{
       subject: [null, Validators.required]
     });
   }
-  ngOnDestroy() {
-    this.subscription.unsubscribe();
-  }
+
 
   ngOnInit(): void {
+    this.socialAuthService.authState.pipe(
+      map((user) => ({
+          oauthProvider: user.provider,
+          idToken: user.idToken,
+        })
+      ),
+      switchMap(user => this.authService.socialLogin(user))
+    ).subscribe({
+      next: response => {
+        this.authService.addToken(response.accessToken);
+        this.authService.addUser(response.user);
+        this.router.navigate(['/profile/details']);
+        this.authService.addRoles(response.roles);
+      }
+    });
     this.initializeForm();
     this.loadTeachers();
     this.loadSubjects();
@@ -100,15 +111,17 @@ export class LandingpageComponent  implements OnDestroy ,OnInit{
       }));
     });
   }
+
   fieldHasError(fieldName: string): boolean {
     const control = this.sessionForm.get(fieldName);
     return !!(control?.invalid && (control?.dirty || control?.touched));
   }
+
   handleSave() {
     if (this.sessionForm.invalid) {
       return;
     }
-    this.sessionBook.changeMessage(this.sessionForm.value,false)
-    this.router.navigate(['/auth/login'])
+    this.sessionBook.changeMessage(this.sessionForm.value, false)
+
   }
 }

@@ -97,20 +97,17 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   onSubmit(): void {
     if (this.profileForm.valid) {
-      console.log(this.profileForm.value)
       const schoolTypeControl = this.profileForm.get("schoolType");
       const schoolYearControl = this.profileForm.get("schoolYear");
       const subjectControl = this.profileForm.get("subject");
       if (subjectControl && this.user != null && this.selectedRole == "TEACHER") {
         this.user.firstName = this.profileForm.get("firstName")?.value;
         this.user.lastName = this.profileForm.get("lastName")?.value;
-        console.log(this.user);
         this.subscriptions.push(
           this.teacherService.update({...this.user, subjects: this.selectedSubjects, payRate: 0})
           .subscribe(user => {
             this.notificationService.showSuccess("Teacher Updated successfully!");
             this.browserStorage.setItem("user", JSON.stringify(this.user));
-            console.log("Teacher saved successfully", user);
           })
         );
       }
@@ -122,7 +119,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
           .subscribe(user => {
             this.notificationService.showSuccess("Student Updated successfully!");
             this.browserStorage.setItem("user", JSON.stringify(this.user));
-            console.log("Student saved successfully", user);
           })
         );
       }
@@ -142,7 +138,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
         disabled: !this.isEditing
       }, Validators.required]
     });
-    console.log(this.teacher);
   }
 
   selectedSubjects: undefined | Array<Subject>;

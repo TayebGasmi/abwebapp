@@ -2,9 +2,10 @@ import {ExtraOptions, RouterModule, Routes} from '@angular/router';
 import {AppLayoutComponent} from "./layout/app.layout.component";
 import {authGuard} from "./core/guard/auth.guard";
 import {NgModule} from "@angular/core";
+
 const routerOptions: ExtraOptions = {
   anchorScrolling: 'enabled',
-  scrollPositionRestoration:'enabled'
+  scrollPositionRestoration: 'enabled'
 };
 export const routes: Routes = [
   {
@@ -18,7 +19,7 @@ export const routes: Routes = [
   {
     path: '',
     loadComponent: () => import('./modules/landingpage/landingpage.component').then(m => m.LandingpageComponent),
-    data: {roles: ['STUDENT,ADMIN','TEACHER']}
+    data: {roles: ['STUDENT,ADMIN', 'TEACHER']}
   }
   ,
   {
@@ -31,14 +32,7 @@ export const routes: Routes = [
         canActivate: [authGuard],
         data: {roles: ['STUDENT', 'TEACHER']}
       },
-
       {
-        path: 'settings',
-        loadChildren: () => import('./modules/settings/settings.routes').then(m => m.routes),
-        canActivate: [authGuard],
-        data: {roles: ['ADMIN']}
-      },
-       {
         path: 'profile',
         loadChildren: () => import('./modules/profile/profile.routes').then(m => m.routes),
         canActivate: [authGuard],
@@ -49,8 +43,10 @@ export const routes: Routes = [
   },
 
 ];
+
 @NgModule({
   imports: [RouterModule.forRoot(routes, routerOptions)],
   exports: [RouterModule]
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {
+}
