@@ -63,10 +63,8 @@
         </li>
 
 
-        <li class="flex align-items-center">
-          <button (click)="router.navigate(['/auth/login'])" pButton pRipple type="button" pStyleClass="@grandparent" enterFromClass="ng-hidden"
-                  enterActiveClass="px-fadein" leaveToClass="ng-hidden" label="Login / Singup"
-                  class="m-0 mt-3 md:mt-0 md:ml-5 white-space-nowrap"></button>
+        <li class="flex align-items-center mx-3">
+          <asl-google-signin-button class="google-login" data-use_fedcm_for_prompt="true" locale="en" size="large" type='standard'></asl-google-signin-button>
         </li>
       </ul>
 
