@@ -64,6 +64,8 @@ export class SessionComponent implements OnInit {
   disableEdit = false;
   sessionSteps: MenuItem[] = [];
   activeStep = 0;
+  startDate = "";
+  endDate = "";
 
   constructor(
     private fb: FormBuilder,
@@ -95,8 +97,8 @@ export class SessionComponent implements OnInit {
     this.loadSubjects();
   }
 
-  private loadSessions(startDate: string = '', endDate: string = '') {
-    this.sessionService.getCurrentUserSessionByDateRange(startDate, endDate).subscribe(sessions => {
+  private loadSessions() {
+    this.sessionService.getCurrentUserSessionByDateRange(this.startDate, this.endDate).subscribe(sessions => {
       this.events = sessions.map(this.mapSessionToEvent);
       this.updateCalendarEvents();
     });
@@ -233,7 +235,9 @@ export class SessionComponent implements OnInit {
   }
 
   private onDateRangeChange(viewInfo: any) {
-    this.loadSessions(viewInfo.startStr, viewInfo.endStr);
+    this.startDate = viewInfo.startStr
+    this.endDate = viewInfo.endStr
+    this.loadSessions();
   }
 
   onEditClick() {
