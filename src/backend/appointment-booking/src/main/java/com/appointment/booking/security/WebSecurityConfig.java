@@ -32,9 +32,6 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @Slf4j
 public class WebSecurityConfig {
 
-    @Value("${security.allowed.origins}")
-    private Set<String> allowedOrigins;
-
     private static final String[] WHITE_LIST = {
         "/appointment-booking/v3/api-docs/**",
         "/swagger-ui/**",
@@ -48,6 +45,8 @@ public class WebSecurityConfig {
     };
     private final UserDetailsService userDetailsService;
     private final JwtTokenFilter jwtTokenFilter;
+    @Value("${security.allowed.origins}")
+    private Set<String> allowedOrigins;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {

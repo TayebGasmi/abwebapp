@@ -25,6 +25,6 @@ public class SubjectController extends BaseController<Subject, Long, SubjectDto>
     @GetMapping("/current")
     ResponseEntity<List<SubjectDto>> getCurrent() {
         return ResponseEntity.ok(subjectService.getCurrent());
-    }   
+    }
 
 }
