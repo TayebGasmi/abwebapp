@@ -16,13 +16,13 @@ const baseUrl = environment.APPOINTMENT_BOOKING_URL;
 })
 export class TeacherService extends BaseService<Teacher, number> {
 
-  constructor(private http: HttpClient) {
+
   authService = inject(AuthService);
   browserStorage:BrowserStorageService =inject(BrowserStorageService);
   notificationService:NotificationService=inject(NotificationService)
   router:Router= inject(Router)
   teacher!:Teacher ;
-  constructor(http: HttpClient) {
+  constructor(private http: HttpClient) {
     const url = `${baseUrl}/teacher`;
     super(http, url);
   }
