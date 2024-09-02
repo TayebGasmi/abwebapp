@@ -13,6 +13,11 @@ import {FormSideBarComponent} from "../../../../shared/components/form-side-bar/
 import {Ripple} from "primeng/ripple";
 import {TableComponent} from "../../../../shared/components/table/table.component";
 import {InputTextModule} from "primeng/inputtext";
+import {CheckboxModule} from "primeng/checkbox";
+import {ConfigType} from "../../../../core/enum/config-type.enum";
+import {InputNumberModule} from "primeng/inputnumber";
+import {ColumnDefDirective} from "../../../../shared/directives/column-def.directive";
+import {CurrencyPipe} from "@angular/common";
 
 @Component({
   selector: 'app-config',
@@ -25,7 +30,11 @@ import {InputTextModule} from "primeng/inputtext";
     Ripple,
     TableComponent,
     InputTextModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    CheckboxModule,
+    InputNumberModule,
+    ColumnDefDirective,
+    CurrencyPipe
   ],
   templateUrl: './config.component.html',
   styleUrl: './config.component.scss'
@@ -46,12 +55,12 @@ export class ConfigComponent {
   rowsPerPageOptions = [10, 25, 50];
   selectedConfig!: Config
 
-  constructor(private SchoolService: ConfigService, private notificationService: NotificationService, private fb: FormBuilder) {
+  constructor(private configService: ConfigService, private notificationService: NotificationService, private fb: FormBuilder) {
     this.initForm();
   }
 
   loadConfigs(): void {
-    this.SchoolService.findAll(this.pageLink).subscribe(pageData => {
+    this.configService.findAll(this.pageLink).subscribe(pageData => {
       this.data = pageData.data;
       this.totalRecords = pageData.totalElements;
     });
@@ -97,7 +106,7 @@ export class ConfigComponent {
       return;
     }
     const formData = this.form.value;
-    this.SchoolService.update({...formData, key: this.selectedConfig.key, id: this.selectedConfig.id}).subscribe(() => {
+    this.configService.update({...this.selectedConfig, ...formData, id: this.selectedConfig.id}).subscribe(() => {
       this.notificationService.showSuccess('Config update successfully');
       this.loadConfigs();
       this.sidebarVisible = false;
@@ -116,4 +125,6 @@ export class ConfigComponent {
       description: ['', [Validators.required]]
     });
   }
+
+  protected readonly ConfigType = ConfigType;
 }

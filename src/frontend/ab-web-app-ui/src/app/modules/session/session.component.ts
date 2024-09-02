@@ -64,6 +64,8 @@ export class SessionComponent implements OnInit {
   disableEdit = false;
   sessionSteps: MenuItem[] = [];
   activeStep = 0;
+  startDate = "";
+  endDate = "";
 
   constructor(
     private fb: FormBuilder,
@@ -95,8 +97,8 @@ export class SessionComponent implements OnInit {
     this.loadSubjects();
   }
 
-  private loadSessions(startDate: string = '', endDate: string = '') {
-    this.sessionService.getCurrentUserSessionByDateRange(startDate, endDate).subscribe(sessions => {
+  private loadSessions() {
+    this.sessionService.getCurrentUserSessionByDateRange(this.startDate, this.endDate).subscribe(sessions => {
       this.events = sessions.map(this.mapSessionToEvent);
       this.updateCalendarEvents();
     });
@@ -233,7 +235,9 @@ export class SessionComponent implements OnInit {
   }
 
   private onDateRangeChange(viewInfo: any) {
-    this.loadSessions(viewInfo.startStr, viewInfo.endStr);
+    this.startDate = viewInfo.startStr
+    this.endDate = viewInfo.endStr
+    this.loadSessions();
   }
 
   onEditClick() {
@@ -252,13 +256,6 @@ export class SessionComponent implements OnInit {
 
   isLastStep(): boolean {
     return this.activeStep === this.sessionSteps.length - 1;
-  }
-
-  isNextDisabled(): boolean {
-    if (this.activeStep === 0) {
-      return this.isFirstStepInvalid();
-    }
-    return false;
   }
 
   private onEventClick(e: EventClickArg) {
@@ -292,6 +289,14 @@ export class SessionComponent implements OnInit {
     const currentDate = new Date();
     if (createdDate)
       this.disableEdit = createdDate && createdDate < currentDate;
+  }
+
+  get sessionSubject() {
+    return this.sessionForm.get("subject")
+  }
+
+  get sessionStartDateTime() {
+    return this.sessionForm.get("startDateTime")
   }
 
   private onDateSelect(selectInfo: DateSelectArg) {
