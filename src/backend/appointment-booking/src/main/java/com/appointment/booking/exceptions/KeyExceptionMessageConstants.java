@@ -12,6 +12,7 @@ public class KeyExceptionMessageConstants {
     static final String UNIQUE_CONSTRAINT_VIOLATION = "error.unique.constraint.violation";
     static final String USER_ALREADY_VERIFIED = "error.user.already.verified";
     static final String GOOGLE_CALENDAR = "error.google.calendar";
+    static final String SessionEditExpiredException = "error.session.edit.expired";
 
 
     private KeyExceptionMessageConstants() {

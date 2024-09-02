@@ -9,13 +9,16 @@ import com.appointment.booking.entity.Session;
 import com.appointment.booking.entity.Student;
 import com.appointment.booking.entity.Teacher;
 import com.appointment.booking.enums.SessionStatus;
+import com.appointment.booking.exceptions.NotFoundException;
 import com.appointment.booking.exceptions.SessionConflictException;
+import com.appointment.booking.exceptions.SessionEditExpiredException;
 import com.appointment.booking.mapper.SessionMapper;
 import com.appointment.booking.mapper.StudentMapper;
 import com.appointment.booking.repository.SessionRepository;
 import com.appointment.booking.utils.ConfigKeyConstants;
 import com.google.api.services.calendar.model.Event;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Set;
@@ -116,5 +119,38 @@ public class SessionService extends BaseServiceImpl<Session, Long, SessionDto> {
                     .displayName(String.format("%s %s", sessionDto.getStudent().getFirstName(), sessionDto.getStudent().getLastName())).build(),
                 MeetingParticipant.builder().email(sessionDto.getTeacher().getEmail())
                     .displayName(String.format("%s %s", sessionDto.getTeacher().getFirstName(), sessionDto.getTeacher().getLastName())).build())).build();
+    }
+
+
+    public SessionDto updateSessionStartTime(SessionDto sessionDto) throws SessionEditExpiredException {
+
+        Session existingSession = sessionRepository.findById(sessionDto.getId()).orElseThrow(() -> new NotFoundException("session not found"));
+        existingSession.setEndDateTime(sessionDto.getStartDateTime().plusMinutes(existingSession.getDuration()));
+        existingSession.setStartDateTime(sessionDto.getStartDateTime());
+        if (existingSession.getCreatedDate().isBefore(LocalDateTime.now().minusDays(1))) {
+            throw new SessionEditExpiredException("unable to edit session ");
+        }
+        boolean conflictingSessionExists = sessionRepository.existsConflictingSession(sessionDto.getTeacher().getId(), sessionDto.getStudent().getId(),
+            sessionDto.getStartDateTime(), sessionDto.getEndDateTime());
+        if (conflictingSessionExists) {
+            throw new SessionConflictException("A conflicting session exists for either the teacher or the student during this time.");
+        }
+
+
+
+        if (existingSession.getMeetingLink() != null && !existingSession.getMeetingLink().isEmpty()) {
+            ZonedDateTime newStartDateTime = sessionDto.getStartDateTime();
+            ZonedDateTime newEndDateTime = sessionDto.getEndDateTime();
+            googleCalendarService.updateMeetingStartTime(
+                extractEventIdFromLink(existingSession.getMeetingLink()),
+                newStartDateTime,
+                newEndDateTime
+            );
+        }
+        return sessionMapper.convertEntityToDto(sessionRepository.save(existingSession));
+    }
+
+    private String extractEventIdFromLink(String meetingLink) {
+        return meetingLink.split("/")[4];
     }
 }
