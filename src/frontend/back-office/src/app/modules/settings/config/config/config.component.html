@@ -13,6 +13,13 @@
     <ng-template #actions let-item>
       <button (click)="edit(item)" class="mr-2 p-button-rounded p-button-outlined" icon="pi pi-pencil" pButton pRipple type="button"></button>
     </ng-template>
+    <ng-template appColumnDef="value" let-conf>
+      @if (conf.valueType === ConfigType.BIG_DECIMAL) {
+        {{ conf.value | currency }}
+      } @else {
+        {{ conf.value }}
+      }
+    </ng-template>
   </app-table>
 
   <app-form-side-bar [(sidebarVisible)]="sidebarVisible" title="Edit Config">
@@ -23,20 +30,49 @@
             <label class="mb-2" for="name">key</label>
             <input [disabled]="true" id="name" pInputText class="w-full" [value]="selectedConfig.key || ''"/>
           </div>
-        }
-        <div class="flex flex-column">
-          <label class="mb-2" for="value">Value</label>
-          <input class="w-full" formControlName="value" id="value" pInputText/>
-        </div>
-        @if (fieldHasError('value')) {
-          <div class="mb-2 ng-invalid p-error">value is required</div>
-        }
-        <div class="flex flex-column">
-          <label class="mb-2" for="description">Description</label>
-          <input class="w-full" formControlName="description" id="description" pInputText/>
-        </div>
-        @if (fieldHasError('description')) {
-          <div class="mb-2 ng-invalid p-error">description is required</div>
+          <div class="flex flex-column">
+            <label class="mb-2">Value</label>
+            @if (selectedConfig.valueType) {
+              @switch (selectedConfig.valueType) {
+                @case (ConfigType.LONG) {
+                  <p-inputNumber styleClass="w-full" formControlName="value" pInputNumber/>
+                }
+                @case (ConfigType.INTEGER) {
+                  <p-inputNumber styleClass="w-full" formControlName="value" pInputNumber/>
+                }
+                @case (ConfigType.DOUBLE) {
+                  <p-inputNumber mode="decimal" styleClass="w-full" formControlName="value" pInputNumber/>
+                }
+                @case (ConfigType.BIG_DECIMAL) {
+                  <p-inputNumber currency="USD" locale="en-US"
+                                 mode="currency"
+                                 styleClass="w-full"
+                                 formControlName="value"
+                                 pInputNumber/>
+                }
+                @case (ConfigType.BOOLEAN) {
+                  <p-checkbox
+                    formControlName="value"
+                    binary="true"
+                    label="True/False"
+                  ></p-checkbox>
+                }
+                @default {
+                  <input class="w-full" formControlName="value" pInputText/>
+                }
+              }
+            }
+          </div>
+          @if (fieldHasError('value')) {
+            <div class="mb-2 ng-invalid p-error">value is required</div>
+          }
+          <div class="flex flex-column">
+            <label class="mb-2" for="description">Description</label>
+            <input class="w-full" formControlName="description" id="description" pInputText/>
+          </div>
+          @if (fieldHasError('description')) {
+            <div class="mb-2 ng-invalid p-error">description is required</div>
+          }
         }
       </form>
     </div>
