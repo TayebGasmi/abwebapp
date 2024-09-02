@@ -258,13 +258,6 @@ export class SessionComponent implements OnInit {
     return this.activeStep === this.sessionSteps.length - 1;
   }
 
-  isNextDisabled(): boolean {
-    if (this.activeStep === 0) {
-      return this.isFirstStepInvalid();
-    }
-    return false;
-  }
-
   private onEventClick(e: EventClickArg) {
     if (this.authService.hasRoles(["TEACHER"])) {
       return;
@@ -296,6 +289,14 @@ export class SessionComponent implements OnInit {
     const currentDate = new Date();
     if (createdDate)
       this.disableEdit = createdDate && createdDate < currentDate;
+  }
+
+  get sessionSubject() {
+    return this.sessionForm.get("subject")
+  }
+
+  get sessionStartDateTime() {
+    return this.sessionForm.get("startDateTime")
   }
 
   private onDateSelect(selectInfo: DateSelectArg) {

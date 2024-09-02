@@ -147,8 +147,15 @@
           <button pButton pRipple label="Back" icon="pi pi-angle-left" (click)="prevStep()" class="p-button-primary p-button-sm"></button>
         }
         @if (!isLastStep()) {
-          <button pButton pRipple label="Next" icon="pi pi-angle-right" class="p-button-primary p-button-sm" (click)="nextStep()"
-          ></button>
+          @if (activeStep == 0) {
+            <button pButton pRipple label="Next" icon="pi pi-angle-right" class="p-button-primary p-button-sm" (click)="nextStep()"
+                    [disabled]="sessionSubject?.invalid || sessionStartDateTime?.invalid"
+            ></button>
+          } @else {
+            <button pButton pRipple label="Next" icon="pi pi-angle-right" class="p-button-primary p-button-sm" (click)="nextStep()"
+                    [disabled]="sessionForm.invalid"
+            ></button>
+          }
         }
         @if (isLastStep()) {
           <button pButton pRipple label="Save" icon="pi pi-check" (click)="handleSave()" class="p-button-primary p-button-sm"
