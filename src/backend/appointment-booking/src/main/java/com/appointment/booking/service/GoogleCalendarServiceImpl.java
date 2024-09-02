@@ -21,6 +21,7 @@ import com.google.auth.oauth2.GoogleCredentials;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.List;
@@ -62,7 +63,6 @@ public class GoogleCalendarServiceImpl implements GoogleCalendarService {
                 .setDescription(meetingDto.getDescription())
                 .setVisibility("private")
                 .setAnyoneCanAddSelf(false);
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssXXX");
             String formattedStartDateTime = meetingDto.getStartDate()
                 .withZoneSameInstant(ZoneOffset.UTC)
                 .format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
@@ -109,6 +109,39 @@ public class GoogleCalendarServiceImpl implements GoogleCalendarService {
         } catch (IOException e) {
             log.error("Failed to create a Google Calendar event", e);
             throw new GoogleCalendarException("Failed to create a Google Calendar event", e);
+        }
+    }
+    @Override
+    public Event updateMeetingStartTime(String eventId, ZonedDateTime newStartDateTime, ZonedDateTime newEndDateTime) {
+        try {
+            Event event = calendar.events().get("primary", eventId).execute();
+
+            String formattedStartDateTime = newStartDateTime
+                .withZoneSameInstant(ZoneOffset.UTC)
+                .format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+            String formattedEndDateTime = newEndDateTime
+                .withZoneSameInstant(ZoneOffset.UTC)
+                .format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+
+            EventDateTime start = new EventDateTime()
+                .setDateTime(DateTime.parseRfc3339(formattedStartDateTime))
+                .setTimeZone(newStartDateTime.getZone().toString());
+            event.setStart(start);
+
+            EventDateTime end = new EventDateTime()
+                .setDateTime(DateTime.parseRfc3339(formattedEndDateTime))
+                .setTimeZone(newEndDateTime.getZone().toString());
+            event.setEnd(end);
+
+            return calendar.events().update("primary", event.getId(), event)
+                .setConferenceDataVersion(1)
+                .setSendNotifications(true)
+                .setSendUpdates("all")
+                .execute();
+
+        } catch (IOException e) {
+            log.error("Failed to update the Google Calendar event start time", e);
+            throw new GoogleCalendarException("Failed to update the Google Calendar event start time", e);
         }
     }
 }

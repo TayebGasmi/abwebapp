@@ -1,6 +1,7 @@
 package com.appointment.booking.base;
 
 
+import com.appointment.booking.exceptions.SessionEditExpiredException;
 import com.appointment.booking.model.PageData;
 import com.appointment.booking.model.PageLink;
 import java.io.Serializable;
@@ -11,7 +12,7 @@ public interface BaseService<E extends BaseEntity<I>, I extends Serializable, D 
 
     D add(D dto);
 
-    D update(D dto);
+    D update(D dto) throws SessionEditExpiredException;
 
     D findById(I id);
 
