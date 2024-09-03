@@ -12,6 +12,7 @@ export const routes: Routes = [
     path: 'auth',
     loadChildren: () => import('./modules/auth/auth.routes').then(m => m.routes)
   },
+
   {
     path: 'complete',
     loadComponent: () => import('./modules/profile/complete-profile/complete-profile.component').then(m => m.CompleteProfileComponent),
@@ -36,7 +37,13 @@ export const routes: Routes = [
         path: 'profile',
         loadChildren: () => import('./modules/profile/profile.routes').then(m => m.routes),
         canActivate: [authGuard],
-        data: {roles: ['STUDENT', 'TEACHER']}
+        data: {roles: ['STUDENT', 'TEACHER','ADMIN']}
+      },
+      {
+        path: 'dhashAdmin',
+        loadComponent: () => import('./modules/dashboards/admin-dashboard/admin-dashboard.component').then(m => m.AdminDashboardComponent),
+        canActivate: [authGuard],
+        data:{roles:['ADMIN']}
       }
       , {
         path: 'session-settings',

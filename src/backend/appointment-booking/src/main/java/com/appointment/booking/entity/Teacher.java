@@ -28,7 +28,8 @@ public class Teacher extends User {
     private BigDecimal payRate;
     @OneToMany(mappedBy = "teacher")
     private Set<Session> sessions = new LinkedHashSet<>();
-
+    @Column(name = "isConfirmedByAdmin")
+    private boolean confirmedByAdmin;
     @ManyToMany
     @JoinTable(name = "Teacher_subjects",
         joinColumns = @JoinColumn(name = "teacher_id"),

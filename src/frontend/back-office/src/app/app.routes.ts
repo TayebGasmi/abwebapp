@@ -11,6 +11,7 @@ export const routes: Routes = [
     path: 'auth',
     loadChildren: () => import('./modules/auth/auth.routes').then(m => m.routes)
   },
+
   {
     path: '', component: AppLayoutComponent,
     canActivate: [authGuard],
@@ -19,6 +20,10 @@ export const routes: Routes = [
         path: 'settings',
         loadChildren: () => import('./modules/settings/settings.routes').then(m => m.routes),
 
+      },
+      {
+        path: 'dashboard',
+        loadComponent: () => import('./modules/dashboards/admin-dashboard/admin-dashboard.component').then(m => m.AdminDashboardComponent)
       },
     ],
   },
