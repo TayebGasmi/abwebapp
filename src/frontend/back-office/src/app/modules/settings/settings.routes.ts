@@ -17,8 +17,4 @@ export const routes: Routes = [
     path: 'school-year',
     loadComponent: () => import('./school-year/school-year.component').then(m => m.SchoolYearComponent)
   },
-  {
-    path: 'teacher',
-    loadComponent: () => import('./teacher/teacher.component').then(m => m.TeacherComponent)
-  }
 ];
