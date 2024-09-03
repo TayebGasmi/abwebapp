@@ -137,6 +137,54 @@
         </form>
       }
       @if (view === 'edit') {
+        @if (selectedSession) {
+          <div>
+
+
+            <div class="grid mt-4">
+              <div class="col-6">
+                <div class="text-900 font-semibold mb-2">Teacher</div>
+                <p class="flex align-items-center m-0">
+                  <i class="pi pi-fw pi-user text-700 mr-2"></i>
+                  <span>{{ selectedSession.teacher?.firstName }} {{ selectedSession.teacher?.lastName }}</span>
+                </p>
+              </div>
+              <div class="col-6">
+                <div class="text-900 font-semibold mb-2">Subject</div>
+                <p class="flex align-items-center m-0">
+                  <i class="pi pi-fw pi-book text-700 mr-2"></i>
+                  <span>{{ selectedSession.subject.name }}</span>
+                </p>
+              </div>
+            </div>
+            <div class="grid mt-4">
+              <div class="col-6">
+                <div class="text-900 font-semibold mb-2">Price</div>
+                <p class="flex align-items-center m-0">
+                  <i class="pi pi-fw pi-dollar text-700 mr-2"></i>
+                  <span>{{ selectedSession.price }}</span>
+                </p>
+              </div>
+              <div class="col-6">
+                <div class="text-900 font-semibold mb-2">Duration</div>
+                <p class="flex align-items-center m-0">
+                  <i class="pi pi-fw pi-clock text-700 mr-2"></i>
+                  <span>{{ selectedSession.duration }} minutes</span>
+                </p>
+              </div>
+            </div>
+          </div>
+
+        }
+        <div class="grid p-fluid formgrid">
+          <div class="col-12 field">
+            <label for="editStartTime" class="text-900 font-semibold">Start Time</label>
+            <p-calendar id="editStartTime" [formControl]="sessionEditStartTime" [showTime]="true" placeholder="Select Start Time"></p-calendar>
+            @if (sessionEditStartTime.invalid) {
+              <div class="mb-2 ng-invalid p-error">Start Time is required</div>
+            }
+          </div>
+        </div>
 
       }
     </ng-template>
@@ -147,8 +195,15 @@
           <button pButton pRipple label="Back" icon="pi pi-angle-left" (click)="prevStep()" class="p-button-primary p-button-sm"></button>
         }
         @if (!isLastStep()) {
-          <button pButton pRipple label="Next" icon="pi pi-angle-right" class="p-button-primary p-button-sm" (click)="nextStep()"
-          ></button>
+          @if (activeStep == 0) {
+            <button pButton pRipple label="Next" icon="pi pi-angle-right" class="p-button-primary p-button-sm" (click)="nextStep()"
+                    [disabled]="sessionSubject?.invalid || sessionStartDateTime?.invalid"
+            ></button>
+          } @else {
+            <button pButton pRipple label="Next" icon="pi pi-angle-right" class="p-button-primary p-button-sm" (click)="nextStep()"
+                    [disabled]="sessionForm.invalid"
+            ></button>
+          }
         }
         @if (isLastStep()) {
           <button pButton pRipple label="Save" icon="pi pi-check" (click)="handleSave()" class="p-button-primary p-button-sm"
@@ -161,6 +216,11 @@
                 [disabled]="disableEdit"
         ></button>
       }
+      @if (view === 'edit') {
+        <button pButton pRipple label="Save" icon="pi pi-check" (click)="handleSave()" class="p-button-primary p-button-sm"
+                [disabled]="sessionEditStartTime.invalid"></button>
+      }
+
 
     </ng-template>
   </p-dialog>

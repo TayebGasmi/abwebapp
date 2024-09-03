@@ -1,7 +1,6 @@
 package com.appointment.booking.dto;
 
 import com.appointment.booking.base.BaseDto;
-import com.appointment.booking.entity.Subject;
 import com.appointment.booking.enums.SessionStatus;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotNull;

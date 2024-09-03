@@ -8,7 +8,7 @@ import {InputTextModule} from 'primeng/inputtext';
 import {InputTextareaModule} from 'primeng/inputtextarea';
 import {PaginatorModule} from 'primeng/paginator';
 import {MenuItem} from 'primeng/api';
-import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import {FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {CalendarOptions, DateSelectArg, EventClickArg, EventInput} from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
@@ -64,6 +64,9 @@ export class SessionComponent implements OnInit {
   disableEdit = false;
   sessionSteps: MenuItem[] = [];
   activeStep = 0;
+  startDate = "";
+  endDate = "";
+  sessionEditStartTime = new FormControl<any>(null, Validators.required);
 
   constructor(
     private fb: FormBuilder,
@@ -95,8 +98,8 @@ export class SessionComponent implements OnInit {
     this.loadSubjects();
   }
 
-  private loadSessions(startDate: string = '', endDate: string = '') {
-    this.sessionService.getCurrentUserSessionByDateRange(startDate, endDate).subscribe(sessions => {
+  private loadSessions() {
+    this.sessionService.getCurrentUserSessionByDateRange(this.startDate, this.endDate).subscribe(sessions => {
       this.events = sessions.map(this.mapSessionToEvent);
       this.updateCalendarEvents();
     });
@@ -197,16 +200,15 @@ export class SessionComponent implements OnInit {
   }
 
   handleSave() {
-    if (this.sessionForm.invalid) {
-      return;
-    }
 
-    if (this.selectedSession) {
-      this.updateSession();
-    } else {
+    if (this.view === 'new') {
+      if (this.sessionForm.invalid) return
       this.addNewSession();
-    }
+    } else {
+      if (this.sessionEditStartTime.invalid) return;
+      this.updateSession();
 
+    }
     this.showDialog = false;
     this.resetEvent();
   }
@@ -220,7 +222,7 @@ export class SessionComponent implements OnInit {
 
   private updateSession() {
     if (this.selectedSession) {
-      const updatedSession = {...this.selectedSession, ...this.sessionForm.value};
+      const updatedSession = {...this.selectedSession, startDateTime: this.sessionEditStartTime.value};
       this.sessionService.update(updatedSession).subscribe(() => {
         this.notificationService.showSuccess('Session updated successfully');
         this.loadSessions();
@@ -233,16 +235,22 @@ export class SessionComponent implements OnInit {
   }
 
   private onDateRangeChange(viewInfo: any) {
-    this.loadSessions(viewInfo.startStr, viewInfo.endStr);
+    this.startDate = viewInfo.startStr
+    this.endDate = viewInfo.endStr
+    this.loadSessions();
   }
 
   onEditClick() {
     this.view = 'edit';
+    this.title = `edit ${this.selectedSession?.title}`
+    this.sessionEditStartTime.patchValue(this.selectedSession?.startDateTime)
   }
 
   resetEvent() {
     this.selectedSession = null;
     this.sessionForm.reset();
+    this.activeStep = 0;
+
   }
 
   fieldHasError(fieldName: string): boolean {
@@ -252,13 +260,6 @@ export class SessionComponent implements OnInit {
 
   isLastStep(): boolean {
     return this.activeStep === this.sessionSteps.length - 1;
-  }
-
-  isNextDisabled(): boolean {
-    if (this.activeStep === 0) {
-      return this.isFirstStepInvalid();
-    }
-    return false;
   }
 
   private onEventClick(e: EventClickArg) {
@@ -290,15 +291,31 @@ export class SessionComponent implements OnInit {
   private disableEditIfNecessary() {
     const createdDate = this.selectedSession?.createdDate;
     const currentDate = new Date();
-    if (createdDate)
-      this.disableEdit = createdDate && createdDate < currentDate;
+
+    if (createdDate) {
+      const diffTime = Math.abs(currentDate.getTime() - new Date(createdDate).getTime());
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+      this.disableEdit = diffDays > 1;
+    } else {
+      this.disableEdit = false;
+    }
+  }
+
+
+  get sessionSubject() {
+    return this.sessionForm.get("subject")
+  }
+
+  get sessionStartDateTime() {
+    return this.sessionForm.get("startDateTime")
   }
 
   private onDateSelect(selectInfo: DateSelectArg) {
     this.resetEvent();
     this.showDialog = true;
     this.view = 'new';
-    this.title = 'New Event';
+    this.title = 'New Session';
     this.sessionForm.patchValue({
       startDateTime: selectInfo.start
     });

@@ -1,6 +1,7 @@
 package com.appointment.booking.base;
 
 
+import com.appointment.booking.exceptions.SessionEditExpiredException;
 import com.appointment.booking.model.PageData;
 import com.appointment.booking.model.PageLink;
 import io.swagger.v3.oas.annotations.Operation;
@@ -59,7 +60,7 @@ public abstract class BaseController<E extends BaseEntity<I>, I extends Serializ
     @Parameters(value = {
         @Parameter(name = "id", description = "Id of entity to be searched", required = true, example = "1", schema = @Schema(implementation = Long.class))})
     @PatchMapping("")
-    public ResponseEntity<D> update(@Valid @RequestBody D dto) {
+    public ResponseEntity<D> update(@Valid @RequestBody D dto) throws SessionEditExpiredException {
 
         return new ResponseEntity<>(baseService.update(dto), HttpStatus.OK);
     }

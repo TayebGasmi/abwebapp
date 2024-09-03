@@ -1,0 +1,8 @@
+export enum ConfigType {
+  STRING = 'STRING',
+  INTEGER = 'INTEGER',
+  BOOLEAN = 'BOOLEAN',
+  DOUBLE = 'DOUBLE',
+  LONG = 'LONG',
+  BIG_DECIMAL = 'BIG_DECIMAL',
+}
