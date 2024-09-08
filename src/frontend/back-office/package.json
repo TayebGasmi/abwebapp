@@ -26,7 +26,8 @@
     "primeng": "^17.18.3",
     "quill": "^2.0.2",
     "@ngx-translate/core": "^15.0.0",
-    "@ngx-translate/http-loader": "^8.0.0"
+    "@ngx-translate/http-loader": "^8.0.0",
+    "chart.js": "^4.4.3"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^18.2.2",

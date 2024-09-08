@@ -27,6 +27,16 @@ export class AppMenuComponent implements OnInit {
         ]
       },
       {
+        label: "Dashboard",
+        items: [
+          {
+            label: "Dashboard",
+            icon: "pi pi-fw pi-user",
+            routerLink: "dashboard",
+          }
+        ]
+      },
+      {
         label: "settings",
         visible: this.authService.hasRoles(["ADMIN"]),
         items: [
