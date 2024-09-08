@@ -7,6 +7,6 @@ VALUES ('S1', NOW(), NOW()),
        ('S4', NOW(), NOW()),
        ('S5', NOW(), NOW()),
        ('S6', NOW(), NOW()),
-       ('S7', NOW(), NOW()),
+       ('S7', NOW(), NOW())
 
 
