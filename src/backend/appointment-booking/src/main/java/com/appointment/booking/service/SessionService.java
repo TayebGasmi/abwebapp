@@ -57,6 +57,7 @@ public class SessionService extends BaseServiceImpl<Session, Long, SessionDto> {
         Event event = googleCalendarService.createSimpleMeeting(meetingDto);
         sessionDto.setMeetingLink(event.getHangoutLink());
         sessionDto.setMeetingCode(event.getConferenceData().getConferenceId());
+        sessionDto.setEventId(event.getId());
         return super.add(sessionDto);
     }
 

@@ -75,7 +75,7 @@ public class UserService extends BaseServiceImpl<User, Long, UserDto> implements
         return userMapper.convertEntityToDto(user);
     }
 
-    public TeacherDto confirmTeacher(TeacherDto teacherDto){
+    public TeacherDto confirmTeacher(TeacherDto teacherDto) {
         Teacher teacher = teacherMapper.convertDtoToEntity(teacherDto);
         teacher.setConfirmedByAdmin(true);
         teacherRepository.save(teacher);
