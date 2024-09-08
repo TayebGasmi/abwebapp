@@ -18,10 +18,6 @@ export const sessionForm: FormField[] = [
     name: 'description',
     type: 'textarea',
     placeholder: 'Enter description',
-    errors: [
-      {type: 'required', message: 'Description is required'}
-    ],
-    validators: [Validators.required]
   },
   {
     label: 'Start Time',
