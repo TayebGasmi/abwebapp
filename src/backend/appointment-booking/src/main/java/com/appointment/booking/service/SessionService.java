@@ -56,7 +56,7 @@ public class SessionService extends BaseServiceImpl<Session, Long, SessionDto> {
         MeetingDto meetingDto = buildMeetingDto(sessionDto);
         Event event = googleCalendarService.createSimpleMeeting(meetingDto);
         sessionDto.setMeetingLink(event.getHangoutLink());
-
+        sessionDto.setMeetingCode(event.getConferenceData().getConferenceId());
         return super.add(sessionDto);
     }
 
@@ -82,9 +82,7 @@ public class SessionService extends BaseServiceImpl<Session, Long, SessionDto> {
         }
 
         if (sessionDto.getDescription() == null || sessionDto.getDescription().isEmpty()) {
-            sessionDto.setDescription(String.format("""
-                Session for subject '%s'.
-                """, sessionDto.getSubject().getName()));
+            sessionDto.setDescription(String.format("Session for subject %s.", sessionDto.getSubject().getName()));
         }
 
         if (sessionDto.getDuration() == null) {
@@ -108,7 +106,7 @@ public class SessionService extends BaseServiceImpl<Session, Long, SessionDto> {
         }
 
         if (sessionDto.getStatus() == null) {
-            sessionDto.setStatus(SessionStatus.ACCEPTED_BY_TEACHER);
+            sessionDto.setStatus(SessionStatus.PENDING);
         }
     }
 
@@ -130,27 +128,24 @@ public class SessionService extends BaseServiceImpl<Session, Long, SessionDto> {
         if (existingSession.getCreatedDate().isBefore(LocalDateTime.now().minusDays(1))) {
             throw new SessionEditExpiredException("unable to edit session ");
         }
-        boolean conflictingSessionExists = sessionRepository.existsConflictingSession(sessionDto.getTeacher().getId(), sessionDto.getStudent().getId(),
+        boolean conflictingSessionExists = sessionRepository.existsConflictingSession(existingSession.getTeacher().getId(),
+            existingSession.getStudent().getId(),
             sessionDto.getStartDateTime(), sessionDto.getEndDateTime());
         if (conflictingSessionExists) {
             throw new SessionConflictException("A conflicting session exists for either the teacher or the student during this time.");
         }
 
-
-
         if (existingSession.getMeetingLink() != null && !existingSession.getMeetingLink().isEmpty()) {
             ZonedDateTime newStartDateTime = sessionDto.getStartDateTime();
             ZonedDateTime newEndDateTime = sessionDto.getEndDateTime();
             googleCalendarService.updateMeetingStartTime(
-                extractEventIdFromLink(existingSession.getMeetingLink()),
+                existingSession.getEventId(),
                 newStartDateTime,
                 newEndDateTime
             );
         }
+        existingSession.setStatus(SessionStatus.RESCHEDULED);
         return sessionMapper.convertEntityToDto(sessionRepository.save(existingSession));
     }
 
-    private String extractEventIdFromLink(String meetingLink) {
-        return meetingLink.split("/")[4];
-    }
 }
