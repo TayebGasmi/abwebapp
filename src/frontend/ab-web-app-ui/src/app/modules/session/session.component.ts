@@ -27,6 +27,7 @@ import {StepsModule} from "primeng/steps";
 import {Ripple} from "primeng/ripple";
 import {distinctUntilChanged, map, of, switchMap} from "rxjs";
 import {filter} from "rxjs/operators";
+import {SessionStatus} from "../../core/enum/session-status";
 
 @Component({
   selector: 'app-session',
@@ -269,7 +270,7 @@ export class SessionComponent implements OnInit {
 
     this.selectedSession = {
       id: parseInt(e.event.id),
-      status: '',
+      status: e.event.extendedProps['status'],
       title: e.event.title || '',
       startDateTime: e.event.start || new Date(),
       endDateTime: e.event.end || new Date(),
@@ -320,4 +321,6 @@ export class SessionComponent implements OnInit {
       startDateTime: selectInfo.start
     });
   }
+
+  protected readonly SessionStatus = SessionStatus;
 }
