@@ -26,8 +26,7 @@ public class SubjectDto extends BaseDto<Long> {
     @NotNull
     @NotBlank
     private String name;
-    @NotNull
-    @NotBlank
+
     private String description;
     @NotNull
     @NotEmpty
