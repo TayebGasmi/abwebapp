@@ -37,13 +37,7 @@ export const routes: Routes = [
         path: 'profile',
         loadChildren: () => import('./modules/profile/profile.routes').then(m => m.routes),
         canActivate: [authGuard],
-        data: {roles: ['STUDENT', 'TEACHER','ADMIN']}
-      },
-      {
-        path: 'dhashAdmin',
-        loadComponent: () => import('./modules/dashboards/admin-dashboard/admin-dashboard.component').then(m => m.AdminDashboardComponent),
-        canActivate: [authGuard],
-        data:{roles:['ADMIN']}
+        data: {roles: ['STUDENT', 'TEACHER', 'ADMIN']}
       }
       , {
         path: 'session-settings',

@@ -10,7 +10,7 @@ export interface FormField {
   options?: { label: string, value: string }[];
   multiple?: boolean;
   icon?: string;
-  errors: { type: string, message: string }[];
+  errors?: { type: string, message: string }[];
   step?: number;
   min?: number;
   max?: number;

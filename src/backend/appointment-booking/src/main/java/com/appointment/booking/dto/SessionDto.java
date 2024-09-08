@@ -36,6 +36,8 @@ public class SessionDto extends BaseDto<Long> {
     private StudentDto student;
     private String description;
     private Long duration;
+    private String meetingCode;
+    private String eventId;
     @NotNull
     private SubjectDto subject;
 

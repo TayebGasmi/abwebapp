@@ -2,9 +2,7 @@ import {inject, Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {Router} from '@angular/router';
 import {environment} from '../../../environments/environment';
-import {Login} from '../models/login';
 import {HttpClient} from '@angular/common/http';
-import {Register} from '../models/register';
 import {TokenResponse} from "../models/token-response";
 import {BrowserStorageService} from "./browser-storage.service";
 import {User} from "../models/user";
@@ -27,14 +25,6 @@ export class AuthService {
     return this.httpClient.post<TokenResponse>(`${this.AUTH_URL}/social`, user);
   }
 
-  signIn(login: Login): Observable<TokenResponse> {
-    return this.httpClient.post<TokenResponse>(`${this.AUTH_URL}/login`, login);
-  }
-
-  signUp(register: Register): Observable<void> {
-    return this.httpClient.post<void>(`${this.AUTH_URL}/register`, register);
-  }
-
   isAuthenticated(): boolean {
     if (typeof window !== 'undefined' && window.localStorage) {
       const token = this.browserStorage.getItem('access_token');
@@ -42,11 +32,8 @@ export class AuthService {
     }
     return false;
   }
-  setSignout(): void {
-    if (typeof window !== 'undefined' && window.localStorage) {
-      this.browserStorage.clear();
-    }
-  }
+
+
   hasRoles(roles: string[]): boolean {
     if (roles.length === 0) {
       return true;
@@ -61,10 +48,7 @@ export class AuthService {
   }
 
   logout() {
-    this.router.navigate(["/auth/login"]).then(() => this.browserStorage.clear()
-    )
-
-
+    this.browserStorage.clear();
   }
 
   addToken(token: string) {

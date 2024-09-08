@@ -111,6 +111,7 @@ public class GoogleCalendarServiceImpl implements GoogleCalendarService {
             throw new GoogleCalendarException("Failed to create a Google Calendar event", e);
         }
     }
+
     @Override
     public Event updateMeetingStartTime(String eventId, ZonedDateTime newStartDateTime, ZonedDateTime newEndDateTime) {
         try {

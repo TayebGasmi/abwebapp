@@ -177,7 +177,7 @@ export class SubjectComponent implements OnInit {
   private initForm() {
     this.form = this.fb.group({
       name: ['', [Validators.required]],
-      description: ['', [Validators.required]],
+      description: [''],
       schoolTypes: [null, [Validators.required]],
       schoolYears: [null, [Validators.required]]
     });

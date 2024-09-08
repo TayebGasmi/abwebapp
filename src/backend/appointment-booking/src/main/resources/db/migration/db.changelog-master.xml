@@ -11,6 +11,8 @@
   <include file="db/migration/changes/config-changelog.sql"/>
 
   <include file="db/migration/changes/admin-account-changelog.sql"/>
+  <include file="db/migration/changes/school-type-changelog.sql"/>
+  <include file="db/migration/changes/school-year-changelog.sql"/>
 
 
 </databaseChangeLog>

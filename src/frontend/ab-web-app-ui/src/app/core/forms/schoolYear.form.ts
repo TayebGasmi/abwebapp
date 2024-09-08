@@ -19,10 +19,7 @@ export const schoolYearForm: FormField[] = [
     name: 'description',
     type: 'text',
     placeholder: 'Enter description',
-    errors: [
-      {type: 'required', message: 'description is required'}
-    ],
-    validators: [Validators.required]
+
 
   }
 ];

@@ -77,10 +77,13 @@
             <div class="text-900 font-semibold mb-2">Status</div>
             <p class="flex align-items-center m-0">
               <i class="pi pi-fw" [ngClass]="{
-                'pi-check-circle text-green-600': selectedSession.status === 'Confirmed',
-                'pi-exclamation-triangle text-orange-500': selectedSession.status === 'Pending',
-                'pi-times-circle text-red-500': selectedSession.status === 'Cancelled'
-              }"></i>
+            'pi-check-circle text-green-600': selectedSession.status === SessionStatus.CONFIRMED,
+            'pi-exclamation-triangle text-orange-500': selectedSession.status === SessionStatus.PENDING,
+            'pi-times-circle text-red-500': selectedSession.status === SessionStatus.CANCELED,
+            'pi-sync text-blue-500': selectedSession.status === SessionStatus.IN_PROGRESS,
+            'pi-calendar-times text-yellow-600': selectedSession.status === SessionStatus.RESCHEDULED,
+            'pi-check-circle text-gray-600': selectedSession.status === SessionStatus.COMPLETED
+        }"></i>
               <span class="ml-2">{{ selectedSession.status }}</span>
             </p>
           </div>
