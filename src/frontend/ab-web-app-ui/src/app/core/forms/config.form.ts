@@ -30,10 +30,7 @@ export const configForm: FormField[] = [
     name: 'description',
     type: 'text',
     placeholder: 'Enter Description',
-    errors: [
-      {type: 'required', message: 'description is required'}
-    ],
-    validators: [Validators.required]
+    errors: [],
 
   }
 ];
