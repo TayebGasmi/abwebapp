@@ -10,4 +10,6 @@ public interface GoogleCalendarService {
     Event createSimpleMeeting(@Valid MeetingDto meetingDto);
 
     Event updateMeetingStartTime(String eventId, ZonedDateTime newStartDateTime, ZonedDateTime newEndDateTime);
+
+    void deleteEvent(String eventId);
 }
