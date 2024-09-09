@@ -75,6 +75,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
   student!: null | Student;
   sessionDto!: SessionDto;
   isComplete!: boolean;
+  currentSchoolYear!:{name:string , value:SchoolYear};
+  currentSchoolType!:{name:string , value:SchoolType};
 
   constructor(private sessionService: SessionService,
               private sessionLanding: SessionBookLandingService,
@@ -210,6 +212,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
         this.studentService.findById(<number>this.user?.id).subscribe(student => {
           this.student = student;
           this.profileForm.patchValue({schoolYear: student.schoolYear, schoolType: student.schoolType});
+          this.currentSchoolYear={name:<string>this.student.schoolYear?.name,value:<SchoolYear>this.student.schoolYear}
+          this.currentSchoolType={name:<string>this.student.schoolType?.name,value:<SchoolType>this.student.schoolType}
           schoolYearControl?.enable();
           schoolTypeControl?.enable();
           subjectControl?.disable();

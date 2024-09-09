@@ -40,7 +40,7 @@ public class WebSecurityConfig {
         "/appointment-booking/subject",
         "/appointment-booking/school-year",
         "/appointment-booking/school-type",
-        "/appointment-booking/teacher",
+        "/appointment-booking/teacher/**",
         "/appointment-booking/student",
     };
     private final UserDetailsService userDetailsService;
