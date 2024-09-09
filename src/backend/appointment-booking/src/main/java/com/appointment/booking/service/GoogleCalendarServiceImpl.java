@@ -34,6 +34,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class GoogleCalendarServiceImpl implements GoogleCalendarService {
 
+    private static final String CALENDAR_ID = "primary";
     private final JsonFactory jsonFactory = GsonFactory.getDefaultInstance();
     private final Calendar calendar;
 
@@ -100,7 +101,7 @@ public class GoogleCalendarServiceImpl implements GoogleCalendarService {
                 ));
             event.setReminders(reminders);
 
-            return calendar.events().insert("primary", event)
+            return calendar.events().insert(CALENDAR_ID, event)
                 .setConferenceDataVersion(1)
                 .setSendNotifications(true)
                 .setSendUpdates("all")
@@ -115,7 +116,7 @@ public class GoogleCalendarServiceImpl implements GoogleCalendarService {
     @Override
     public Event updateMeetingStartTime(String eventId, ZonedDateTime newStartDateTime, ZonedDateTime newEndDateTime) {
         try {
-            Event event = calendar.events().get("primary", eventId).execute();
+            Event event = calendar.events().get(CALENDAR_ID, eventId).execute();
 
             String formattedStartDateTime = newStartDateTime
                 .withZoneSameInstant(ZoneOffset.UTC)
@@ -134,7 +135,7 @@ public class GoogleCalendarServiceImpl implements GoogleCalendarService {
                 .setTimeZone(newEndDateTime.getZone().toString());
             event.setEnd(end);
 
-            return calendar.events().update("primary", event.getId(), event)
+            return calendar.events().update(CALENDAR_ID, event.getId(), event)
                 .setConferenceDataVersion(1)
                 .setSendNotifications(true)
                 .setSendUpdates("all")
@@ -143,6 +144,16 @@ public class GoogleCalendarServiceImpl implements GoogleCalendarService {
         } catch (IOException e) {
             log.error("Failed to update the Google Calendar event start time", e);
             throw new GoogleCalendarException("Failed to update the Google Calendar event start time", e);
+        }
+    }
+
+    @Override
+    public void deleteEvent(String eventId) {
+        try {
+            calendar.events().delete(CALENDAR_ID, eventId).execute();
+        } catch (IOException e) {
+            log.error("Failed to delete the Google Calendar event", e);
+            throw new GoogleCalendarException("Failed to delete the Google Calendar event", e);
         }
     }
 }

@@ -28,6 +28,7 @@ import {Ripple} from "primeng/ripple";
 import {distinctUntilChanged, map, of, switchMap} from "rxjs";
 import {filter} from "rxjs/operators";
 import {SessionStatus} from "../../core/enum/session-status";
+import {DeleteConfirmationComponent} from "../../shared/components/delete-confirmation/delete-confirmation.component";
 
 @Component({
   selector: 'app-session',
@@ -47,7 +48,8 @@ import {SessionStatus} from "../../core/enum/session-status";
     DatePipe,
     CurrencyPipe,
     StepsModule,
-    Ripple
+    Ripple,
+    DeleteConfirmationComponent
   ],
   templateUrl: './session.component.html',
   styleUrls: ['./session.component.scss']
@@ -68,6 +70,8 @@ export class SessionComponent implements OnInit {
   startDate = "";
   endDate = "";
   sessionEditStartTime = new FormControl<any>(null, Validators.required);
+  showCancelSession: boolean = false
+  enableMeetingLink: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -287,6 +291,7 @@ export class SessionComponent implements OnInit {
     this.disableEditIfNecessary();
     this.view = 'display';
     this.showDialog = true;
+    this.enableMeetingLink = this.selectedSession.startDateTime.getTime() >= new Date().getTime()
   }
 
   private disableEditIfNecessary() {
@@ -323,4 +328,33 @@ export class SessionComponent implements OnInit {
   }
 
   protected readonly SessionStatus = SessionStatus;
+
+  onCancelSessionConfirmed() {
+    if (this.selectedSession)
+      this.sessionService.cancelSession(this.selectedSession?.id).subscribe(() => {
+          this.notificationService.showSuccess('Session canceled successfully');
+          this.loadSessions();
+          this.showCancelSession = false
+          this.showDialog = false
+        }
+      )
+  }
+
+  onCancelClick() {
+    this.showCancelSession = true
+
+  }
+
+  handleBack() {
+    this.view = 'display'
+  }
+
+  openMeetingLink() {
+    if (this.selectedSession?.meetingLink) {
+      window.open(this.selectedSession.meetingLink, '_blank');
+    } else {
+      this.notificationService.showError('Meeting link is not available.');
+    }
+  }
+
 }

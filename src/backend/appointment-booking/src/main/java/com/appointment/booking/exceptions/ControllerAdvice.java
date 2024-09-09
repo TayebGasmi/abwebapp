@@ -145,7 +145,13 @@ public class ControllerAdvice {
     @ExceptionHandler(SessionEditExpiredException.class)
     public ResponseEntity<ErrorResponse> handleSessionEditExpiredException(SessionEditExpiredException ex) {
         log.error("error {}", ex.getMessage(), ex);
-        return createErrorResponse(HttpStatus.BAD_REQUEST, ex, KeyExceptionMessageConstants.SessionEditExpiredException);
+        return createErrorResponse(HttpStatus.BAD_REQUEST, ex, KeyExceptionMessageConstants.SESSION_EDIT_EXPIRED);
+    }
+
+    @ExceptionHandler(SessionCancelException.class)
+    public ResponseEntity<ErrorResponse> handleSessionCancelException(SessionCancelException ex) {
+        log.error("error {}", ex.getMessage(), ex);
+        return createErrorResponse(HttpStatus.BAD_REQUEST, ex, KeyExceptionMessageConstants.SESSION_CANCEL);
     }
 
     @ExceptionHandler(Exception.class)

@@ -4,7 +4,7 @@
     <span>{{ message }}</span>
   </div>
   <ng-template pTemplate="footer">
-    <button (click)="showDeleteConfirmation = false" class="p-button-text" icon="pi pi-times" label="No" pButton pRipple></button>
+    <button (click)="showDeleteConfirmation = false" class="p-button-secondary  p-button-sm" icon="pi pi-times" label="No" pButton pRipple></button>
     <ng-container *ngTemplateOutlet="confirmButton"></ng-container>
   </ng-template>
 </p-dialog>
