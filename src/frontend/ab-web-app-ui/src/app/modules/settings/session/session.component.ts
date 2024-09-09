@@ -1,9 +1,7 @@
-import { Component } from '@angular/core';
-import {Config} from "../../../core/models/config";
+import {Component} from '@angular/core';
 import {PageLink} from "../../../core/models/page-link";
 import {TableColumn} from "../../../core/models/table-cloumn";
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
-import {ConfigService} from "../../../core/service/config.service";
 import {NotificationService} from "../../../core/service/notification.service";
 import {SortOrder} from "../../../core/enum/sort-order.enum";
 import {SessionDto} from "../../../core/models/session";
@@ -15,7 +13,7 @@ import {Ripple} from "primeng/ripple";
 import {TableComponent} from "../../../shared/components/table/table.component";
 import {Subject} from "../../../core/models/subject";
 import {CalendarModule} from "primeng/calendar";
-import {DatePipe, NgClass} from "@angular/common";
+import {CurrencyPipe, DatePipe, NgClass} from "@angular/common";
 import {DialogModule} from "primeng/dialog";
 import {DropdownModule} from "primeng/dropdown";
 import {PrimeTemplate} from "primeng/api";
@@ -26,10 +24,14 @@ import {BrowserStorageService} from "../../../core/service/browser-storage.servi
 import {User} from "../../../core/models/user";
 import {AuthService} from "../../../core/service/auth.service";
 import {SessionStatus} from "../../../core/enum/session-status";
+import {ColumnDefDirective} from "../../../shared/directives/column-def.directive";
+import {StepsModule} from "primeng/steps";
+
 interface GlobalFilter {
   keys: string[];
   value: string;
 }
+
 @Component({
   selector: 'app-session',
   standalone: true,
@@ -46,45 +48,54 @@ interface GlobalFilter {
     DialogModule,
     DropdownModule,
     PrimeTemplate,
-    NgClass
+    NgClass,
+    ColumnDefDirective,
+    CurrencyPipe,
+    StepsModule
   ],
   templateUrl: './session.component.html',
   styleUrl: './session.component.scss'
 })
 export class SessionComponent {
-  visibleEdit:boolean=true;
+  visibleEdit: boolean = true;
   sidebarVisible = false;
   data: SessionDto[] = [];
   totalRecords: number = 0;
   pageSize = 10;
-  globalFilter!: GlobalFilter  ;
+  globalFilter!: GlobalFilter;
   pageLink: PageLink = {page: 0, pageSize: this.pageSize};
   columns: TableColumn[] = [
-    {field: 'startDateTime', header: 'Start Date', type: 'text', sortable: true, filterable: true},
-    {field: 'subject.name', header: 'subject', type: 'text',sortable: false, filterable: false},
-    {field: 'teacher.firstName', header: 'teacher', type: 'text',sortable: false, filterable: false}
+    {field: 'startDateTime', header: 'Start Date', type: 'date', sortable: true, filterable: true},
+    {field: 'subject.name', header: 'subject', type: 'text', sortable: true, filterable: true},
+    {field: 'teacher', header: 'teacher', type: 'text', sortable: true, filterable: true},
+    {field: 'status', header: 'status', type: 'text', sortable: true, filterable: true},
+    {field: 'price', header: 'price', type: 'number', sortable: true, filterable: true},
+    {field: 'duration', header: 'duration', type: 'number', sortable: true, filterable: true}
   ];
-  view: 'display' | 'edit' ='display';
+  view: 'display' | 'edit' = 'display';
   form!: FormGroup
   currentPageReportTemplate = "Showing {first} to {last} of {totalRecords} entries";
   rowsPerPageOptions = [10, 25, 50];
   selectedSession!: null | SessionDto
-  currentUser!:User ;
+  currentUser!: User;
   subjects: { label: string, value: Subject }[] = [];
   teachers: { label: string, value: Teacher }[] = [];
-  constructor(private authService:AuthService, private browserStorage:BrowserStorageService, private teacherService: TeacherService,
-               private subjectService: SubjectService,private sessionService: SessionService, private notificationService: NotificationService, private fb: FormBuilder) {
+
+  constructor(private authService: AuthService, private browserStorage: BrowserStorageService, private teacherService: TeacherService,
+              private subjectService: SubjectService, private sessionService: SessionService, private notificationService: NotificationService, private fb: FormBuilder) {
     this.initForm();
-    this.currentUser=JSON.parse(<string>this.browserStorage.getItem('user'));
+    this.currentUser = JSON.parse(<string>this.browserStorage.getItem('user'));
   }
+
   resetEvent() {
     this.selectedSession = null;
     this.form.reset();
   }
+
   loadSessions(): void {
     this.sessionService.findAll(this.pageLink).subscribe(pageData => {
       this.data = pageData.data;
-      this.data=this.data.map(session=>({
+      this.data = this.data.map(session => ({
         ...session,
         'subject.name': session.subject?.name || 'N/A',
         'teacher.firstName': session.teacher?.firstName || 'N/A'
@@ -92,29 +103,32 @@ export class SessionComponent {
       this.totalRecords = pageData.totalElements;
     });
   }
+
   onEditClick() {
     this.view = 'edit';
   }
+
   handleSave() {
     if (this.form.invalid) {
       return;
     }
     if (this.selectedSession) {
       this.updateSession();
-    }else{
+    } else {
       this.addNewSession();
-      this.sidebarVisible=false;
+      this.sidebarVisible = false;
     }
     this.resetEvent();
   }
+
   onLazyLoad(event: any): void {
     this.pageLink.page = event.first! / event.rows!;
     this.pageLink.pageSize = event.rows!;
-    if(this.authService.hasRoles(["STUDENT"])){
-      this.pageLink.globalFilter= {keys:["student.email"],value:this.currentUser?.email}
-    }else if(this.authService.hasRoles(["TEACHER"])){
-      this.visibleEdit=false;
-      this.pageLink.globalFilter= {keys:["teacher.email"],value:this.currentUser?.email}
+    if (this.authService.hasRoles(["STUDENT"])) {
+      this.pageLink.globalFilter = {keys: ["student.email"], value: this.currentUser?.email}
+    } else if (this.authService.hasRoles(["TEACHER"])) {
+      this.visibleEdit = false;
+      this.pageLink.globalFilter = {keys: ["teacher.email"], value: this.currentUser?.email}
     }
     if (event.sortField) {
       this.pageLink.sortProperty = event.sortField;
@@ -129,6 +143,7 @@ export class SessionComponent {
     }
     this.loadSessions();
   }
+
   private addNewSession() {
     const formValue = this.form.value;
     this.sessionService.save(formValue).subscribe(() => {
@@ -136,6 +151,7 @@ export class SessionComponent {
       this.loadSessions();
     });
   }
+
   onGlobalFilter(value: string) {
     this.pageLink.globalFilter = {keys: ['key', 'value', 'description'], value};
     this.loadSessions();
@@ -163,7 +179,8 @@ export class SessionComponent {
       subject: [null, Validators.required]
     });
   }
-   updateSession() {
+
+  updateSession() {
     if (this.selectedSession) {
       const updatedSession = {...this.selectedSession, ...this.form.value};
       this.sessionService.update(updatedSession).subscribe(() => {
@@ -172,6 +189,7 @@ export class SessionComponent {
       });
     }
   }
+
   private loadTeachers() {
     this.teacherService.getALL().subscribe(result => {
       this.teachers = result.map(u => ({
@@ -189,7 +207,8 @@ export class SessionComponent {
       }));
     });
   }
-  add(){
+
+  add() {
     this.view = 'edit';
     this.sidebarVisible = true;
     this.loadTeachers();
