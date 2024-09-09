@@ -1,5 +1,6 @@
 -- liquibase formatted sql
-
+-- changeset tayeb:create-schema booking
+CREATE SCHEMA IF NOT EXISTS booking;
 -- changeset tayeb:create-app-user-sequence
 CREATE SEQUENCE IF NOT EXISTS app_user_id_seq START WITH 1 INCREMENT BY 1;
 
@@ -170,7 +171,7 @@ CREATE TABLE teacher
 -- changeset tayeb:create-teacher-subjects-table
 CREATE TABLE teacher_subjects
 (
-    teachers_id  BIGINT NOT NULL,
+    teachers_id BIGINT NOT NULL,
     subjects_id BIGINT NOT NULL,
     CONSTRAINT teacher_subjects_pkey PRIMARY KEY (teachers_id, subjects_id)
 );
