@@ -131,20 +131,17 @@ public class SessionService extends BaseServiceImpl<Session, Long, SessionDto> {
         }
         boolean conflictingSessionExists = sessionRepository.existsConflictingSession(existingSession.getTeacher().getId(),
             existingSession.getStudent().getId(),
-            sessionDto.getStartDateTime(), sessionDto.getEndDateTime());
+            existingSession.getStartDateTime(), existingSession.getEndDateTime());
         if (conflictingSessionExists) {
             throw new SessionConflictException("A conflicting session exists for either the teacher or the student during this time.");
         }
-
-        if (existingSession.getMeetingLink() != null && !existingSession.getMeetingLink().isEmpty()) {
-            ZonedDateTime newStartDateTime = sessionDto.getStartDateTime();
-            ZonedDateTime newEndDateTime = sessionDto.getEndDateTime();
+            ZonedDateTime newStartDateTime = existingSession.getStartDateTime();
+            ZonedDateTime newEndDateTime = existingSession.getEndDateTime();
             googleCalendarService.updateMeetingStartTime(
                 existingSession.getEventId(),
                 newStartDateTime,
                 newEndDateTime
             );
-        }
         existingSession.setStatus(SessionStatus.RESCHEDULED);
         return sessionMapper.convertEntityToDto(sessionRepository.save(existingSession));
     }
