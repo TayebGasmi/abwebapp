@@ -25,6 +25,7 @@ import {SubjectService} from "../../../core/service/subject.service";
 import {BrowserStorageService} from "../../../core/service/browser-storage.service";
 import {User} from "../../../core/models/user";
 import {AuthService} from "../../../core/service/auth.service";
+import {SessionStatus} from "../../../core/enum/session-status";
 interface GlobalFilter {
   keys: string[];
   value: string;
@@ -194,4 +195,6 @@ export class SessionComponent {
     this.loadTeachers();
     this.loadSubjects();
   }
+
+  protected readonly SessionStatus = SessionStatus;
 }
