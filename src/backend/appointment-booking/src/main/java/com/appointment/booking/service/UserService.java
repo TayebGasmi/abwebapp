@@ -2,12 +2,14 @@ package com.appointment.booking.service;
 
 
 import com.appointment.booking.base.BaseServiceImpl;
+import com.appointment.booking.dto.TeacherDto;
 import com.appointment.booking.dto.UserDto;
 import com.appointment.booking.entity.Student;
 import com.appointment.booking.entity.Teacher;
 import com.appointment.booking.entity.User;
 import com.appointment.booking.exceptions.NotFoundException;
 import com.appointment.booking.exceptions.UserAlreadyVerifiedException;
+import com.appointment.booking.mapper.TeacherMapper;
 import com.appointment.booking.mapper.UserMapper;
 import com.appointment.booking.repository.StudentRepository;
 import com.appointment.booking.repository.TeacherRepository;
@@ -29,6 +31,8 @@ public class UserService extends BaseServiceImpl<User, Long, UserDto> implements
     private final UserRepository userRepository;
     private final CodeVerificationService codeVerificationService;
     private final UserMapper userMapper;
+    private final TeacherMapper teacherMapper;
+    private final TeacherService teacherService;
 
     public void verifyEmail(String email, String code) {
         User user = userRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("User not found"));
@@ -69,5 +73,12 @@ public class UserService extends BaseServiceImpl<User, Long, UserDto> implements
 
     public UserDto getUserDetails(User user) {
         return userMapper.convertEntityToDto(user);
+    }
+
+    public TeacherDto confirmTeacher(TeacherDto teacherDto) {
+        Teacher teacher = teacherMapper.convertDtoToEntity(teacherDto);
+        teacher.setConfirmedByAdmin(true);
+        teacherRepository.save(teacher);
+        return teacherDto;
     }
 }

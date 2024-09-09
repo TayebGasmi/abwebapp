@@ -24,8 +24,7 @@ public class SchoolYearDto extends BaseDto<Long> {
     @NotBlank
     @NotNull
     private String name;
-    @NotBlank
-    @NotNull
+
     private String description;
 
 

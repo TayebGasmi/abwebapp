@@ -34,33 +34,12 @@ export class AppMenuComponent implements OnInit {
             label: "calendar",
             icon: "pi pi-fw pi-calendar",
             routerLink: "calendar"
-          }
-        ]
-      },
-      {
-        label: "settings",
-        visible: this.authService.hasRoles(["ADMIN"]),
-        items: [
-          {
-            label: "Subject",
-            icon: "pi pi-fw pi-book",
-            routerLink: "settings/subject"
           },
           {
-            label: "School types",
-            icon: "pi pi-fw pi-book",
-            routerLink: "settings/school"
-          },
-          {
-            label: "School Year",
+            label: "session",
             icon: "pi pi-fw pi-calendar",
-            routerLink: "settings/school-year"
-          },
-          {
-            label: "Configuration",
-            icon: "pi pi-fw pi-cog",
-            routerLink: "settings/config"
-          },
+            routerLink: "session-settings"
+          }
         ]
       }
     ];

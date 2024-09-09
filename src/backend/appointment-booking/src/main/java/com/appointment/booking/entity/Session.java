@@ -27,7 +27,6 @@ public class Session extends BaseEntity<Long> {
 
     @Column(nullable = false)
     private String title;
-    @Column(nullable = false)
     private String description;
     @Column(nullable = false)
     private ZonedDateTime startDateTime;
@@ -35,7 +34,10 @@ public class Session extends BaseEntity<Long> {
     private ZonedDateTime endDateTime;
     @Column(nullable = false)
     private String meetingLink;
-
+    @Column(nullable = false)
+    private String meetingCode;
+    @Column(nullable = false)
+    private String eventId;
     @Column(name = "price", nullable = false, precision = 19, scale = 2)
     private BigDecimal price;
 

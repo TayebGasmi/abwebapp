@@ -47,14 +47,20 @@
               </p>
             </div>
           </div>
+          @if (selectedSession.status !== SessionStatus.CANCELED) {
+            <div class="mt-4">
+              <div class="text-900 font-semibold mb-2">Meeting Link</div>
+              <button class="p-button p-component p-button-sm"
+                      [disabled]="enableMeetingLink"
+                      (click)="openMeetingLink()"
+              >
+                <span class="p-button-icon pi pi-external-link"></span>
+                <span class="p-button-label">Join Session</span>
+              </button>
 
-          <div class="mt-4">
-            <div class="text-900 font-semibold mb-2">Meeting Link</div>
-            <a [href]="selectedSession.meetingLink" target="_blank" class="p-button p-component   p-button-sm">
-              <span class="p-button-icon pi pi-external-link"></span>
-              <span class="p-button-label">Join Session</span>
-            </a>
-          </div>
+            </div>
+          }
+
 
           <div class="grid mt-4">
             <div class="col-6">
@@ -77,10 +83,13 @@
             <div class="text-900 font-semibold mb-2">Status</div>
             <p class="flex align-items-center m-0">
               <i class="pi pi-fw" [ngClass]="{
-                'pi-check-circle text-green-600': selectedSession.status === 'Confirmed',
-                'pi-exclamation-triangle text-orange-500': selectedSession.status === 'Pending',
-                'pi-times-circle text-red-500': selectedSession.status === 'Cancelled'
-              }"></i>
+            'pi-check-circle text-green-600': selectedSession.status === SessionStatus.CONFIRMED,
+            'pi-exclamation-triangle text-orange-500': selectedSession.status === SessionStatus.PENDING,
+            'pi-times-circle text-red-500': selectedSession.status === SessionStatus.CANCELED,
+            'pi-sync text-blue-500': selectedSession.status === SessionStatus.IN_PROGRESS,
+            'pi-calendar-times text-yellow-600': selectedSession.status === SessionStatus.RESCHEDULED,
+            'pi-check-circle text-gray-600': selectedSession.status === SessionStatus.COMPLETED
+        }"></i>
               <span class="ml-2">{{ selectedSession.status }}</span>
             </p>
           </div>
@@ -137,6 +146,54 @@
         </form>
       }
       @if (view === 'edit') {
+        @if (selectedSession) {
+          <div>
+
+
+            <div class="grid mt-4">
+              <div class="col-6">
+                <div class="text-900 font-semibold mb-2">Teacher</div>
+                <p class="flex align-items-center m-0">
+                  <i class="pi pi-fw pi-user text-700 mr-2"></i>
+                  <span>{{ selectedSession.teacher?.firstName }} {{ selectedSession.teacher?.lastName }}</span>
+                </p>
+              </div>
+              <div class="col-6">
+                <div class="text-900 font-semibold mb-2">Subject</div>
+                <p class="flex align-items-center m-0">
+                  <i class="pi pi-fw pi-book text-700 mr-2"></i>
+                  <span>{{ selectedSession.subject.name }}</span>
+                </p>
+              </div>
+            </div>
+            <div class="grid mt-4">
+              <div class="col-6">
+                <div class="text-900 font-semibold mb-2">Price</div>
+                <p class="flex align-items-center m-0">
+                  <i class="pi pi-fw pi-dollar text-700 mr-2"></i>
+                  <span>{{ selectedSession.price }}</span>
+                </p>
+              </div>
+              <div class="col-6">
+                <div class="text-900 font-semibold mb-2">Duration</div>
+                <p class="flex align-items-center m-0">
+                  <i class="pi pi-fw pi-clock text-700 mr-2"></i>
+                  <span>{{ selectedSession.duration }} minutes</span>
+                </p>
+              </div>
+            </div>
+          </div>
+
+        }
+        <div class="grid p-fluid formgrid">
+          <div class="col-12 field">
+            <label for="editStartTime" class="text-900 font-semibold">Start Time</label>
+            <p-calendar id="editStartTime" [formControl]="sessionEditStartTime" [showTime]="true" placeholder="Select Start Time"></p-calendar>
+            @if (sessionEditStartTime.invalid) {
+              <div class="mb-2 ng-invalid p-error">Start Time is required</div>
+            }
+          </div>
+        </div>
 
       }
     </ng-template>
@@ -147,8 +204,15 @@
           <button pButton pRipple label="Back" icon="pi pi-angle-left" (click)="prevStep()" class="p-button-primary p-button-sm"></button>
         }
         @if (!isLastStep()) {
-          <button pButton pRipple label="Next" icon="pi pi-angle-right" class="p-button-primary p-button-sm" (click)="nextStep()"
-          ></button>
+          @if (activeStep == 0) {
+            <button pButton pRipple label="Next" icon="pi pi-angle-right" class="p-button-primary p-button-sm" (click)="nextStep()"
+                    [disabled]="sessionSubject?.invalid || sessionStartDateTime?.invalid"
+            ></button>
+          } @else {
+            <button pButton pRipple label="Next" icon="pi pi-angle-right" class="p-button-primary p-button-sm" (click)="nextStep()"
+                    [disabled]="sessionForm.invalid"
+            ></button>
+          }
         }
         @if (isLastStep()) {
           <button pButton pRipple label="Save" icon="pi pi-check" (click)="handleSave()" class="p-button-primary p-button-sm"
@@ -157,11 +221,28 @@
       }
 
       @if (view === 'display') {
-        <button pRipple pButton label="Edit" icon="pi pi-pencil" (click)="onEditClick()" class="p-button-primary p-button-sm"
-                [disabled]="disableEdit"
-        ></button>
+
+        @if (selectedSession?.status !== SessionStatus.CANCELED) {
+          <button pRipple pButton label="Edit" icon="pi pi-pencil" (click)="onEditClick()" class="p-button-primary p-button-sm"
+                  [disabled]="disableEdit"
+          ></button>
+          <button pButton pRipple label="Cancel" [disabled]="disableEdit" (click)="onCancelClick()" icon="pi pi-times"
+                  class="p-button-secondary  p-button-sm"></button>
+        }
       }
+      @if (view === 'edit') {
+        <button pButton pRipple label="Save" icon="pi pi-check" (click)="handleSave()" class="p-button-primary p-button-sm"
+                [disabled]="sessionEditStartTime.invalid"></button>
+        <button pButton pRipple label="back" icon="pi pi-check" (click)="handleBack()" class="p-button-secondary p-button-sm"
+                [disabled]="sessionEditStartTime.invalid"></button>
+      }
+
 
     </ng-template>
   </p-dialog>
 </div>
+<app-delete-confirmation [(showDeleteConfirmation)]="showCancelSession" message="Are you sure to cancel the selecte session !">
+  <ng-template #confirmButton>
+    <button (click)="onCancelSessionConfirmed()" class="p-button-primary p-button-sm" icon="pi pi-check" label="Yes" pButton pRipple></button>
+  </ng-template>
+</app-delete-confirmation>

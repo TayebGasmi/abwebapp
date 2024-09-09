@@ -1,6 +1,5 @@
 package com.appointment.booking.security;
 
-import com.appointment.booking.service.AuthService;
 import com.appointment.booking.utils.JwtUTil;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;

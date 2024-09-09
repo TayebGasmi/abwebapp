@@ -25,4 +25,7 @@ public class TeacherDto extends UserDto {
     private BigDecimal payRate;
     @NotNull
     private Set<SubjectDto> subjects;
+    @NotNull
+    private boolean confirmedByAdmin=false;
+
 }
