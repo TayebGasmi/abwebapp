@@ -25,4 +25,8 @@ export class SessionService extends BaseService<SessionDto, number> {
       }
     });
   }
+
+  cancelSession(id: number): Observable<SessionDto> {
+    return this.http.patch<SessionDto>(`${baseUrl}/session/cancel/${id}`, null);
+  }
 }
