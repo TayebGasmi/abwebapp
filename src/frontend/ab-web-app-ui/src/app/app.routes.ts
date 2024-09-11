@@ -34,6 +34,18 @@ export const routes: Routes = [
         data: {roles: ['STUDENT', 'TEACHER']}
       },
       {
+        path: 'dashboard-teacher',
+        loadComponent: () => import('./modules/dashboards/teacher-dashboard/teacher-dashboard.component').then(m => m.TeacherDashboardComponent),
+        canActivate: [authGuard],
+        data: {roles: ['TEACHER']}
+      },
+      {
+        path: 'dashboard-student',
+        loadComponent: () => import('./modules/dashboards/student-dashboard/student-dashboard.component').then(m => m.StudentDashboardComponent),
+        canActivate: [authGuard],
+        data: {roles: ['STUDENT']}
+      },
+      {
         path: 'profile',
         loadChildren: () => import('./modules/profile/profile.routes').then(m => m.routes),
         canActivate: [authGuard],

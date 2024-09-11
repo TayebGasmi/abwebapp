@@ -16,6 +16,28 @@ export class AppMenuComponent implements OnInit {
   ngOnInit() {
     this.model = [
       {
+        label: "Dashboard",
+        visible: this.authService.hasRoles(["STUDENT"]),
+        items: [
+          {
+            label: "My Dashboard",
+            icon: "pi pi-fw pi-user",
+            routerLink: "dashboard-student",
+          }
+        ]
+      },
+      {
+        label: "Dashboard",
+        visible: this.authService.hasRoles(["TEACHER"]),
+        items: [
+          {
+            label: "My Dashboard",
+            icon: "pi pi-fw pi-user",
+            routerLink: "dashboard-teacher",
+          }
+        ]
+      },
+      {
         label: "profile",
         visible: this.authService.hasRoles(["STUDENT", "TEACHER"]),
         items: [

@@ -47,7 +47,6 @@
               formControlName="subject"
               placeholder="choose a subject"
               [options]="subjects"
-              [(ngModel)]="selectedSubjects"
             ></p-multiSelect>
             @if (isFieldInvalid("subject")) {
               <div class="mb-2 ng-invalid p-error">Subject is required</div>
