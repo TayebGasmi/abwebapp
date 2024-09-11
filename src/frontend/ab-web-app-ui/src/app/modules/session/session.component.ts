@@ -29,6 +29,7 @@ import {distinctUntilChanged, map, of, switchMap} from "rxjs";
 import {filter} from "rxjs/operators";
 import {SessionStatus} from "../../core/enum/session-status";
 import {DeleteConfirmationComponent} from "../../shared/components/delete-confirmation/delete-confirmation.component";
+import {RoleName} from "../../core/models/role";
 
 @Component({
   selector: 'app-session',
@@ -73,6 +74,7 @@ export class SessionComponent implements OnInit {
   showCancelSession: boolean = false
   enableMeetingLink: boolean = false;
   currentDate = new Date();
+  isTeacher = false
 
   constructor(
     private fb: FormBuilder,
@@ -82,6 +84,7 @@ export class SessionComponent implements OnInit {
     private notificationService: NotificationService,
     private authService: AuthService
   ) {
+    this.isTeacher = this.authService.hasRoles([RoleName.TEACHER])
   }
 
   ngOnInit(): void {
@@ -112,7 +115,7 @@ export class SessionComponent implements OnInit {
   }
 
   private loadTeachers() {
-    this.sessionForm.get('subject')?.valueChanges
+    this.subject?.valueChanges
     .pipe(
       filter(subject => !!subject),
       map(subject => subject.name),
@@ -193,8 +196,12 @@ export class SessionComponent implements OnInit {
     this.activeStep--;
   }
 
+  get subject() {
+    return this.sessionForm.get('subject')
+  }
+
   private isFirstStepInvalid(): boolean {
-    if (this.sessionForm.get('subject')?.invalid) {
+    if (this.subject?.invalid) {
       this.notificationService.showError("Please choose a subject.");
       return true;
     }
@@ -269,9 +276,6 @@ export class SessionComponent implements OnInit {
   }
 
   private onEventClick(e: EventClickArg) {
-    if (this.authService.hasRoles(["TEACHER"])) {
-      return;
-    }
 
     this.selectedSession = {
       id: parseInt(e.event.id),
@@ -319,6 +323,9 @@ export class SessionComponent implements OnInit {
   }
 
   private onDateSelect(selectInfo: DateSelectArg) {
+    if (this.authService.hasRoles(["TEACHER"])) {
+      return;
+    }
     this.resetEvent();
     this.showDialog = true;
     this.view = 'new';
