@@ -143,6 +143,11 @@
       <groupId>com.google.apis</groupId>
       <version>${google-api-services-calendar.version}</version>
     </dependency>
+    <dependency>
+      <groupId>com.stripe</groupId>
+      <artifactId>stripe-java</artifactId>
+      <version>${stripe-java.version}</version>
+    </dependency>
 
 
   </dependencies>
@@ -166,6 +171,7 @@
     <nimbus-jose-jwt.version>9.37.2</nimbus-jose-jwt.version>
     <projectlombok.version>1.18.30</projectlombok.version>
     <springdoc-openapi-starter-webmvc-ui.version>2.5.0</springdoc-openapi-starter-webmvc-ui.version>
+    <stripe-java.version>26.11.0</stripe-java.version>
   </properties>
 
   <version>0.0.1-SNAPSHOT</version>
