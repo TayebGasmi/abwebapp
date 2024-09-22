@@ -41,6 +41,7 @@ public class SessionController extends BaseController<Session, Long, SessionDto>
     public ResponseEntity<SessionDto> update(SessionDto dto) throws SessionEditExpiredException {
         return new ResponseEntity<>(sessionService.updateSessionStartTime(dto), HttpStatus.OK);
     }
+
     @PatchMapping("/cancel/{id}")
     public ResponseEntity<SessionDto> cancel(@PathVariable Long id) throws SessionCancelException {
         return ResponseEntity.ok(sessionService.cancelSession(id));

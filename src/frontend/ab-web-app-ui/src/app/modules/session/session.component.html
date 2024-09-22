@@ -1,4 +1,7 @@
 <div class="card">
+
+
+
   <full-calendar [options]="calendarOptions"></full-calendar>
 
   <p-dialog [(visible)]="showDialog" [style]="{width: '36rem'}" [modal]="true" [closable]="true" (onHide)="resetEvent()">
@@ -140,10 +143,11 @@
                   }
                 </div>
               }
-
-
             </div>
           </form>
+          @if(activeStep==2){
+            <app-payment [amount]="5000"></app-payment>
+          }
         }
         @if (view === 'edit') {
           @if (selectedSession) {
@@ -226,7 +230,7 @@
 
       @if (view === 'display') {
 
-        @if (selectedSession?.status !== SessionStatus.CANCELED && !isTeacher  ) {
+        @if (selectedSession?.status !== SessionStatus.CANCELED && !isTeacher) {
           <button pRipple pButton label="Edit" icon="pi pi-pencil" (click)="onEditClick()" class="p-button-primary p-button-sm"
                   [disabled]="disableEdit"
           ></button>
@@ -250,3 +254,4 @@
     <button (click)="onCancelSessionConfirmed()" class="p-button-primary p-button-sm" icon="pi pi-check" label="Yes" pButton pRipple></button>
   </ng-template>
 </app-delete-confirmation>
+

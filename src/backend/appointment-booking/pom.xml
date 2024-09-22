@@ -144,8 +144,8 @@
       <version>${google-api-services-calendar.version}</version>
     </dependency>
     <dependency>
-      <groupId>com.stripe</groupId>
       <artifactId>stripe-java</artifactId>
+      <groupId>com.stripe</groupId>
       <version>${stripe-java.version}</version>
     </dependency>
 

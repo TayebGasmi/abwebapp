@@ -30,6 +30,7 @@ import {filter} from "rxjs/operators";
 import {SessionStatus} from "../../core/enum/session-status";
 import {DeleteConfirmationComponent} from "../../shared/components/delete-confirmation/delete-confirmation.component";
 import {RoleName} from "../../core/models/role";
+import {PaymentComponent} from "../payment/payment.component";
 
 @Component({
   selector: 'app-session',
@@ -50,7 +51,8 @@ import {RoleName} from "../../core/models/role";
     CurrencyPipe,
     StepsModule,
     Ripple,
-    DeleteConfirmationComponent
+    DeleteConfirmationComponent,
+    PaymentComponent
   ],
   templateUrl: './session.component.html',
   styleUrls: ['./session.component.scss']
@@ -181,7 +183,10 @@ export class SessionComponent implements OnInit {
   private initializeSteps() {
     this.sessionSteps = [
       {label: 'Choose Subject & Time'},
-      {label: 'Choose Teacher'}
+      {label: 'Choose Teacher'},
+      {
+        label:"Payment "
+      }
     ];
   }
 
