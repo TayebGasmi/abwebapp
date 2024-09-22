@@ -1,0 +1,9 @@
+<ngx-stripe-elements
+  [stripe]="stripe"
+  [elementsOptions]="elementsOptions"
+>
+  <ngx-stripe-payment (ready)="onPaymentElementReady()" [options]="paymentElementOptions"/>
+</ngx-stripe-elements>
+@if (isPaymentReady) {
+  <button (click)="pay()" class="m-2" pButton label="pay" size="small"></button>
+}
