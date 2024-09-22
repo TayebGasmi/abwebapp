@@ -4,6 +4,7 @@ import com.appointment.booking.base.BaseDto;
 import com.appointment.booking.entity.Config;
 import com.appointment.booking.enums.ConfigType;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -24,6 +25,7 @@ import lombok.experimental.SuperBuilder;
 @Setter
 @EqualsAndHashCode(callSuper = true)
 @JsonIgnoreProperties(ignoreUnknown = true)
+@Schema
 public class ConfigDto extends BaseDto<Long> implements Serializable {
 
     @NotNull
