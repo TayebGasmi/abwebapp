@@ -1,6 +1,7 @@
 package com.appointment.booking.exceptions;
 
 import com.appointment.booking.model.ErrorResponse;
+import com.stripe.exception.StripeException;
 import jakarta.validation.ConstraintViolationException;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -154,8 +155,15 @@ public class ControllerAdvice {
         return createErrorResponse(HttpStatus.BAD_REQUEST, ex, KeyExceptionMessageConstants.SESSION_CANCEL);
     }
 
+    @ExceptionHandler(StripeException.class)
+    public ResponseEntity<ErrorResponse> handleStripeException(StripeException ex) {
+        log.error("error {}", ex.getMessage(), ex);
+        return createErrorResponse(HttpStatus.BAD_REQUEST, ex, KeyExceptionMessageConstants.STRIPE_EXCEPTION);
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleException(Exception ex) {
+        log.error("error {}", ex.getMessage(), ex);
         return createErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, ex, KeyExceptionMessageConstants.UNKNOWN_ERROR);
     }
 }
