@@ -33,7 +33,7 @@ interface GlobalFilter {
 }
 
 @Component({
-  selector: 'app-session',
+  selector: 'app-session-list',
   standalone: true,
   imports: [
     ButtonDirective,
@@ -53,10 +53,10 @@ interface GlobalFilter {
     CurrencyPipe,
     StepsModule
   ],
-  templateUrl: './session.component.html',
-  styleUrl: './session.component.scss'
+  templateUrl: './session-list.component.html',
+  styleUrl: './session-list.component.scss'
 })
-export class SessionComponent {
+export class SessionListComponent {
   visibleEdit: boolean = true;
   sidebarVisible = false;
   data: SessionDto[] = [];

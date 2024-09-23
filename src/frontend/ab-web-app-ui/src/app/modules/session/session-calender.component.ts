@@ -23,7 +23,7 @@ import {CalendarModule} from "primeng/calendar";
 import {SessionStatus} from "../../core/enum/session-status";
 
 @Component({
-  selector: 'app-session',
+  selector: 'app-session-calender',
   standalone: true,
   imports: [
     ButtonDirective,
@@ -39,10 +39,10 @@ import {SessionStatus} from "../../core/enum/session-status";
     CalendarModule,
     ReactiveFormsModule,
   ],
-  templateUrl: './session.component.html',
-  styleUrls: ['./session.component.scss']
+  templateUrl: './session-calendar.component.html',
+  styleUrls: ['./session-calender.component.scss']
 })
-export class SessionComponent implements OnInit {
+export class SessionCalenderComponent implements OnInit {
   calendarOptions: CalendarOptions = {};
   events: EventInput[] = [];
   showDialog = false;
@@ -72,10 +72,10 @@ export class SessionComponent implements OnInit {
 
   handleSave() {
 
-      if (this.sessionEditStartTime.invalid) return;
-      this.updateSession();
-      this.showDialog = false;
-      this.resetEvent();
+    if (this.sessionEditStartTime.invalid) return;
+    this.updateSession();
+    this.showDialog = false;
+    this.resetEvent();
   }
 
   onEditClick() {
