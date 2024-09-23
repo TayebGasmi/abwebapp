@@ -1,36 +1,4 @@
-$primaryColor: #1a276d !default;
 .session-card{
   min-height:20rem;
 }
-:host {
-  ::ng-deep .p-dialog {
 
-
-    .p-dialog-content {
-      display: flex;
-      flex-direction: column;
-      height: 100%;
-    }
-
-    .p-dialog-footer {
-      margin-top: auto;
-    }
-  }
-
-  ::ng-deep .p-steps .p-steps-item.p-highlight .p-steps-number {
-    background-color: #eef2ff !important;
-    color: $primaryColor !important;
-
-  }
-
-  ::ng-deep .p-steps .p-steps-item .p-menuitem-link .p-steps-number {
-    color: #4b5563;
-    border: 1px solid #f3f4f6;
-    background: #ffffff;
-  }
-
-  ::ng-deep .p-steps .p-steps-item .p-menuitem-link:not(.p-disabled):focus {
-    outline: none;
-    box-shadow: none;
-  }
-}
