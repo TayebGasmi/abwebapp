@@ -1,10 +1,18 @@
-<ngx-stripe-elements
-  [stripe]="stripe"
-  [elementsOptions]="elementsOptions"
->
-  <ngx-stripe-payment (ready)="onPaymentElementReady()" [options]="paymentElementOptions"/>
-</ngx-stripe-elements>
-@if (isPaymentReady) {
-  <button (click)="pay()" class="m-2" pButton label="pay" size="small"></button>
-}
+<div class="w-full">
+  <ngx-stripe-elements
+    [stripe]="stripe"
+    [elementsOptions]="elementsOptions"
+  >
+    <ngx-stripe-payment (ready)="onPaymentElementReady()" [options]="paymentElementOptions"/>
+  </ngx-stripe-elements>
+  @if (isPaymentReady) {
+    @if (payButton) {
+      <ng-container *ngTemplateOutlet="payButton"></ng-container>
+    } @else {
+      <button (click)="pay()" class="m-2" pButton label="pay" size="small"></button>
+
+    }
+  }
+
+</div>
 

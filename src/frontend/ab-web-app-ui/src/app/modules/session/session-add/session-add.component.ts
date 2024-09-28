@@ -1,7 +1,7 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 
-import {distinctUntilChanged, map, of, switchMap} from 'rxjs';
+import {combineLatest, distinctUntilChanged, map, of, switchMap} from 'rxjs';
 import {filter} from 'rxjs/operators';
 import {SessionDto} from "../../../core/models/session";
 import {Teacher} from "../../../core/models/teacher";
@@ -44,6 +44,8 @@ export class SessionAddComponent implements OnInit {
   activeStep = 0;
   @Input()
   currentDate = new Date()
+  @ViewChild(PaymentComponent)
+  paymentComponent!: PaymentComponent;
 
   constructor(
     private fb: FormBuilder,
@@ -87,14 +89,33 @@ export class SessionAddComponent implements OnInit {
   }
 
   loadTeachers() {
-    this.subject?.valueChanges
-    .pipe(
+    console.log(this.sessionStartDateTime?.value);
+
+    const subjectChanges$ = this.subject?.valueChanges.pipe(
       filter(subject => !!subject),
       map(subject => subject.name),
+      distinctUntilChanged()
+    ) || of(null);
+
+    const startTimeChanges$ = this.sessionStartDateTime?.valueChanges.pipe(
+      filter(start => !!start),
       distinctUntilChanged(),
-      switchMap(subjectName => subjectName ? this.teacherService.getTeachersBySubjectName(subjectName) : of([]))
+      map(start => start.toISOString())
+    ) || of(null);
+
+    combineLatest([subjectChanges$, startTimeChanges$])
+    .pipe(
+      map(([subjectName, startTime]) => ({
+        subjectName,
+        startTime
+      })),
+      filter(({subjectName, startTime}) => !!subjectName && !!startTime),
+      switchMap(({subjectName, startTime}) =>
+        this.teacherService.getAvailableTeachers(subjectName, startTime)
+      )
     )
     .subscribe(teachers => {
+
       this.teachers = teachers.map(teacher => ({
         label: `${teacher.firstName} ${teacher.lastName}`,
         value: teacher
@@ -133,8 +154,8 @@ export class SessionAddComponent implements OnInit {
     this.activeStep--;
   }
 
-  handleSave() {
-
+  paySession() {
+    this.paymentComponent.pay()
   }
 
   private initializeSteps() {
@@ -146,6 +167,4 @@ export class SessionAddComponent implements OnInit {
       }
     ];
   }
-
-
 }

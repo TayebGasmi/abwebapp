@@ -10,7 +10,7 @@
     <div class="session-card">
       @if (view === "display" && selectedSession) {
         <app-session-details [selectedSession]="selectedSession"></app-session-details>
-        @if (selectedSession?.status !== SessionStatus.CANCELED && !isTeacher) {
+        @if (selectedSession.status !== SessionStatus.CANCELED && !isTeacher) {
           <div class="flex justify-content-end">
 
             <button pRipple pButton label="Edit" icon="pi pi-pencil" (click)="onEditClick()" class="p-button-primary p-button-sm m-1"

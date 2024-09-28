@@ -1,6 +1,7 @@
 package com.appointment.booking.exceptions;
 
 import com.appointment.booking.model.ErrorResponse;
+import com.stripe.exception.SignatureVerificationException;
 import com.stripe.exception.StripeException;
 import jakarta.validation.ConstraintViolationException;
 import java.util.Objects;
@@ -22,6 +23,8 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 @RestControllerAdvice
 @Slf4j
 public class ControllerAdvice {
+
+    private static final String ERROR_MESSAGE = "error {}";
 
     private ResponseEntity<ErrorResponse> createErrorResponse(HttpStatus status, Exception ex, String keyMessage) {
         ErrorResponse errorResponse = ErrorResponse.builder()
@@ -133,37 +136,37 @@ public class ControllerAdvice {
 
     @ExceptionHandler(GoogleCalendarException.class)
     public ResponseEntity<ErrorResponse> handleGoogleCalendarException(GoogleCalendarException ex) {
-        log.error("error {}", ex.getMessage(), ex);
+        log.error(ERROR_MESSAGE, ex.getMessage(), ex);
         return createErrorResponse(HttpStatus.BAD_REQUEST, ex, KeyExceptionMessageConstants.GOOGLE_CALENDAR);
     }
 
     @ExceptionHandler(SessionConflictException.class)
     public ResponseEntity<ErrorResponse> handleSessionConflictException(SessionConflictException ex) {
-        log.error("error {}", ex.getMessage(), ex);
+        log.error(ERROR_MESSAGE, ex.getMessage(), ex);
         return createErrorResponse(HttpStatus.BAD_REQUEST, ex, KeyExceptionMessageConstants.SESSION_CONFLICT);
     }
 
     @ExceptionHandler(SessionEditExpiredException.class)
     public ResponseEntity<ErrorResponse> handleSessionEditExpiredException(SessionEditExpiredException ex) {
-        log.error("error {}", ex.getMessage(), ex);
+        log.error(ERROR_MESSAGE, ex.getMessage(), ex);
         return createErrorResponse(HttpStatus.BAD_REQUEST, ex, KeyExceptionMessageConstants.SESSION_EDIT_EXPIRED);
     }
 
     @ExceptionHandler(SessionCancelException.class)
     public ResponseEntity<ErrorResponse> handleSessionCancelException(SessionCancelException ex) {
-        log.error("error {}", ex.getMessage(), ex);
+        log.error(ERROR_MESSAGE, ex.getMessage(), ex);
         return createErrorResponse(HttpStatus.BAD_REQUEST, ex, KeyExceptionMessageConstants.SESSION_CANCEL);
     }
 
-    @ExceptionHandler(StripeException.class)
+    @ExceptionHandler({StripeException.class,SignatureVerificationException.class})
     public ResponseEntity<ErrorResponse> handleStripeException(StripeException ex) {
-        log.error("error {}", ex.getMessage(), ex);
+        log.error(ERROR_MESSAGE, ex.getMessage(), ex);
         return createErrorResponse(HttpStatus.BAD_REQUEST, ex, KeyExceptionMessageConstants.STRIPE_EXCEPTION);
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleException(Exception ex) {
-        log.error("error {}", ex.getMessage(), ex);
+        log.error(ERROR_MESSAGE, ex.getMessage(), ex);
         return createErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, ex, KeyExceptionMessageConstants.UNKNOWN_ERROR);
     }
 }

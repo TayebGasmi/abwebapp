@@ -1,7 +1,7 @@
 import {inject, Injectable} from '@angular/core';
 import {BaseService} from "./base.service";
 import {Teacher} from "../models/teacher";
-import {HttpClient} from "@angular/common/http";
+import {HttpClient, HttpParams} from "@angular/common/http";
 import {environment} from "../../../environments/environment";
 import {AuthService} from "./auth.service";
 import {BrowserStorageService} from "./browser-storage.service";
@@ -43,5 +43,13 @@ export class TeacherService extends BaseService<Teacher, number> {
       )
     )
 
+  }
+
+  getAvailableTeachers(subjectName: string, startDateTime: string): Observable<Teacher[]> {
+    const params = new HttpParams()
+    .set('subjectName', subjectName)
+    .set('startDateTime', startDateTime);
+
+    return this.http.get<Teacher[]>(`${baseUrl}/teacher/available`, { params });
   }
 }

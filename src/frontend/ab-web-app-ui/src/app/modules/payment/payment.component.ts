@@ -1,4 +1,4 @@
-import {Component, inject, Input, OnInit, ViewChild} from '@angular/core';
+import {Component, ContentChild, inject, Input, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import {
   injectStripe,
   StripeElementsDirective,
@@ -13,6 +13,7 @@ import {environment} from "../../../environments/environment";
 import {ButtonDirective} from "primeng/button";
 import {PaymentService} from "../../core/service/payment.service";
 import {switchMap} from "rxjs";
+import {NgTemplateOutlet} from "@angular/common";
 
 @Component({
   selector: 'app-payment',
@@ -24,7 +25,8 @@ import {switchMap} from "rxjs";
     StripeIssuingCardExpiryDisplayComponent,
     StripeIssuingCardCvcDisplayComponent,
     StripeIssuingCardPinDisplayComponent,
-    ButtonDirective
+    ButtonDirective,
+    NgTemplateOutlet
   ],
   templateUrl: './payment.component.html',
   styleUrls: ['./payment.component.scss']
@@ -37,6 +39,9 @@ export class PaymentComponent implements OnInit {
   @Input() amount!: number;
   elementsOptions!: StripeElementsOptions;
   isPaymentReady = false;
+  @ContentChild("payButton")
+  payButton!:TemplateRef<any>
+
   paymentElementOptions: StripePaymentElementOptions = {
     layout: {
       type: 'accordion',

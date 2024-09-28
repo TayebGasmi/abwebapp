@@ -43,27 +43,32 @@
         }
       </div>
     }
-    @if (activeStep == 2) {
-      <div class="col-12 field">
-        <app-payment [amount]="5000"></app-payment>
-      </div>
-    }
   </div>
+  @if (activeStep == 2) {
+
+    <app-payment [amount]="5000">
+      <ng-template #payButton>
+        <div class="flex justify-content-end">
+          <button size="small" pButton pRipple label="Back" icon="pi pi-angle-left" (click)="prevStep()" class="p-button-primary p-button-sm m-1 "></button>
+          <button size="small" pButton pRipple label="pay" icon="pi pi-check" class="p-button-primary p-button-sm m-1" (click)="paySession()"></button>
+        </div>
+      </ng-template>
+    </app-payment>
+
+  }
   <div class="flex justify-content-end">
-    @if (activeStep > 0) {
+    @if (activeStep > 0 && activeStep < this.sessionSteps.length - 1) {
       <button pButton pRipple label="Back" icon="pi pi-angle-left" (click)="prevStep()" class="p-button-primary p-button-sm m-1 "></button>
     }
-    @if (activeStep !== this.sessionSteps.length - 1) {
-      <button pButton pRipple label="Next" icon="pi pi-angle-right" class="p-button-primary p-button-sm"
+    @if (activeStep < this.sessionSteps.length - 1) {
+      <button pButton pRipple label="Next" icon="pi pi-angle-right" class="p-button-primary p-button-sm m-1 "
               (click)="nextStep()"
               [disabled]="activeStep == 0 ? sessionSubject?.invalid || sessionStartDateTime?.invalid:
               sessionForm.invalid"
       ></button>
     }
-    @if (activeStep === this.sessionSteps.length - 1) {
-      <button pButton pRipple label="Save" icon="pi pi-check" (click)="handleSave()" class="p-button-primary p-button-sm"
-              [disabled]="sessionForm.invalid"></button>
-    }
+
   </div>
 
 </form>
+
