@@ -158,7 +158,7 @@ public class ControllerAdvice {
         return createErrorResponse(HttpStatus.BAD_REQUEST, ex, KeyExceptionMessageConstants.SESSION_CANCEL);
     }
 
-    @ExceptionHandler({StripeException.class,SignatureVerificationException.class})
+    @ExceptionHandler({StripeException.class, SignatureVerificationException.class})
     public ResponseEntity<ErrorResponse> handleStripeException(StripeException ex) {
         log.error(ERROR_MESSAGE, ex.getMessage(), ex);
         return createErrorResponse(HttpStatus.BAD_REQUEST, ex, KeyExceptionMessageConstants.STRIPE_EXCEPTION);

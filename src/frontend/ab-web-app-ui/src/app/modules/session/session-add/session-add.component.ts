@@ -89,8 +89,6 @@ export class SessionAddComponent implements OnInit {
   }
 
   loadTeachers() {
-    console.log(this.sessionStartDateTime?.value);
-
     const subjectChanges$ = this.subject?.valueChanges.pipe(
       filter(subject => !!subject),
       map(subject => subject.name),
@@ -155,7 +153,9 @@ export class SessionAddComponent implements OnInit {
   }
 
   paySession() {
-    this.paymentComponent.pay()
+    if (this.sessionForm.invalid)
+      return;
+    this.paymentComponent.pay(this.sessionForm.value)
   }
 
   private initializeSteps() {

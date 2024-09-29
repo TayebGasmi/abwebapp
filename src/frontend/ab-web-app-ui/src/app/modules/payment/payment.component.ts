@@ -14,6 +14,7 @@ import {ButtonDirective} from "primeng/button";
 import {PaymentService} from "../../core/service/payment.service";
 import {switchMap} from "rxjs";
 import {NgTemplateOutlet} from "@angular/common";
+import {SessionDto} from "../../core/models/session";
 
 @Component({
   selector: 'app-payment',
@@ -40,8 +41,7 @@ export class PaymentComponent implements OnInit {
   elementsOptions!: StripeElementsOptions;
   isPaymentReady = false;
   @ContentChild("payButton")
-  payButton!:TemplateRef<any>
-
+  payButton!: TemplateRef<any>
   paymentElementOptions: StripePaymentElementOptions = {
     layout: {
       type: 'accordion',
@@ -64,24 +64,23 @@ export class PaymentComponent implements OnInit {
     this.isPaymentReady = true;
   }
 
-  pay() {
-    this.paymentElement.elements.submit()
+  pay(session: SessionDto) {
+    this.paymentElement.elements.submit().then()
     this.paymentService.createPaymentIntent(
       {
         total: 50000,
+        session
       }
     ).pipe(switchMap(secret => this.stripe
     .confirmPayment({
       elements: this.paymentElement.elements,
       clientSecret: secret.clientSecret,
-        confirmParams: {
-          mandate_data:{},
-          return_url:window.location.href ,
-        },
+      confirmParams: {
+        return_url: window.location.href,
+      },
       redirect: "if_required"
     })))
     .subscribe(
-      r => console.log(r)
     )
   }
 }

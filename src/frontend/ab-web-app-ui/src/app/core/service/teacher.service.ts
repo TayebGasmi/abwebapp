@@ -35,8 +35,8 @@ export class TeacherService extends BaseService<Teacher, number> {
     return this.findById(JSON.parse(<string>this.browserStorage?.getItem("user"))["id"]).pipe(
       map(teacher => {
         if(!teacher.confirmedByAdmin){
-            this.router.navigate([''])
-          this.notificationService.showWarn("your account should be confimed by admin")
+            this.router.navigate(['']).then()
+          this.notificationService.showWarn("your account should be confirmed by admin")
         }
         return !!teacher?.confirmedByAdmin
         }

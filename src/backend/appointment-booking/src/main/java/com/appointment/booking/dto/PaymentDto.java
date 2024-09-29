@@ -1,17 +1,20 @@
 package com.appointment.booking.dto;
 
 import com.appointment.booking.base.BaseDto;
+import com.appointment.booking.enums.PaymentStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 /**
  * DTO for {@link com.appointment.booking.entity.Payment}
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
 @SuperBuilder
 @AllArgsConstructor
@@ -25,5 +28,6 @@ public class PaymentDto extends BaseDto<Long> {
     @NotNull
     private BigDecimal total;
     private Boolean isTeacherPaid;
-
+    private PaymentStatus status;
+    private String paymentIntentId;
 }
