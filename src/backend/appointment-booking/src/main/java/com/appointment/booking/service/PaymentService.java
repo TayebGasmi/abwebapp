@@ -5,6 +5,9 @@ import static com.stripe.Stripe.apiKey;
 import com.appointment.booking.dto.ConfigDto;
 import com.appointment.booking.dto.PaymentDto;
 import com.appointment.booking.dto.SessionDto;
+import com.appointment.booking.dto.StudentDto;
+import com.appointment.booking.dto.SubjectDto;
+import com.appointment.booking.dto.TeacherDto;
 import com.appointment.booking.entity.Payment;
 import com.appointment.booking.entity.Student;
 import com.appointment.booking.enums.PaymentStatus;
@@ -95,10 +98,16 @@ public class PaymentService {
     }
 
     private PaymentIntent createStripePaymentIntent(PaymentDto paymentDto) throws StripeException, JsonProcessingException {
+        SessionDto sessionDto = SessionDto.builder()
+            .startDateTime(paymentDto.getSession().getStartDateTime())
+            .subject(SubjectDto.builder().id(paymentDto.getSession().getSubject().getId()).build())
+            .teacher(TeacherDto.builder().id(paymentDto.getSession().getTeacher().getId()).build())
+            .student(StudentDto.builder().id(paymentDto.getSession().getStudent().getId()).build())
+            .build();
         PaymentIntentCreateParams params = PaymentIntentCreateParams.builder()
             .setAmount(paymentDto.getTotal().longValue())
             .setCurrency(currency)
-            .putMetadata("session", objectMapper.writeValueAsString(paymentDto.getSession()))
+            .putMetadata("session", objectMapper.writeValueAsString(sessionDto))
             .build();
 
         return PaymentIntent.create(params);
