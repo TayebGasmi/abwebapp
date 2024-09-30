@@ -1,13 +1,9 @@
 package com.appointment.booking.service;
 
-import static com.stripe.Stripe.apiKey;
-
 import com.appointment.booking.dto.ConfigDto;
 import com.appointment.booking.dto.PaymentDto;
 import com.appointment.booking.dto.SessionDto;
-import com.appointment.booking.dto.StudentDto;
-import com.appointment.booking.dto.SubjectDto;
-import com.appointment.booking.dto.TeacherDto;
+import com.appointment.booking.dto.SessionMetadataDto;
 import com.appointment.booking.entity.Payment;
 import com.appointment.booking.entity.Student;
 import com.appointment.booking.enums.PaymentStatus;
@@ -24,7 +20,6 @@ import com.stripe.model.PaymentIntent;
 import com.stripe.net.Webhook;
 import com.stripe.param.PaymentIntentCreateParams;
 import java.math.BigDecimal;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
@@ -38,8 +33,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class PaymentService {
 
-    private static final String PAYMENT_INTENT_SUCCEEDED_EVENT = "payment_intent.succeeded";
-    private static final String PAYMENT_INTENT_FAILED_EVENT = "payment_intent.payment_failed";
+    private static final String SESSION_METADATA_KEY = "session_metadata";
 
     private final PaymentRepository paymentRepository;
     private final SessionService sessionService;
@@ -50,17 +44,14 @@ public class PaymentService {
     private final StudentMapper studentMapper;
     private final SessionMapper sessionMapper;
 
-    public PaymentService(
-        PaymentRepository paymentRepository,
-        SessionService sessionService,
+    public PaymentService(PaymentRepository paymentRepository, SessionService sessionService,
         @Value("${currency}") String currency,
         @Value("${stripe.secure.key}") String stripeSk,
         @Value("${stripe.webhook.secret}") String stripeWebhookSecret,
         ConfigService configService,
         ObjectMapper objectMapper,
         StudentMapper studentMapper,
-        SessionMapper sessionMapper
-    ) {
+        SessionMapper sessionMapper) {
         validateStripeKeys(stripeSk, stripeWebhookSecret);
         this.paymentRepository = paymentRepository;
         this.sessionService = sessionService;
@@ -70,7 +61,6 @@ public class PaymentService {
         this.objectMapper = objectMapper;
         this.studentMapper = studentMapper;
         this.sessionMapper = sessionMapper;
-        apiKey = stripeSk;
     }
 
     private void validateStripeKeys(String stripeSk, String stripeWebhookSecret) {
@@ -87,9 +77,7 @@ public class PaymentService {
         PaymentIntent paymentIntent = createStripePaymentIntent(paymentDto);
         savePaymentToRepository(paymentDto, paymentIntent.getId());
 
-        Map<String, String> response = new HashMap<>();
-        response.put("clientSecret", paymentIntent.getClientSecret());
-        return response;
+        return Map.of("clientSecret", paymentIntent.getClientSecret());
     }
 
     private Student getAuthenticatedStudent() {
@@ -98,16 +86,11 @@ public class PaymentService {
     }
 
     private PaymentIntent createStripePaymentIntent(PaymentDto paymentDto) throws StripeException, JsonProcessingException {
-        SessionDto sessionDto = SessionDto.builder()
-            .startDateTime(paymentDto.getSession().getStartDateTime())
-            .subject(SubjectDto.builder().id(paymentDto.getSession().getSubject().getId()).build())
-            .teacher(TeacherDto.builder().id(paymentDto.getSession().getTeacher().getId()).build())
-            .student(StudentDto.builder().id(paymentDto.getSession().getStudent().getId()).build())
-            .build();
+        SessionMetadataDto sessionMetadataDto = sessionMapper.ConvertDtoToMetadataDto(paymentDto.getSession());
         PaymentIntentCreateParams params = PaymentIntentCreateParams.builder()
             .setAmount(paymentDto.getTotal().longValue())
             .setCurrency(currency)
-            .putMetadata("session", objectMapper.writeValueAsString(sessionDto))
+            .putMetadata(SESSION_METADATA_KEY, objectMapper.writeValueAsString(sessionMetadataDto))
             .build();
 
         return PaymentIntent.create(params);
@@ -120,6 +103,7 @@ public class PaymentService {
             .adminShare(paymentDto.getAdminShare())
             .status(PaymentStatus.PENDING)
             .paymentIntentId(paymentIntentId)
+            .isTeacherPaid(false)
             .build();
 
         paymentRepository.save(payment);
@@ -131,10 +115,10 @@ public class PaymentService {
         log.info("Received event type: {}", event.getType());
 
         switch (event.getType()) {
-            case PAYMENT_INTENT_SUCCEEDED_EVENT:
+            case "payment_intent.succeeded":
                 handlePaymentIntentSucceeded(event);
                 break;
-            case PAYMENT_INTENT_FAILED_EVENT:
+            case "payment_intent.payment_failed":
                 handlePaymentIntentFailed(event);
                 break;
             default:
@@ -143,28 +127,31 @@ public class PaymentService {
     }
 
     private void handlePaymentIntentSucceeded(Event event) throws JsonProcessingException {
-        PaymentIntent paymentIntent = (PaymentIntent) event.getDataObjectDeserializer()
-            .getObject()
-            .orElseThrow(() -> new IllegalArgumentException("Failed to retrieve PaymentIntent from event"));
+        PaymentIntent paymentIntent = getPaymentIntentFromEvent(event);
         SessionDto sessionDto = getSessionDtoFromPaymentIntent(paymentIntent);
 
         if (sessionDto != null) {
-            sessionService.add(sessionDto);
+            sessionDto = sessionService.add(sessionDto);
         }
 
         updatePaymentAndSessionStatus(paymentIntent.getId(), PaymentStatus.SUCCEEDED, Optional.ofNullable(sessionDto));
         log.info("PaymentIntent succeeded: {}", paymentIntent.getId());
     }
 
+    private PaymentIntent getPaymentIntentFromEvent(Event event) {
+        return (PaymentIntent) event.getDataObjectDeserializer().getObject()
+            .orElseThrow(() -> new IllegalArgumentException("Failed to retrieve PaymentIntent from event"));
+    }
+
     private SessionDto getSessionDtoFromPaymentIntent(PaymentIntent paymentIntent) throws JsonProcessingException {
-        String sessionDtoJson = paymentIntent.getMetadata().get("session");
-        return (sessionDtoJson != null) ? objectMapper.readValue(sessionDtoJson, SessionDto.class) : null;
+        String sessionDtoJson = paymentIntent.getMetadata().get(SESSION_METADATA_KEY);
+        SessionMetadataDto sessionMetadataDto = (sessionDtoJson != null) ? objectMapper.readValue(sessionDtoJson, SessionMetadataDto.class) : null;
+
+        return sessionMetadataDto != null ? sessionMapper.ConvertMetaDataToDto(sessionMetadataDto) : null;
     }
 
     private void handlePaymentIntentFailed(Event event) {
-        PaymentIntent paymentIntent = (PaymentIntent) event.getDataObjectDeserializer()
-            .getObject()
-            .orElseThrow(() -> new IllegalArgumentException("Failed to retrieve PaymentIntent from event"));
+        PaymentIntent paymentIntent = getPaymentIntentFromEvent(event);
         updatePaymentAndSessionStatus(paymentIntent.getId(), PaymentStatus.FAILED, Optional.empty());
         log.warn("PaymentIntent failed: {}", paymentIntent.getId());
     }

@@ -27,7 +27,7 @@ public class PaymentDto extends BaseDto<Long> {
     private BigDecimal adminShare;
     @NotNull
     private BigDecimal total;
-    private Boolean isTeacherPaid;
-    private PaymentStatus status;
+    private Boolean isTeacherPaid = false;
+    private PaymentStatus status = PaymentStatus.PENDING;
     private String paymentIntentId;
 }
