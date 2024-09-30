@@ -17,12 +17,12 @@
                     [disabled]="disableEdit"
             ></button>
             <button pButton pRipple label="Cancel" [disabled]="disableEdit" (click)="onCancelClick()" icon="pi pi-times"
-                    class="p-button-secondary  p-button-sm"></button>
+                    class="p-button-secondary p-button-sm m-1"></button>
           </div>
         }
       }
       @if (view === 'new') {
-        <app-session-add></app-session-add>
+        <app-session-add (sessionPayed)="handleSessionPayment()" ></app-session-add>
       }
       @if (view === 'edit') {
         @if (selectedSession) {
@@ -74,9 +74,9 @@
           </div>
         </div>
         <div class="flex justify-content-end">
-          <button pButton pRipple label="Save" icon="pi pi-check" (click)="handleSave()" class="p-button-primary p-button-sm"
+          <button pButton pRipple label="Save" icon="pi pi-check" (click)="handleSave()" class="p-button-primary p-button-sm m-1"
                   [disabled]="sessionEditStartTime.invalid"></button>
-          <button pButton pRipple label="back" icon="pi pi-check" (click)="handleBack()" class="p-button-secondary p-button-sm"
+          <button pButton pRipple label="back" icon="pi pi-angle-left" (click)="handleBack()" class="p-button-secondary p-button-sm m-1"
                   [disabled]="sessionEditStartTime.invalid"></button>
         </div>
 
