@@ -144,6 +144,12 @@
       <version>${google-api-services-calendar.version}</version>
     </dependency>
     <dependency>
+      <artifactId>stripe-java</artifactId>
+      <groupId>com.stripe</groupId>
+      <version>${stripe-java.version}</version>
+    </dependency>
+
+    <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-websocket</artifactId>
     </dependency>
@@ -169,6 +175,7 @@
     <nimbus-jose-jwt.version>9.37.2</nimbus-jose-jwt.version>
     <projectlombok.version>1.18.30</projectlombok.version>
     <springdoc-openapi-starter-webmvc-ui.version>2.5.0</springdoc-openapi-starter-webmvc-ui.version>
+    <stripe-java.version>26.11.0</stripe-java.version>
   </properties>
 
   <version>0.0.1-SNAPSHOT</version>
