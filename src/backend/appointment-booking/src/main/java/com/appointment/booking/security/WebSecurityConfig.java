@@ -42,6 +42,7 @@ public class WebSecurityConfig {
         "/appointment-booking/school-type",
         "/appointment-booking/teacher/**",
         "/appointment-booking/student",
+        "/appointment-booking/payment/stripe-webhook"
     };
     private final UserDetailsService userDetailsService;
     private final JwtTokenFilter jwtTokenFilter;

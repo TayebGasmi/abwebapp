@@ -14,7 +14,6 @@ import com.appointment.booking.exceptions.SessionCancelException;
 import com.appointment.booking.exceptions.SessionConflictException;
 import com.appointment.booking.exceptions.SessionEditExpiredException;
 import com.appointment.booking.mapper.SessionMapper;
-import com.appointment.booking.mapper.StudentMapper;
 import com.appointment.booking.repository.SessionRepository;
 import com.appointment.booking.utils.ConfigKeyConstants;
 import com.google.api.services.calendar.model.Event;
@@ -36,18 +35,12 @@ public class SessionService extends BaseServiceImpl<Session, Long, SessionDto> {
 
     private final GoogleCalendarService googleCalendarService;
     private final SessionRepository sessionRepository;
-    private final StudentMapper studentMapper;
     private final SessionMapper sessionMapper;
     private final ConfigService configService;
 
     @Override
     public SessionDto add(SessionDto sessionDto) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Student student = (Student) authentication.getPrincipal();
-        sessionDto.setStudent(studentMapper.convertEntityToDto(student));
-
         setDefaultValuesIfNeeded(sessionDto);
-
         boolean conflictingSessionExists = sessionRepository.existsConflictingSession(sessionDto.getTeacher().getId(), sessionDto.getStudent().getId(),
             sessionDto.getStartDateTime(), sessionDto.getEndDateTime());
         if (conflictingSessionExists) {

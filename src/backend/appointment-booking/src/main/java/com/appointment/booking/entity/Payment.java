@@ -1,8 +1,11 @@
 package com.appointment.booking.entity;
 
 import com.appointment.booking.base.BaseEntity;
+import com.appointment.booking.enums.PaymentStatus;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
@@ -34,6 +37,10 @@ public class Payment extends BaseEntity<Long> {
     private BigDecimal total;
     @Column(nullable = false)
     private Boolean isTeacherPaid = false;
-
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false)
+    private PaymentStatus status;
+    @Column(name = "payment_intent_id", unique = true, nullable = false)
+    private String paymentIntentId;
 
 }
