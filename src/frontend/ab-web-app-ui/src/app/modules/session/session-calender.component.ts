@@ -21,212 +21,217 @@ import {SessionAddComponent} from "./session-add/session-add.component";
 import {SessionDetailsComponent} from "./session-details/session-details.component";
 import {CalendarModule} from "primeng/calendar";
 import {SessionStatus} from "../../core/enum/session-status";
+import {RxStompService} from "../../core/service/rx-stomp.service";
 
 @Component({
-    selector: 'app-session-calender',
-    standalone: true,
-    imports: [
-        ButtonDirective,
-        DialogModule,
-        DropdownModule,
-        FullCalendarModule,
-        NgClass,
-        Ripple,
-        DeleteConfirmationComponent,
-        PaymentComponent,
-        SessionAddComponent,
-        SessionDetailsComponent,
-        CalendarModule,
-        ReactiveFormsModule,
-    ],
-    templateUrl: './session-calendar.component.html',
-    styleUrls: ['./session-calender.component.scss']
+  selector: 'app-session-calender',
+  standalone: true,
+  imports: [
+    ButtonDirective,
+    DialogModule,
+    DropdownModule,
+    FullCalendarModule,
+    NgClass,
+    Ripple,
+    DeleteConfirmationComponent,
+    PaymentComponent,
+    SessionAddComponent,
+    SessionDetailsComponent,
+    CalendarModule,
+    ReactiveFormsModule,
+  ],
+  templateUrl: './session-calendar.component.html',
+  styleUrls: ['./session-calender.component.scss']
 })
 export class SessionCalenderComponent implements OnInit {
-    calendarOptions: CalendarOptions = {};
-    events: EventInput[] = [];
-    showDialog = false;
-    view: 'display' | 'edit' | 'new' = 'display';
-    selectedSession: SessionDto | null = null;
-    title = '';
-    disableEdit = false;
-    startDate = "";
-    endDate = "";
-    sessionEditStartTime = new FormControl<any>(null, Validators.required);
-    showCancelSession: boolean = false
-    currentDate = new Date();
-    isTeacher = false
-    protected readonly SessionStatus = SessionStatus;
+  calendarOptions: CalendarOptions = {};
+  events: EventInput[] = [];
+  showDialog = false;
+  view: 'display' | 'edit' | 'new' = 'display';
+  selectedSession: SessionDto | null = null;
+  title = '';
+  disableEdit = false;
+  startDate = "";
+  endDate = "";
+  sessionEditStartTime = new FormControl<any>(null, Validators.required);
+  showCancelSession: boolean = false
+  currentDate = new Date();
+  isTeacher = false
+  protected readonly SessionStatus = SessionStatus;
 
-    constructor(
-        private sessionService: SessionService,
-        private notificationService: NotificationService,
-        private authService: AuthService
-    ) {
-        this.isTeacher = this.authService.hasRoles([RoleName.TEACHER])
-    }
+  constructor(
+    private sessionService: SessionService,
+    private notificationService: NotificationService,
+    private authService: AuthService,
+    private rxStompService: RxStompService
+  ) {
+    this.isTeacher = this.authService.hasRoles([RoleName.TEACHER])
+  }
 
-    ngOnInit(): void {
-        this.setupCalendarOptions();
-    }
+  ngOnInit(): void {
+    this.setupCalendarOptions();
+    this.rxStompService.connected$.subscribe(
+      () => console.log("connected")
+    )
+  }
 
-    handleSave() {
+  handleSave() {
 
-        if (this.sessionEditStartTime.invalid) return;
-        this.updateSession();
-        this.showDialog = false;
-        this.resetEvent();
-    }
+    if (this.sessionEditStartTime.invalid) return;
+    this.updateSession();
+    this.showDialog = false;
+    this.resetEvent();
+  }
 
-    onEditClick() {
-        this.view = 'edit';
-        this.title = `edit ${this.selectedSession?.title}`
-        this.sessionEditStartTime.patchValue(this.selectedSession?.startDateTime)
-    }
+  onEditClick() {
+    this.view = 'edit';
+    this.title = `edit ${this.selectedSession?.title}`
+    this.sessionEditStartTime.patchValue(this.selectedSession?.startDateTime)
+  }
 
-    resetEvent() {
-        this.selectedSession = null;
+  resetEvent() {
+    this.selectedSession = null;
 
-    }
+  }
 
-    onCancelSessionConfirmed() {
-        if (this.selectedSession)
-            this.sessionService.cancelSession(this.selectedSession?.id).subscribe(() => {
-                    this.notificationService.showSuccess('Session canceled successfully');
-                    this.loadSessions();
-                    this.showCancelSession = false
-                    this.showDialog = false
-                }
-            )
-    }
-
-    onCancelClick() {
-        this.showCancelSession = true
-
-    }
-
-    handleBack() {
-        this.view = 'display'
-    }
-
-    handleSessionPayment() {
-        this.showDialog = false
-        this.notificationService.showSuccess("payment done successfully.")
-    }
-
-    private loadSessions() {
-        this.sessionService.getCurrentUserSessionByDateRange(this.startDate, this.endDate).subscribe(sessions => {
-            this.events = sessions.map(this.mapSessionToEvent);
-            this.updateCalendarEvents();
-        });
-    }
-
-    private mapSessionToEvent(session: SessionDto): EventInput {
-        return {
-            id: session.id.toString(),
-            title: session.title,
-            start: session.startDateTime,
-            end: session.endDateTime,
-            extendedProps: {
-                description: session.description,
-                meetingLink: session.meetingLink,
-                price: session.price,
-                duration: session.duration,
-                status: session.status,
-                teacher: session.teacher,
-                subject: session.subject,
-                createdDate: new Date(session.createdDate)
-            }
-        };
-    }
-
-    private setupCalendarOptions() {
-        this.calendarOptions = {
-            initialView: 'dayGridMonth',
-            plugins: [dayGridPlugin, interactionPlugin, timeGridPlugin],
-            headerToolbar: {
-                left: 'prev,next today',
-                center: 'title',
-                right: 'dayGridMonth,timeGridWeek,timeGridDay'
-            },
-            editable: false,
-            selectable: true,
-            selectMirror: true,
-            dayMaxEvents: true,
-            eventClick: (e: EventClickArg) => this.onEventClick(e),
-            select: (e: DateSelectArg) => this.onDateSelect(e),
-            events: this.events,
-            datesSet: (dateInfo) => this.onDateRangeChange(dateInfo)
-        };
-    }
-
-    private updateSession() {
-        if (this.selectedSession) {
-            const updatedSession = {...this.selectedSession, startDateTime: this.sessionEditStartTime.value};
-            this.sessionService.update(updatedSession).subscribe(() => {
-                this.notificationService.showSuccess('Session updated successfully');
-                this.loadSessions();
-            });
+  onCancelSessionConfirmed() {
+    if (this.selectedSession)
+      this.sessionService.cancelSession(this.selectedSession?.id).subscribe(() => {
+          this.notificationService.showSuccess('Session canceled successfully');
+          this.loadSessions();
+          this.showCancelSession = false
+          this.showDialog = false
         }
-    }
+      )
+  }
 
-    private updateCalendarEvents() {
-        this.calendarOptions = {...this.calendarOptions, events: this.events};
-    }
+  onCancelClick() {
+    this.showCancelSession = true
 
-    private onDateRangeChange(viewInfo: any) {
-        this.startDate = viewInfo.startStr
-        this.endDate = viewInfo.endStr
+  }
+
+  handleBack() {
+    this.view = 'display'
+  }
+
+  handleSessionPayment() {
+    this.showDialog = false
+    this.notificationService.showSuccess("payment done successfully.")
+  }
+
+  private loadSessions() {
+    this.sessionService.getCurrentUserSessionByDateRange(this.startDate, this.endDate).subscribe(sessions => {
+      this.events = sessions.map(this.mapSessionToEvent);
+      this.updateCalendarEvents();
+    });
+  }
+
+  private mapSessionToEvent(session: SessionDto): EventInput {
+    return {
+      id: session.id.toString(),
+      title: session.title,
+      start: session.startDateTime,
+      end: session.endDateTime,
+      extendedProps: {
+        description: session.description,
+        meetingLink: session.meetingLink,
+        price: session.price,
+        duration: session.duration,
+        status: session.status,
+        teacher: session.teacher,
+        subject: session.subject,
+        createdDate: new Date(session.createdDate)
+      }
+    };
+  }
+
+  private setupCalendarOptions() {
+    this.calendarOptions = {
+      initialView: 'dayGridMonth',
+      plugins: [dayGridPlugin, interactionPlugin, timeGridPlugin],
+      headerToolbar: {
+        left: 'prev,next today',
+        center: 'title',
+        right: 'dayGridMonth,timeGridWeek,timeGridDay'
+      },
+      editable: false,
+      selectable: true,
+      selectMirror: true,
+      dayMaxEvents: true,
+      eventClick: (e: EventClickArg) => this.onEventClick(e),
+      select: (e: DateSelectArg) => this.onDateSelect(e),
+      events: this.events,
+      datesSet: (dateInfo) => this.onDateRangeChange(dateInfo)
+    };
+  }
+
+  private updateSession() {
+    if (this.selectedSession) {
+      const updatedSession = {...this.selectedSession, startDateTime: this.sessionEditStartTime.value};
+      this.sessionService.update(updatedSession).subscribe(() => {
+        this.notificationService.showSuccess('Session updated successfully');
         this.loadSessions();
+      });
     }
+  }
 
-    private onEventClick(e: EventClickArg) {
+  private updateCalendarEvents() {
+    this.calendarOptions = {...this.calendarOptions, events: this.events};
+  }
 
-        this.selectedSession = {
-            id: parseInt(e.event.id),
-            status: e.event.extendedProps['status'],
-            title: e.event.title || '',
-            startDateTime: e.event.start || new Date(),
-            endDateTime: e.event.end || new Date(),
-            description: e.event.extendedProps['description'] || '',
-            meetingLink: e.event.extendedProps['meetingLink'] || '',
-            price: e.event.extendedProps['price'] || 0,
-            duration: e.event.extendedProps['duration'] || 0,
-            teacher: e.event.extendedProps['teacher'],
-            subject: e.event.extendedProps['subject'],
-            createdDate: e.event.extendedProps['createdDate']
-        };
+  private onDateRangeChange(viewInfo: any) {
+    this.startDate = viewInfo.startStr
+    this.endDate = viewInfo.endStr
+    this.loadSessions();
+  }
 
-        this.title = this.selectedSession.title;
-        this.disableEditIfNecessary();
-        this.view = 'display';
-        this.showDialog = true;
+  private onEventClick(e: EventClickArg) {
+
+    this.selectedSession = {
+      id: parseInt(e.event.id),
+      status: e.event.extendedProps['status'],
+      title: e.event.title || '',
+      startDateTime: e.event.start || new Date(),
+      endDateTime: e.event.end || new Date(),
+      description: e.event.extendedProps['description'] || '',
+      meetingLink: e.event.extendedProps['meetingLink'] || '',
+      price: e.event.extendedProps['price'] || 0,
+      duration: e.event.extendedProps['duration'] || 0,
+      teacher: e.event.extendedProps['teacher'],
+      subject: e.event.extendedProps['subject'],
+      createdDate: e.event.extendedProps['createdDate']
+    };
+
+    this.title = this.selectedSession.title;
+    this.disableEditIfNecessary();
+    this.view = 'display';
+    this.showDialog = true;
+  }
+
+  private disableEditIfNecessary() {
+    const createdDate = this.selectedSession?.createdDate;
+    const currentDate = new Date();
+
+    if (createdDate) {
+      const diffTime = Math.abs(currentDate.getTime() - new Date(createdDate).getTime());
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+      this.disableEdit = diffDays > 1;
+    } else {
+      this.disableEdit = false;
     }
+  }
 
-    private disableEditIfNecessary() {
-        const createdDate = this.selectedSession?.createdDate;
-        const currentDate = new Date();
+  private onDateSelect(selectInfo: DateSelectArg) {
 
-        if (createdDate) {
-            const diffTime = Math.abs(currentDate.getTime() - new Date(createdDate).getTime());
-            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-            this.disableEdit = diffDays > 1;
-        } else {
-            this.disableEdit = false;
-        }
+    if (this.authService.hasRoles(["TEACHER"])) {
+      return;
     }
-
-    private onDateSelect(selectInfo: DateSelectArg) {
-
-        if (this.authService.hasRoles(["TEACHER"])) {
-            return;
-        }
-        if (selectInfo.start < new Date())
-            return;
-        this.resetEvent();
-        this.showDialog = true;
-        this.view = 'new';
-        this.title = 'New Session';
-    }
+    if (selectInfo.start < new Date())
+      return;
+    this.resetEvent();
+    this.showDialog = true;
+    this.view = 'new';
+    this.title = 'New Session';
+  }
 }

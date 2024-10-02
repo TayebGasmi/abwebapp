@@ -38,21 +38,27 @@ public class SessionService extends BaseServiceImpl<Session, Long, SessionDto> {
     private final SessionMapper sessionMapper;
     private final ConfigService configService;
 
+
     @Override
     public SessionDto add(SessionDto sessionDto) {
         setDefaultValuesIfNeeded(sessionDto);
-        boolean conflictingSessionExists = sessionRepository.existsConflictingSession(sessionDto.getTeacher().getId(), sessionDto.getStudent().getId(),
-            sessionDto.getStartDateTime(), sessionDto.getEndDateTime());
-        if (conflictingSessionExists) {
-            throw new SessionConflictException("A conflicting session exists for either the teacher or the student during this time.");
-        }
+        validateSessionConflict(sessionDto);
 
         MeetingDto meetingDto = buildMeetingDto(sessionDto);
         Event event = googleCalendarService.createSimpleMeeting(meetingDto);
         sessionDto.setMeetingLink(event.getHangoutLink());
         sessionDto.setMeetingCode(event.getConferenceData().getConferenceId());
         sessionDto.setEventId(event.getId());
+
         return super.add(sessionDto);
+    }
+
+    private void validateSessionConflict(SessionDto sessionDto) {
+        boolean conflictingSessionExists = sessionRepository.existsConflictingSession(sessionDto.getTeacher().getId(), sessionDto.getStudent().getId(),
+            sessionDto.getStartDateTime(), sessionDto.getEndDateTime());
+        if (conflictingSessionExists) {
+            throw new SessionConflictException("A conflicting session exists for either the teacher or the student during this time.");
+        }
     }
 
     public List<SessionDto> getCurrentUserSessionsWithinDateRange(ZonedDateTime startDate, ZonedDateTime endDate) {
@@ -136,6 +142,14 @@ public class SessionService extends BaseServiceImpl<Session, Long, SessionDto> {
 
     public SessionDto cancelSession(Long sessionId) throws SessionCancelException {
         Session existingSession = sessionRepository.findById(sessionId).orElseThrow(() -> new NotFoundException("session not found"));
+        validateCancelTime(existingSession);
+        existingSession.setStatus(SessionStatus.CANCELED);
+        googleCalendarService.deleteEvent(existingSession.getEventId());
+
+        return sessionMapper.convertEntityToDto(sessionRepository.save(existingSession));
+    }
+
+    private static void validateCancelTime(Session existingSession) throws SessionCancelException {
         if (existingSession.getStartDateTime().isAfter(ZonedDateTime.now()) && (existingSession.getStatus() == SessionStatus.CONFIRMED)) {
             throw new SessionCancelException("Cannot cancel session. The session has already started.");
         }
@@ -145,10 +159,7 @@ public class SessionService extends BaseServiceImpl<Session, Long, SessionDto> {
         if (existingSession.getStatus() == SessionStatus.CANCELED) {
             throw new SessionCancelException("Cannot cancel session. The session has already CANCELLED.");
         }
-        existingSession.setStatus(SessionStatus.CANCELED);
-        googleCalendarService.deleteEvent(existingSession.getEventId());
-
-        return sessionMapper.convertEntityToDto(sessionRepository.save(existingSession));
     }
+
 
 }

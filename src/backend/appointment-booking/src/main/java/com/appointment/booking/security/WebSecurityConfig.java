@@ -36,7 +36,6 @@ public class WebSecurityConfig {
         "/appointment-booking/v3/api-docs/**",
         "/swagger-ui/**",
         "/actuator/**",
-        "/websocket",
         "/appointment-booking/auth/**",
         "/appointment-booking/role",
         "/appointment-booking/subject",
