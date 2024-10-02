@@ -38,6 +38,17 @@ public class SessionService extends BaseServiceImpl<Session, Long, SessionDto> {
     private final SessionMapper sessionMapper;
     private final ConfigService configService;
 
+    private static void validateCancelTime(Session existingSession) throws SessionCancelException {
+        if (existingSession.getStartDateTime().isAfter(ZonedDateTime.now()) && (existingSession.getStatus() == SessionStatus.CONFIRMED)) {
+            throw new SessionCancelException("Cannot cancel session. The session has already started.");
+        }
+        if (existingSession.getCreatedDate().isBefore(LocalDateTime.now().minusDays(1))) {
+            throw new SessionCancelException("unable to cancel session");
+        }
+        if (existingSession.getStatus() == SessionStatus.CANCELED) {
+            throw new SessionCancelException("Cannot cancel session. The session has already CANCELLED.");
+        }
+    }
 
     @Override
     public SessionDto add(SessionDto sessionDto) {
@@ -107,7 +118,6 @@ public class SessionService extends BaseServiceImpl<Session, Long, SessionDto> {
         }
     }
 
-
     private MeetingDto buildMeetingDto(SessionDto sessionDto) {
         return MeetingDto.builder().summary(sessionDto.getTitle()).description(sessionDto.getDescription()).startDate(sessionDto.getStartDateTime())
             .endDate(sessionDto.getEndDateTime()).participants(Set.of(MeetingParticipant.builder().email(sessionDto.getStudent().getEmail())
@@ -115,7 +125,6 @@ public class SessionService extends BaseServiceImpl<Session, Long, SessionDto> {
                 MeetingParticipant.builder().email(sessionDto.getTeacher().getEmail())
                     .displayName(String.format("%s %s", sessionDto.getTeacher().getFirstName(), sessionDto.getTeacher().getLastName())).build())).build();
     }
-
 
     public SessionDto updateSessionStartTime(SessionDto sessionDto) throws SessionEditExpiredException {
 
@@ -147,18 +156,6 @@ public class SessionService extends BaseServiceImpl<Session, Long, SessionDto> {
         googleCalendarService.deleteEvent(existingSession.getEventId());
 
         return sessionMapper.convertEntityToDto(sessionRepository.save(existingSession));
-    }
-
-    private static void validateCancelTime(Session existingSession) throws SessionCancelException {
-        if (existingSession.getStartDateTime().isAfter(ZonedDateTime.now()) && (existingSession.getStatus() == SessionStatus.CONFIRMED)) {
-            throw new SessionCancelException("Cannot cancel session. The session has already started.");
-        }
-        if (existingSession.getCreatedDate().isBefore(LocalDateTime.now().minusDays(1))) {
-            throw new SessionCancelException("unable to cancel session");
-        }
-        if (existingSession.getStatus() == SessionStatus.CANCELED) {
-            throw new SessionCancelException("Cannot cancel session. The session has already CANCELLED.");
-        }
     }
 
 
