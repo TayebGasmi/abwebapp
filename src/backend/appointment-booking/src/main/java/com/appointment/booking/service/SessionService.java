@@ -52,7 +52,7 @@ public class SessionService extends BaseServiceImpl<Session, Long, SessionDto> {
 
     @Override
     public SessionDto add(SessionDto sessionDto) {
-        setDefaultValuesIfNeeded(sessionDto);
+        setDefaultValues(sessionDto);
         validateSessionConflict(sessionDto);
 
         MeetingDto meetingDto = buildMeetingDto(sessionDto);
@@ -88,7 +88,7 @@ public class SessionService extends BaseServiceImpl<Session, Long, SessionDto> {
         return sessionMapper.convertEntitiesToDtos(sessions);
     }
 
-    private void setDefaultValuesIfNeeded(SessionDto sessionDto) {
+    private void setDefaultValues(SessionDto sessionDto) {
         if (sessionDto.getTitle() == null || sessionDto.getTitle().isEmpty()) {
             sessionDto.setTitle(String.format("%s session", sessionDto.getSubject().getName()));
         }
@@ -97,25 +97,18 @@ public class SessionService extends BaseServiceImpl<Session, Long, SessionDto> {
             sessionDto.setDescription(String.format("Session for subject %s.", sessionDto.getSubject().getName()));
         }
 
-        if (sessionDto.getDuration() == null) {
-            Long defaultDuration = configService.getConfigDtoByKey(ConfigKeyConstants.SESSION_DURATION).map(ConfigDto::getValue).map(Long::parseLong)
-                .orElse(60L);
-            sessionDto.setDuration(defaultDuration);
-        }
+        Long defaultDuration = configService.getConfigDtoByKey(ConfigKeyConstants.SESSION_DURATION).map(ConfigDto::getValue).map(Long::parseLong)
+            .orElse(60L);
+        sessionDto.setDuration(defaultDuration);
 
-        if (sessionDto.getPrice() == null) {
-            BigDecimal defaultPrice = configService.getConfigDtoByKey(ConfigKeyConstants.SESSION_PRICE).map(ConfigDto::getValue).map(BigDecimal::new)
-                .orElse(BigDecimal.valueOf(25));
-            sessionDto.setPrice(defaultPrice);
-        }
+        BigDecimal defaultPrice = configService.getConfigDtoByKey(ConfigKeyConstants.SESSION_PRICE).map(ConfigDto::getValue).map(BigDecimal::new)
+            .orElse(BigDecimal.valueOf(30));
+        sessionDto.setPrice(defaultPrice);
 
-        if (sessionDto.getEndDateTime() == null) {
-            sessionDto.setEndDateTime(sessionDto.getStartDateTime().plusMinutes(sessionDto.getDuration()));
-        }
+        sessionDto.setEndDateTime(sessionDto.getStartDateTime().plusMinutes(sessionDto.getDuration()));
 
-        if (sessionDto.getStatus() == null) {
-            sessionDto.setStatus(SessionStatus.PENDING);
-        }
+        sessionDto.setStatus(SessionStatus.PENDING);
+
     }
 
     private MeetingDto buildMeetingDto(SessionDto sessionDto) {

@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ButtonDirective} from 'primeng/button';
 import {DialogModule} from 'primeng/dialog';
 import {DropdownModule} from 'primeng/dropdown';
@@ -22,6 +22,8 @@ import {SessionDetailsComponent} from "./session-details/session-details.compone
 import {CalendarModule} from "primeng/calendar";
 import {SessionStatus} from "../../core/enum/session-status";
 import {RxStompService} from "../../core/service/rx-stomp.service";
+import {map, Subscription} from "rxjs";
+import {filter} from "rxjs/operators";
 
 @Component({
   selector: 'app-session-calender',
@@ -43,7 +45,8 @@ import {RxStompService} from "../../core/service/rx-stomp.service";
   templateUrl: './session-calendar.component.html',
   styleUrls: ['./session-calender.component.scss']
 })
-export class SessionCalenderComponent implements OnInit {
+export class SessionCalenderComponent implements OnInit, OnDestroy {
+
   calendarOptions: CalendarOptions = {};
   events: EventInput[] = [];
   showDialog = false;
@@ -57,6 +60,7 @@ export class SessionCalenderComponent implements OnInit {
   showCancelSession: boolean = false
   currentDate = new Date();
   isTeacher = false
+  Subscriptions: Subscription[] = []
   protected readonly SessionStatus = SessionStatus;
 
   constructor(
@@ -70,9 +74,8 @@ export class SessionCalenderComponent implements OnInit {
 
   ngOnInit(): void {
     this.setupCalendarOptions();
-    this.rxStompService.connected$.subscribe(
-      () => console.log("connected")
-    )
+    this.getSessionFormWs();
+
   }
 
   handleSave() {
@@ -117,6 +120,10 @@ export class SessionCalenderComponent implements OnInit {
   handleSessionPayment() {
     this.showDialog = false
     this.notificationService.showSuccess("payment done successfully.")
+  }
+
+  ngOnDestroy(): void {
+    this.Subscriptions.forEach(sub => sub.unsubscribe())
   }
 
   private loadSessions() {
@@ -233,5 +240,28 @@ export class SessionCalenderComponent implements OnInit {
     this.showDialog = true;
     this.view = 'new';
     this.title = 'New Session';
+  }
+
+  private getSessionFormWs() {
+    this.Subscriptions.push(
+      this.rxStompService.watch("/session").pipe(
+        map((message) => JSON.parse(message.body)),
+        filter((session: SessionDto) => this.isSessionInTheValidDateRange(session))
+      ).subscribe(
+        (newSession: SessionDto) => this.addSessionFromWebSocket(newSession)
+      )
+    );
+  }
+
+  private isSessionInTheValidDateRange(newSession: SessionDto): boolean {
+    return new Date(this.startDate) <= new Date(newSession.startDateTime) && new Date(this.endDate) >= new Date(newSession.endDateTime);
+  }
+
+  private addSessionFromWebSocket(newSession: SessionDto) {
+    const newEvent = this.mapSessionToEvent(newSession);
+
+    this.events = [...this.events, newEvent];
+    this.updateCalendarEvents()
+    this.notificationService.showSuccess("New session added");
   }
 }
