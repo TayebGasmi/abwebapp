@@ -35,6 +35,8 @@ public class WebSecurityConfig {
     private static final String[] WHITE_LIST = {
         "/appointment-booking/v3/api-docs/**",
         "/swagger-ui/**",
+        "/actuator/**",
+        "/websocket",
         "/appointment-booking/auth/**",
         "/appointment-booking/role",
         "/appointment-booking/subject",
@@ -89,7 +91,7 @@ public class WebSecurityConfig {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration corsConfig = new CorsConfiguration();
-        corsConfig.setAllowedOrigins(allowedOrigins.stream().toList());
+        corsConfig.setAllowedOriginPatterns(allowedOrigins.stream().toList());
         corsConfig.setAllowedMethods(List.of("*"));
         corsConfig.setAllowedHeaders(List.of("*"));
 
