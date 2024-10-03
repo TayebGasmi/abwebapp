@@ -22,40 +22,11 @@ import {DropdownModule} from 'primeng/dropdown';
 import {InputTextModule} from 'primeng/inputtext';
 import {Button, ButtonDirective} from 'primeng/button';
 import {InputSwitchModule} from "primeng/inputswitch";
-import {User} from "../../core/models/user";
-import {SchoolType} from "../../core/models/school-type";
-import {SchoolYear} from "../../core/models/school-year";
-import {BrowserStorageService} from "../../core/service/browser-storage.service";
-import {StudentService} from "../../core/service/student.service";
-import {AuthService} from "../../core/service/auth.service";
-import {SchoolService} from "../../core/service/school.service";
-import {Role} from "../../core/models/role";
-import {SchoolYearService} from "../../core/service/school-year.service";
 import {NgClass} from "@angular/common";
-import {StepperModule} from "primeng/stepper";
-import {PasswordModule} from "primeng/password";
-import {InputIconModule} from "primeng/inputicon";
-import {IconFieldModule} from "primeng/iconfield";
-import {ToggleButtonModule} from "primeng/togglebutton";
-import {ToastModule} from "primeng/toast";
-import {StepsModule} from "primeng/steps";
-import {MultiSelectModule} from "primeng/multiselect";
-import {Subject} from "../../core/models/subject";
-import {TeacherService} from "../../core/service/teacher.service";
-import {SubjectService} from "../../core/service/subject.service";
-import {RoleService} from "../../core/service/role.service";
-import {Teacher} from "../../core/models/teacher";
-import {Student} from "../../core/models/student";
-import {NotificationService} from "../../core/service/notification.service";
-import {SessionBookLandingService} from "../../core/service/session-book-landing.service";
-import {SessionService} from "../../core/service/session.service";
-import {SessionDto} from "../../core/models/session";
-import {Subscription} from 'rxjs';
 import {FileService} from "../../core/service/file.service";
 import {FileDto} from "../../core/models/file";
 import {FileUploadModule} from "primeng/fileupload";
 import {PdfViewerModule} from "ng2-pdf-viewer";
-import {NgClass} from '@angular/common';
 
 @Component({
   selector: 'app-profile',
@@ -76,7 +47,6 @@ import {NgClass} from '@angular/common';
   styleUrls: ['./profile.component.scss']
 })
 export class ProfileComponent implements OnInit, OnDestroy {
-  private subscriptions: Subscription[] = [];
   profileForm: FormGroup = new FormGroup({});
   user!: User;
   roles: { name: string, value: Role }[] = [];
@@ -88,7 +58,9 @@ export class ProfileComponent implements OnInit, OnDestroy {
   student!: Student;
   selectedFile: File | null = null;
   fileMetadata: FileDto | null = null;
-  userFileCv:string="";
+  userFileCv: string = "";
+  protected readonly RoleName = RoleName;
+  private subscriptions: Subscription[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -101,7 +73,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
     private schoolService: SchoolService,
     private schoolYearService: SchoolYearService,
     private subjectService: SubjectService,
-    private fileService:FileService) {
+    private fileService: FileService) {
 
   }
 
@@ -193,7 +165,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
     );
   }
 
-
   loadStaticData(): void {
     this.subscriptions.push(
       this.roleService.getALL().subscribe((roles) => {
@@ -240,7 +211,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
       ...this.teacher,
       firstName: formValue.firstName,
       lastName: formValue.lastName,
-      subjects: formValue.subject.map((s: { label:string, value: any; })=>s.value),
+      subjects: formValue.subject.map((s: { label: string, value: any; }) => s.value),
     };
     this.subscriptions.push(
       this.teacherService.update(updatedTeacher).subscribe(() => {
@@ -276,10 +247,9 @@ export class ProfileComponent implements OnInit, OnDestroy {
       });
     }
   }
+
   ngOnDestroy(): void {
     this.subscriptions.forEach((subscription) => subscription.unsubscribe());
   }
-
-  protected readonly RoleName = RoleName;
 }
 
