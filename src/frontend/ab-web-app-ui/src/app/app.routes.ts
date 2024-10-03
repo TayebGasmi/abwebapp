@@ -24,6 +24,11 @@ export const routes: Routes = [
   }
   ,
   {
+    path: 'teachers-overview',
+    loadComponent: () => import('./modules/landing-teacher/landing-teacher.component').then(m => m.LandingTeacherComponent),
+    data: {roles: ['STUDENT,ADMIN', 'TEACHER']}
+  },
+  {
     path: '', component: AppLayoutComponent,
     canActivate: [authGuard],
     children: [

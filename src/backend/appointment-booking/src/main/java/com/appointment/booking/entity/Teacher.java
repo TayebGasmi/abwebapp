@@ -31,6 +31,7 @@ public class Teacher extends User {
     @ManyToMany
     private Set<Subject> subjects = new LinkedHashSet<>();
 
+
     public void setParentProperties(User user) {
         BeanUtils.copyProperties(user, this);
     }

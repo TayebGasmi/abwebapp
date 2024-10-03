@@ -33,6 +33,10 @@ import {SessionBookLandingService} from "../../core/service/session-book-landing
 import {SessionService} from "../../core/service/session.service";
 import {SessionDto} from "../../core/models/session";
 import {Subscription} from 'rxjs';
+import {FileService} from "../../core/service/file.service";
+import {FileDto} from "../../core/models/file";
+import {FileUploadModule} from "primeng/fileupload";
+import {PdfViewerModule} from "ng2-pdf-viewer";
 
 @Component({
   selector: 'app-profile',
@@ -53,7 +57,9 @@ import {Subscription} from 'rxjs';
     DropdownModule,
     MultiSelectModule,
     ReactiveFormsModule,
-    InputSwitchModule
+    InputSwitchModule,
+    FileUploadModule,
+    PdfViewerModule
   ],
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.scss']
@@ -77,7 +83,9 @@ export class ProfileComponent implements OnInit, OnDestroy {
   isComplete!: boolean;
   currentSchoolYear!:{name:string , value:SchoolYear};
   currentSchoolType!:{name:string , value:SchoolType};
-
+  selectedFile: File | null = null;
+  fileMetadata: FileDto | null = null;
+  userFileCv:string="";
   constructor(private sessionService: SessionService,
               private sessionLanding: SessionBookLandingService,
               private notificationService: NotificationService,
@@ -89,7 +97,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
               private fb: FormBuilder,
               private authService: AuthService,
               private schoolTypeService: SchoolService,
-              private schoolYearService: SchoolYearService) {
+              private schoolYearService: SchoolYearService,
+              private fileService:FileService) {
   }
 
   isFieldInvalid(field: string): undefined | false | true {
@@ -159,6 +168,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
         })
       );
       this.sessionLanding.changeMessage("", false);
+
     }
 
     this.subscriptions.push(
@@ -220,8 +230,42 @@ export class ProfileComponent implements OnInit, OnDestroy {
         })
       );
     }
+    this.fileService.getUserFile(<number> this.user?.id).subscribe(
+      url =>{
+        this.userFileCv=url;
+      }
+    )
+  }
+  onFileSelected(event: any): void {
+    this.selectedFile = event.files[0];
+    console.log(this.selectedFile?.name)
+    if (this.selectedFile) {
+      this.fileService.uploadFile(<number>this.user?.id, this.selectedFile).subscribe({
+        next: (data: FileDto) => {
+          this.fileMetadata = data;
+          this.notificationService.showSuccess("resume uploaded successfully")
+          this.fileService.getUserFile(<number>this.user?.id).subscribe(cvlink=>this.userFileCv=cvlink)
+        },
+        error: (err) => {
+          this.notificationService.showError('File upload failed')
+        },
+      });
+    }
+
   }
 
+  uploadFile(): void {
+    if (this.selectedFile) {
+      this.fileService.uploadFile(<number>this.user?.id, this.selectedFile).subscribe({
+        next: (data: FileDto) => {
+          this.fileMetadata = data;
+        },
+        error: (err) => {
+          this.notificationService.showError('File upload failed')
+        },
+      });
+    }
+  }
   ngOnDestroy(): void {
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
