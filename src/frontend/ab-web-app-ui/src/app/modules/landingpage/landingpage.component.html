@@ -142,7 +142,7 @@
                 </div>
                 <div class="col-12 field">
                   <label for="startTime" class="text-900 font-semibold">Start Time</label>
-                  <p-calendar id="startTime" formControlName="startDateTime" [showTime]="true" placeholder="Select Start Time"></p-calendar>
+                  <p-calendar id="startTime"  [minDate]="currentDate" formControlName="startDateTime" [showTime]="true" placeholder="Select Start Time"></p-calendar>
                   @if (fieldHasError('startTime')) {
                     <div class="mb-2 ng-invalid p-error">Start Time is required</div>
                   }
