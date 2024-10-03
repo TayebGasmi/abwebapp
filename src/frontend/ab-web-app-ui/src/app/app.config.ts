@@ -11,6 +11,8 @@ import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
 import {HttpLoaderFactory} from './app.translate.loader';
 import {provideNgxStripe} from "ngx-stripe";
 import {environment} from "../environments/environment";
+import {RxStompService} from "./core/service/rx-stomp.service";
+import {rxStompServiceFactory} from "./core/config/rx-stomp-service-factory";
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -34,6 +36,11 @@ export const appConfig: ApplicationConfig = {
         }
       })
     ),
-    provideNgxStripe(environment.STRIPE_PK)
+    provideNgxStripe(environment.STRIPE_PK),
+    {
+      provide: RxStompService,
+      useFactory: rxStompServiceFactory,
+    },
   ],
+
 };

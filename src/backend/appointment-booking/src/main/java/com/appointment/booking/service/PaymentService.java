@@ -1,5 +1,7 @@
 package com.appointment.booking.service;
 
+import static com.stripe.Stripe.apiKey;
+
 import com.appointment.booking.dto.ConfigDto;
 import com.appointment.booking.dto.PaymentDto;
 import com.appointment.booking.dto.SessionDto;
@@ -12,6 +14,7 @@ import com.appointment.booking.mapper.SessionMapper;
 import com.appointment.booking.mapper.StudentMapper;
 import com.appointment.booking.repository.PaymentRepository;
 import com.appointment.booking.utils.ConfigKeyConstants;
+import com.appointment.booking.ws.SessionWebSocketService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.stripe.exception.StripeException;
@@ -36,7 +39,7 @@ public class PaymentService {
     private static final String SESSION_METADATA_KEY = "session_metadata";
 
     private final PaymentRepository paymentRepository;
-    private final SessionService sessionService;
+    private final SessionWebSocketService sessionWebSocketService;
     private final String currency;
     private final String stripeWebhookSecret;
     private final ConfigService configService;
@@ -44,7 +47,7 @@ public class PaymentService {
     private final StudentMapper studentMapper;
     private final SessionMapper sessionMapper;
 
-    public PaymentService(PaymentRepository paymentRepository, SessionService sessionService,
+    public PaymentService(PaymentRepository paymentRepository, SessionWebSocketService sessionWebSocketService,
         @Value("${currency}") String currency,
         @Value("${stripe.secure.key}") String stripeSk,
         @Value("${stripe.webhook.secret}") String stripeWebhookSecret,
@@ -54,13 +57,14 @@ public class PaymentService {
         SessionMapper sessionMapper) {
         validateStripeKeys(stripeSk, stripeWebhookSecret);
         this.paymentRepository = paymentRepository;
-        this.sessionService = sessionService;
+        this.sessionWebSocketService = sessionWebSocketService;
         this.currency = currency;
         this.stripeWebhookSecret = stripeWebhookSecret;
         this.configService = configService;
         this.objectMapper = objectMapper;
         this.studentMapper = studentMapper;
         this.sessionMapper = sessionMapper;
+        apiKey = stripeSk;
     }
 
     private void validateStripeKeys(String stripeSk, String stripeWebhookSecret) {
@@ -88,7 +92,7 @@ public class PaymentService {
     private PaymentIntent createStripePaymentIntent(PaymentDto paymentDto) throws StripeException, JsonProcessingException {
         SessionMetadataDto sessionMetadataDto = sessionMapper.ConvertDtoToMetadataDto(paymentDto.getSession());
         PaymentIntentCreateParams params = PaymentIntentCreateParams.builder()
-            .setAmount(paymentDto.getTotal().longValue())
+            .setAmount(paymentDto.getTotal().longValue() * 100)
             .setCurrency(currency)
             .putMetadata(SESSION_METADATA_KEY, objectMapper.writeValueAsString(sessionMetadataDto))
             .build();
@@ -131,7 +135,7 @@ public class PaymentService {
         SessionDto sessionDto = getSessionDtoFromPaymentIntent(paymentIntent);
 
         if (sessionDto != null) {
-            sessionDto = sessionService.add(sessionDto);
+            sessionDto = sessionWebSocketService.addSessionAndNotify(sessionDto);
         }
 
         updatePaymentAndSessionStatus(paymentIntent.getId(), PaymentStatus.SUCCEEDED, Optional.ofNullable(sessionDto));

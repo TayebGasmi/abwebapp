@@ -149,6 +149,10 @@
       <version>${stripe-java.version}</version>
     </dependency>
 
+    <dependency>
+      <artifactId>spring-boot-starter-websocket</artifactId>
+      <groupId>org.springframework.boot</groupId>
+    </dependency>
 
   </dependencies>
   <description>appointment-booking</description>

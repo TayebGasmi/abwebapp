@@ -1,4 +1,4 @@
-import {Component, ContentChild, inject, Input, OnInit, TemplateRef, ViewChild} from '@angular/core';
+import {Component, ContentChild, EventEmitter, inject, Input, OnInit, Output, TemplateRef, ViewChild} from '@angular/core';
 import {
   injectStripe,
   StripeElementsDirective,
@@ -13,7 +13,7 @@ import {environment} from "../../../environments/environment";
 import {ButtonDirective} from "primeng/button";
 import {PaymentService} from "../../core/service/payment.service";
 import {switchMap} from "rxjs";
-import {NgTemplateOutlet} from "@angular/common";
+import {CurrencyPipe, NgTemplateOutlet} from "@angular/common";
 import {SessionDto} from "../../core/models/session";
 
 @Component({
@@ -27,7 +27,8 @@ import {SessionDto} from "../../core/models/session";
     StripeIssuingCardCvcDisplayComponent,
     StripeIssuingCardPinDisplayComponent,
     ButtonDirective,
-    NgTemplateOutlet
+    NgTemplateOutlet,
+    CurrencyPipe
   ],
   templateUrl: './payment.component.html',
   styleUrls: ['./payment.component.scss']
@@ -38,6 +39,7 @@ export class PaymentComponent implements OnInit {
   @ViewChild(StripePaymentElementComponent)
   paymentElement!: StripePaymentElementComponent;
   @Input() amount!: number;
+  @Output() paymentCompleted = new EventEmitter<void>();
   elementsOptions!: StripeElementsOptions;
   isPaymentReady = false;
   @ContentChild("payButton")
@@ -55,7 +57,7 @@ export class PaymentComponent implements OnInit {
     this.elementsOptions = {
       locale: 'auto',
       mode: "payment",
-      amount: this.amount || 1000,
+      amount: this.amount * 100 || 30000,
       currency: "usd"
     };
   }
@@ -65,22 +67,20 @@ export class PaymentComponent implements OnInit {
   }
 
   pay(session: SessionDto) {
-    this.paymentElement.elements.submit().then()
-    this.paymentService.createPaymentIntent(
-      {
-        total: 50000,
-        session
-      }
-    ).pipe(switchMap(secret => this.stripe
-    .confirmPayment({
-      elements: this.paymentElement.elements,
-      clientSecret: secret.clientSecret,
-      confirmParams: {
-        return_url: window.location.href,
-      },
-      redirect: "if_required"
-    })))
-    .subscribe(
+    this.paymentElement.elements.submit().then();
+    this.paymentService.createPaymentIntent({total: this.amount, session})
+    .pipe(
+      switchMap(secret => this.stripe.confirmPayment({
+        elements: this.paymentElement.elements,
+        clientSecret: secret.clientSecret,
+        confirmParams: {
+          return_url: window.location.href,
+        },
+        redirect: "if_required"
+      }))
     )
+    .subscribe(() => {
+      this.paymentCompleted.emit();
+    })
   }
 }
