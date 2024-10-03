@@ -1,5 +1,4 @@
-import { Component } from '@angular/core';
-import {Subject} from "../../../core/models/subject";
+import {Component} from '@angular/core';
 import {PageLink} from "../../../core/models/page-link";
 import {TableColumn} from "../../../core/models/table-cloumn";
 import {Teacher} from "../../../core/models/teacher";
@@ -35,18 +34,21 @@ export class TeacherComponent {
     {field: 'firstName', header: 'Name', type: 'text', sortable: true, filterable: true},
     {field: 'lastName', header: 'Last name', type: 'text', sortable: true, filterable: true},
     {field: 'email', header: 'Email', type: 'text', sortable: true, filterable: true},
-    {field: 'isConfirmedByAdmin', header: 'Status', type: 'text', sortable: true, filterable: true},
+    {field: 'confirmedByAdmin', header: 'Status', type: 'text', sortable: true, filterable: true},
   ];
   currentPageReportTemplate = "Showing {first} to {last} of {totalRecords} entries";
   rowsPerPageOptions = [10, 25, 50];
-  constructor(private notificationService:NotificationService,private userService:UserService,private teacherService:TeacherService) {
+
+  constructor(private notificationService: NotificationService, private userService: UserService, private teacherService: TeacherService) {
   }
+
   loadTeachers(): void {
     this.teacherService.findAll(this.pageLink).subscribe(pageData => {
       this.data = pageData.data;
       this.totalRecords = pageData.totalElements;
     });
   }
+
   onLazyLoad(event: any): void {
     this.pageLink.page = event.first! / event.rows!;
     this.pageLink.pageSize = event.rows!;
@@ -63,18 +65,20 @@ export class TeacherComponent {
     }
     this.loadTeachers();
   }
+
   onGlobalFilter(value: string) {
     this.pageLink.globalFilter = {keys: ['name', 'description'], value};
     this.loadTeachers();
   }
-  confirmTeacher(teacher:Teacher){
+
+  confirmTeacher(teacher: Teacher) {
     console.log(teacher.confirmedByAdmin)
-    if(!teacher.confirmedByAdmin){
-      this.userService.confirmTeacher(teacher).subscribe(teacher=>{
+    if (!teacher.confirmedByAdmin) {
+      this.userService.confirmTeacher(teacher).subscribe(teacher => {
         this.notificationService.showSuccess("Teacher confirmed Successfully !")
       })
-    }else{
-      this.notificationService.showInfo(teacher.firstName +" is already confirmed !")
+    } else {
+      this.notificationService.showInfo(teacher.firstName + " is already confirmed !")
     }
   }
 }
