@@ -39,6 +39,7 @@ public class WebSecurityConfig {
         "/ws",
         "/appointment-booking/auth/**",
         "/appointment-booking/role",
+        "/appointment-booking/file/**",
         "/appointment-booking/subject",
         "/appointment-booking/school-year",
         "/appointment-booking/school-type",

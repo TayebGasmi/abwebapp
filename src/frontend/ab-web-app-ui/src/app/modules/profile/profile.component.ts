@@ -21,7 +21,15 @@ import {MultiSelectModule} from 'primeng/multiselect';
 import {DropdownModule} from 'primeng/dropdown';
 import {InputTextModule} from 'primeng/inputtext';
 import {Button, ButtonDirective} from 'primeng/button';
-import {NgClass} from '@angular/common';
+import {InputSwitchModule} from "primeng/inputswitch";
+import {NgClass} from "@angular/common";
+import {FileService} from "../../core/service/file.service";
+import {FileDto} from "../../core/models/file";
+import {FileUploadModule} from "primeng/fileupload";
+import {PdfViewerModule} from "ng2-pdf-viewer";
+import {SessionBookLandingService} from "../../core/service/session-book-landing.service";
+import {SessionService} from "../../core/service/session.service";
+import {SessionDto} from "../../core/models/session";
 
 @Component({
   selector: 'app-profile',
@@ -33,13 +41,15 @@ import {NgClass} from '@angular/common';
     MultiSelectModule,
     DropdownModule,
     ReactiveFormsModule,
-    ButtonDirective
+    ButtonDirective,
+    InputSwitchModule,
+    FileUploadModule,
+    PdfViewerModule
   ],
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.scss']
 })
 export class ProfileComponent implements OnInit, OnDestroy {
-  private subscriptions: Subscription[] = [];
   profileForm: FormGroup = new FormGroup({});
   user!: User;
   roles: { name: string, value: Role }[] = [];
@@ -49,9 +59,16 @@ export class ProfileComponent implements OnInit, OnDestroy {
   selectedRole!: RoleName;
   teacher!: Teacher;
   student!: Student;
-
+  selectedFile: File | null = null;
+  fileMetadata: FileDto | null = null;
+  userFileCv: string = "";
+  protected readonly RoleName = RoleName;
+  private subscriptions: Subscription[] = [];
+  isComplete!: boolean;
+  sessionDto!: SessionDto;
   constructor(
     private fb: FormBuilder,
+    private sessionLanding: SessionBookLandingService,
     private authService: AuthService,
     private browserStorage: BrowserStorageService,
     private teacherService: TeacherService,
@@ -60,16 +77,44 @@ export class ProfileComponent implements OnInit, OnDestroy {
     private roleService: RoleService,
     private schoolService: SchoolService,
     private schoolYearService: SchoolYearService,
-    private subjectService: SubjectService
-  ) {
+    private subjectService: SubjectService,
+    private sessionService:SessionService,
+    private fileService: FileService) {
+
   }
 
   ngOnInit(): void {
     this.initForm();
     this.loadUserData();
     this.loadStaticData();
-  }
+    this.userFileLoad();
+    this.postSession();
 
+  }
+  private postSession():void {
+    this.subscriptions.push(
+      this.sessionLanding.completed.subscribe(complete => this.isComplete = complete)
+    );
+    if (this.isComplete) {
+      this.subscriptions.push(
+        this.sessionLanding.currentMessage.subscribe(session => this.sessionDto = session)
+      );
+
+      this.subscriptions.push(
+        this.sessionService.save(this.sessionDto).subscribe(() => {
+          this.notificationService.showSuccess("You have successfully booked a session");
+        })
+      );
+      this.sessionLanding.changeMessage("", false);
+    }
+
+  }
+  private userFileLoad():void{
+    this.fileService.getUserFile(<number> this.user?.id).subscribe(
+      url =>{
+        this.userFileCv=url;
+      })
+  }
   initForm(): void {
 
     this.profileForm = this.fb.group({
@@ -152,7 +197,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
     );
   }
 
-
   loadStaticData(): void {
     this.subscriptions.push(
       this.roleService.getALL().subscribe((roles) => {
@@ -199,7 +243,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
       ...this.teacher,
       firstName: formValue.firstName,
       lastName: formValue.lastName,
-      subjects: formValue.subject.map((s: { label:string, value: any; })=>s.value),
+      subjects: formValue.subject.map((s: { label: string, value: any; }) => s.value),
     };
     this.subscriptions.push(
       this.teacherService.update(updatedTeacher).subscribe(() => {
@@ -223,10 +267,24 @@ export class ProfileComponent implements OnInit, OnDestroy {
     );
   }
 
+  onFileSelected(event: any): void {
+    this.selectedFile = event.files[0];
+    console.log(this.selectedFile?.name)
+    if (this.selectedFile) {
+      this.fileService.uploadFile(<number>this.user?.id, this.selectedFile).subscribe({
+        next: (data: FileDto) => {
+          this.fileMetadata = data;
+          this.notificationService.showSuccess("resume uploaded successfully")
+          this.fileService.getUserFile(<number>this.user?.id).subscribe(cvlink=>this.userFileCv=cvlink)
+        },
+        error: () => {
+          this.notificationService.showError('File upload failed')
+        },
+      })
+    }
+  }
   ngOnDestroy(): void {
     this.subscriptions.forEach((subscription) => subscription.unsubscribe());
   }
-
-  protected readonly RoleName = RoleName;
 }
 
