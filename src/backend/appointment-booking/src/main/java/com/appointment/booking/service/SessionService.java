@@ -14,6 +14,7 @@ import com.appointment.booking.exceptions.SessionCancelException;
 import com.appointment.booking.exceptions.SessionConflictException;
 import com.appointment.booking.exceptions.SessionEditExpiredException;
 import com.appointment.booking.mapper.SessionMapper;
+import com.appointment.booking.mapper.StudentMapperImpl;
 import com.appointment.booking.repository.SessionRepository;
 import com.appointment.booking.utils.ConfigKeyConstants;
 import com.google.api.services.calendar.model.Event;
@@ -37,6 +38,7 @@ public class SessionService extends BaseServiceImpl<Session, Long, SessionDto> {
     private final SessionRepository sessionRepository;
     private final SessionMapper sessionMapper;
     private final ConfigService configService;
+    private final StudentMapperImpl studentMapper;
 
     private static void validateCancelTime(Session existingSession) throws SessionCancelException {
         if (existingSession.getStartDateTime().isAfter(ZonedDateTime.now()) && (existingSession.getStatus() == SessionStatus.CONFIRMED)) {
@@ -52,6 +54,7 @@ public class SessionService extends BaseServiceImpl<Session, Long, SessionDto> {
 
     @Override
     public SessionDto add(SessionDto sessionDto) {
+        setSessionStudent(sessionDto);
         setDefaultValues(sessionDto);
         validateSessionConflict(sessionDto);
 
@@ -62,6 +65,14 @@ public class SessionService extends BaseServiceImpl<Session, Long, SessionDto> {
         sessionDto.setEventId(event.getId());
 
         return super.add(sessionDto);
+    }
+
+    private void setSessionStudent(SessionDto sessionDto) {
+        if (sessionDto.getStudent() == null) {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            Student student = (Student) authentication.getPrincipal();
+            sessionDto.setStudent(studentMapper.convertEntityToDto(student));
+        }
     }
 
     private void validateSessionConflict(SessionDto sessionDto) {
