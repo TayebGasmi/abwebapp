@@ -27,9 +27,6 @@ import {FileService} from "../../core/service/file.service";
 import {FileDto} from "../../core/models/file";
 import {FileUploadModule} from "primeng/fileupload";
 import {PdfViewerModule} from "ng2-pdf-viewer";
-import {SessionBookLandingService} from "../../core/service/session-book-landing.service";
-import {SessionService} from "../../core/service/session.service";
-import {SessionDto} from "../../core/models/session";
 
 @Component({
   selector: 'app-profile',
@@ -64,11 +61,9 @@ export class ProfileComponent implements OnInit, OnDestroy {
   userFileCv: string = "";
   protected readonly RoleName = RoleName;
   private subscriptions: Subscription[] = [];
-  isComplete!: boolean;
-  sessionDto!: SessionDto;
+
   constructor(
     private fb: FormBuilder,
-    private sessionLanding: SessionBookLandingService,
     private authService: AuthService,
     private browserStorage: BrowserStorageService,
     private teacherService: TeacherService,
@@ -78,7 +73,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
     private schoolService: SchoolService,
     private schoolYearService: SchoolYearService,
     private subjectService: SubjectService,
-    private sessionService:SessionService,
     private fileService: FileService) {
 
   }
@@ -88,33 +82,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
     this.loadUserData();
     this.loadStaticData();
     this.userFileLoad();
-    this.postSession();
-
   }
-  private postSession():void {
-    this.subscriptions.push(
-      this.sessionLanding.completed.subscribe(complete => this.isComplete = complete)
-    );
-    if (this.isComplete) {
-      this.subscriptions.push(
-        this.sessionLanding.currentMessage.subscribe(session => this.sessionDto = session)
-      );
 
-      this.subscriptions.push(
-        this.sessionService.save(this.sessionDto).subscribe(() => {
-          this.notificationService.showSuccess("You have successfully booked a session");
-        })
-      );
-      this.sessionLanding.changeMessage("", false);
-    }
-
-  }
-  private userFileLoad():void{
-    this.fileService.getUserFile(<number> this.user?.id).subscribe(
-      url =>{
-        this.userFileCv=url;
-      })
-  }
   initForm(): void {
 
     this.profileForm = this.fb.group({
@@ -195,14 +164,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
         });
       })
     );
-  }
-
-  loadStaticData(): void {
-    this.subscriptions.push(
-      this.roleService.getALL().subscribe((roles) => {
-        this.roles = roles.map((role) => ({name: role.name, value: role}));
-      })
-    );
     this.subscriptions.push(
       this.schoolService.getALL().subscribe((schoolTypes) => {
         this.schoolTypes = schoolTypes.map((type) => ({
@@ -217,6 +178,14 @@ export class ProfileComponent implements OnInit, OnDestroy {
           name: year.name,
           value: year,
         }));
+      })
+    );
+  }
+
+  loadStaticData(): void {
+    this.subscriptions.push(
+      this.roleService.getALL().subscribe((roles) => {
+        this.roles = roles.map((role) => ({name: role.name, value: role}));
       })
     );
   }
@@ -271,11 +240,11 @@ export class ProfileComponent implements OnInit, OnDestroy {
     this.selectedFile = event.files[0];
     console.log(this.selectedFile?.name)
     if (this.selectedFile) {
-      this.fileService.uploadFile(<number>this.user?.id, this.selectedFile).subscribe({
+      this.fileService.uploadFile(this.user?.id, this.selectedFile).subscribe({
         next: (data: FileDto) => {
           this.fileMetadata = data;
           this.notificationService.showSuccess("resume uploaded successfully")
-          this.fileService.getUserFile(<number>this.user?.id).subscribe(cvlink=>this.userFileCv=cvlink)
+          this.fileService.getUserFile(this.user?.id).subscribe(cvLink => this.userFileCv = cvLink)
         },
         error: () => {
           this.notificationService.showError('File upload failed')
@@ -283,8 +252,17 @@ export class ProfileComponent implements OnInit, OnDestroy {
       })
     }
   }
+
   ngOnDestroy(): void {
     this.subscriptions.forEach((subscription) => subscription.unsubscribe());
+  }
+
+
+  private userFileLoad(): void {
+    this.fileService.getUserFile(this.user?.id).subscribe(
+      url => {
+        this.userFileCv = url;
+      })
   }
 }
 
