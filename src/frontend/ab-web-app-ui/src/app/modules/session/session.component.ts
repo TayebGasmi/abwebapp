@@ -72,6 +72,7 @@ export class SessionComponent implements OnInit {
   sessionEditStartTime = new FormControl<any>(null, Validators.required);
   showCancelSession: boolean = false
   enableMeetingLink: boolean = false;
+  currentDate = new Date();
 
   constructor(
     private fb: FormBuilder,
@@ -349,12 +350,5 @@ export class SessionComponent implements OnInit {
     this.view = 'display'
   }
 
-  openMeetingLink() {
-    if (this.selectedSession?.meetingLink) {
-      window.open(this.selectedSession.meetingLink, '_blank');
-    } else {
-      this.notificationService.showError('Meeting link is not available.');
-    }
-  }
 
 }

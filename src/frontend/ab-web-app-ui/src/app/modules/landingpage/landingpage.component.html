@@ -1,4 +1,17 @@
 <div class="relative overflow-hidden flex flex-column justify-content-center">
+  <p-dialog [(visible)]="popupVisible" [style]="{width: '36rem'}" [modal]="true" [closable]="true" (onHide)="resetEvent()">
+    <div>
+      <span class="text-900 block font-bold text-5xl mb-4 text-center">Login to your account</span>
+    <br>
+    </div>
+    <div class="flex align-items-center justify-content-center" style="height: 100%;">
+
+<!--      <span>Login to your account</span>-->
+      <li class="flex align-items-center">
+        <asl-google-signin-button class="google-login" locale="en" size="large" type='standard' data-use_fedcm_for_prompt="true"></asl-google-signin-button>
+      </li>
+    </div>
+  </p-dialog>
   <div class="bg-circle opacity-50" style="top: -200px; left: -700px;"></div>
   <div class="bg-circle hidden lg:flex" style="top: 50px; right:-800px; transform: rotate(60deg)"></div>
   <div class="landing-wrapper">
@@ -41,10 +54,10 @@
           </a>
         </li>
         <li>
-          <a (click)="router.navigate(['/'], {fragment: 'apps'})" pRipple pStyleClass="@grandparent"
+          <a (click)="router.navigate(['/teachers-overview'], {fragment: 'apps'})" pRipple pStyleClass="@grandparent"
              enterFromClass="ng-hidden" enterActiveClass="px-fadein" leaveToClass="ng-hidden"
              class="flex m-0 md:ml-5 px-0 py-3 text-900 font-medium line-height-3 cursor-pointer">
-            <span>App3s</span>
+            <span>Teachers</span>
           </a>
         </li>
         <li>
@@ -71,34 +84,190 @@
     </div>
     <div class="py-4 px-4 mx-0 md:mx-6 lg:mx-8 lg:px-8 z-2">
       <div id="home" class="grid grid-nogutter justify-content-between align-items-center mb-6 py-6 md:mb-8 md:py-8">
-        <div class="col-12 md:col-4 flex flex-column gap-4 flex-order-1 md:flex-order-0 align-items-center md:align-items-start text-center md:text-left">
-          <span class="block text-900 font-bold text-4xl">Doowi: Empower Your Learning Journey</span>
-          <span class="block text-700 text-lg">Your gateway to a modern, comprehensive, and accessible e-learning platform.</span>
-          <ul class="flex flex-wrap gap-5 list-none p-0">
-            <li class="flex align-items-center">
-              <div class="p-1 border-circle bg-green-400 inline-block mr-2"></div>
-              <span class="text-900 font-semibold">Interactive Courses</span>
-            </li>
-            <li class="flex align-items-center">
-              <div class="p-1 border-circle bg-green-400 inline-block mr-2"></div>
-              <span class="text-900 font-semibold">Personalized Learning</span>
-            </li>
-            <li class="flex align-items-center">
-              <div class="p-1 border-circle bg-green-400 inline-block mr-2"></div>
-              <span class="text-900 font-semibold">Expert Instructors</span>
-            </li>
-          </ul>
-          <button pButton pRipple type="button" label="Explore Courses" icon="pi pi-arrow-right" iconPos="right" class="w-12rem p-button-outlined"></button>
+        <div class="col-12 md:col-5 flex flex-column gap-4 flex-order-1 md:flex-order-0 align-items-center md:align-items-start text-center md:text-left">
+          <span class="text-900 block font-bold text-5xl mb-2 text-center">Réserve ta session dès maintenant !</span>
+          <span class="text-700 block text-xl  text-center ">Ta première séance est gratuite.</span>
+          <div class="steps p-4 md:w-30rem">
+          <p-steps styleClass="mb-3" [readonly]="true" [model]="sessionSteps" [(activeIndex)]="activeStep"></p-steps>
+          <form [formGroup]="sessionForm">
+            <div class="grid p-fluid formgrid">
+              @if (activeStep === 0) {
+                <div class="col-12 field">
+                  <label class="mb-2" for="schoolYear">School year</label>
+                  <p-dropdown [filter]="true" [ngClass]="{'ng-invalid ng-dirty': fieldHasError('schoolYear')}" [options]="schoolYears"
+                              [showClear]="true"
+                              formControlName="schoolYear"
+                              id="schoolYear"
+                              placeholder="choose a school year"
+                              styleClass="w-full"
+
+                  >
+                  </p-dropdown>
+                  @if (fieldHasError('schoolYear')) {
+                    <div class="ng-invalid p-error">school year is required</div>
+                  }
+                </div>
+                <div class="col-12 field">
+                  <label class="mb-2" for="schoolType">School type</label>
+                  <p-dropdown [filter]="true" [ngClass]="{'ng-invalid ng-dirty': fieldHasError('schoolType')}" [options]="schoolTypes"
+                              [showClear]="true"
+                              formControlName="schoolType"
+                              id="schoolType"
+                              placeholder="choose a school type"
+                              styleClass="w-full"
+
+                  >
+                  </p-dropdown>
+                  @if (fieldHasError('schoolType')) {
+                    <div class="ng-invalid p-error">school type is required</div>
+                  }
+                </div>
+
+              }
+              @if (activeStep === 1) {
+                <div class="col-12 field">
+                  <label class="mb-2" for="subject">subject</label>
+                  <p-dropdown [filter]="true" [ngClass]="{'ng-invalid ng-dirty': fieldHasError('subject')}" [options]="subjects"
+                              [showClear]="true"
+                              formControlName="subject"
+                              id="subject"
+                              placeholder="choose a subject"
+                              styleClass="w-full"
+
+                  >
+                  </p-dropdown>
+                  @if (fieldHasError('subject')) {
+                    <div class="ng-invalid p-error">subject is required</div>
+                  }
+                </div>
+                <div class="col-12 field">
+                  <label for="startTime" class="text-900 font-semibold">Start Time</label>
+                  <p-calendar id="startTime" formControlName="startDateTime" [showTime]="true" placeholder="Select Start Time"></p-calendar>
+                  @if (fieldHasError('startTime')) {
+                    <div class="mb-2 ng-invalid p-error">Start Time is required</div>
+                  }
+                </div>
+              }
+              @if (activeStep === 2) {
+                <div class="col-12 field">
+                  <label class="mb-2" for="teacher">teacher</label>
+                  <p-dropdown [filter]="true" [ngClass]="{'ng-invalid ng-dirty': fieldHasError('schoolTypes')}" [options]="teachers"
+                              [showClear]="true"
+                              formControlName="teacher"
+                              id="teacher"
+                              placeholder="choose a teacher"
+                              styleClass="w-full  mb-2"
+                  >
+                  </p-dropdown>
+                  @if (fieldHasError('teacher')) {
+                    <div class="mb-2 ng-invalid p-error">teacher is required</div>
+                  }
+                </div>
+              }
+
+
+            </div>
+          </form>
+            <div class="justify-content-between flex align-content-between">
+              @if (activeStep > 0) {
+                <button pButton pRipple label="Back" icon="pi pi-angle-left" (click)="prevStep()" class="p-button-primary p-button-sm"></button>
+              }
+              @if (!isLastStep()) {
+                @if (activeStep == 0) {
+                  <button pButton pRipple label="Next" icon="pi pi-angle-right" class="p-button-primary p-button-sm" (click)="nextStep()"
+                          [disabled]="sessionSchoolYear?.invalid || sessionSchoolType?.invalid"
+                  ></button>
+                }
+                @if (activeStep == 1) {
+                  <button pButton pRipple label="Next" icon="pi pi-angle-right" class="p-button-primary p-button-sm" (click)="nextStep()"
+                          [disabled]="sessionSubject?.invalid || sessionStartDateTime?.invalid"
+                  ></button>
+                }
+              }
+              @if (isLastStep()) {
+                <button pButton pRipple label="Save" icon="pi pi-check" (click)="handleSave()" class="p-button-primary p-button-sm"
+                        [disabled]="sessionForm.invalid"></button>
+              }
+            </div>
+          </div>
         </div>
 
-        <div class="col-12 md:col-7 flex-order-0 md:flex-order-1 mb-6 md:mb-0 border-round">
+        <div class="col-12 md:col-6 flex-order-0 md:flex-order-1 mb-6 md:mb-0 border-round">
           <img animateEnter="moveinright" src="/assets/landing/learn.png" alt="" class="w-full h-full border-round shadow-2 animation-duration-1000 animation-ease-out">
         </div>
       </div>
+      <div class="my-6 md:my-6">
+        <span class="block text-900 font-bold text-4xl">Doowi - Le réussite à portée de clic</span>
+        <span class="block text-700 text-lg">Pourquoi Doowi est unique ?</span>
+        <ul >
+          <li class="flex align-items-center">
+            <div class="p-1 border-circle bg-green-400 inline-block mr-2"></div>
+            <span class="text-900 font-semibold">Apprendre à Apprendre :</span>
+            <br>
 
+          </li>
+          <ul>
+            <span class="block text-700 text-lg">Avec notre experte en gestion mentale, développe les outils pour mieux
+comprendre, mémoriser, et réussir. Apprends à apprendre de manière
+efficace et durable.
+</span>
+          </ul>
+          <li class="flex align-items-center">
+            <div class="p-1 border-circle bg-green-400 inline-block mr-2"></div>
+            <span class="text-900 font-semibold">Une Approche Pédagogique Innovante :</span>
+          </li>
+          <ul>
+            <span class="block text-700 text-lg">Tous nos cours sont donnés par de vrais enseignants, experts dans leur
+domaine, pour t'assurer un accompagnement de qualité et personnalisé.</span>
+          </ul>
+          <li class="flex align-items-center">
+            <div class="p-1 border-circle bg-green-400 inline-block mr-2"></div>
+            <span class="text-900 font-semibold">Des Professeurs Certifiés :</span>
+          </li>
+          <ul>
+            <span class="block text-700 text-lg">Nous ne faisons pas que répéter le programme scolaire. Nous te donnons
+les clés pour vraiment maîtriser les concepts et t'épanouir dans tes études.</span>
+          </ul>
+        </ul>
+        <button pButton pRipple type="button" label="Explore Courses" icon="pi pi-arrow-right" iconPos="right" class="w-12rem p-button-outlined"></button>
+
+      </div>
+      <div id="pricing" class="my-6 py-6 md:my-8 md:py-8">
+        <div class="text-900 font-bold text-5xl mb-4 text-center">Tarification</div>
+        <div class="text-700 text-xl mb-8 text-center line-height-3">Un tarif unique pour un enseignement personnalisé et de qualité
+        </div>
+
+        <div class="grid grid-nogutter justify-content-center mt-8">
+          <div class="col-12 lg:col-6 xl:col-4">
+            <div class="p-3 h-full">
+              <div class="shadow-2 p-6 h-full flex flex-column surface-card" style="border-radius: 6px">
+                <span class="text-900 block font-medium text-xl mb-2 text-center">Basic Plan</span>
+                <span class="font-bold block text-2xl text-900 text-center">25€</span>
+                <span class="line-height-3 block cursor-pointer text-700 text-center">par demi heure</span>
+                <ul class="list-none p-0 m-0 flex-grow-1 mt-6">
+                  <li class="flex align-items-center mb-3">
+                    <i class="pi pi-check text-green-500 mr-2"></i>
+                    <span>Cours particuliers avec de vrais professeurs</span>
+                  </li>
+                  <li class="flex align-items-center mb-3">
+                    <i class="pi pi-check text-green-500 mr-2"></i>
+                    <span>Suivi personnalisé</span>
+                  </li>
+                  <li class="flex align-items-center mb-3">
+                    <i class="pi pi-check text-green-500 mr-2"></i>
+                    <span>Soutien en temps réel</span>
+                  </li>
+                </ul>
+
+                <button pButton pRipple label="Réservez votre session maintenant !" class="px-5 w-full mt-6 p-button-outlined" icon="pi pi-arrow-right" iconPos="right"></button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
       <div id="features" class="my-6 md:my-8">
-        <span class="text-900 block font-bold text-5xl mb-4 text-center">Key Features</span>
-        <span class="text-700 block text-xl mb-8 text-center line-height-3">Discover how Doowi enhances your learning experience.</span>
+        <span class="text-900 block font-bold text-5xl mb-4 text-center">Fonctionnalités Clés</span>
+        <span class="text-700 block text-xl mb-8 text-center line-height-3">Découvrez comment Doowi améliore votre expérience d'apprentissage.</span>
 
         <div class="flex flex-column lg:flex-row align-items-center justify-content-between mt-8 gap-8">
           <div class="flex flex-column align-items-center">
@@ -112,120 +281,6 @@
           <div class="flex flex-column align-items-center">
             <img animateEnter="scalein" src="/assets/landing/session-manage.png" alt="chat" class="w-full h-full border-round surface-border shadow-2 animation-duration-500 origin-top">
             <span class="block text-900 text-lg font-semibold mt-4">Session Management</span>
-          </div>
-        </div>
-      </div>
-      <div id="booksession" class="my-6 md:my-8">
-        <span class="text-900 block font-bold text-5xl mb-4 text-center">Book Your session Now!</span>
-        <span class="text-700 block text-xl mb-8 text-center line-height-3">Get your first session for free .</span>
-
-        <form [formGroup]="sessionForm">
-          <div class="grid p-fluid formgrid">
-            <div class="col-12 field">
-              <label class="mb-2" for="teacher">teacher</label>
-              <p-dropdown [filter]="true" [ngClass]="{'ng-invalid ng-dirty': fieldHasError('schoolTypes')}" [options]="teachers"
-                          [showClear]="true"
-                          formControlName="teacher"
-                          id="teacher"
-                          placeholder="choose a teacher"
-                          styleClass="w-full  mb-2"
-              >
-              </p-dropdown>
-              @if (fieldHasError('teacher')) {
-                <div class="mb-2 ng-invalid p-error">teacher is required</div>
-              }
-            </div>
-
-            <div class="col-12 field">
-              <label class="mb-2" for="subject">subject</label>
-              <p-dropdown [filter]="true" [ngClass]="{'ng-invalid ng-dirty': fieldHasError('subject')}" [options]="subjects"
-                          [showClear]="true"
-                          formControlName="subject"
-                          id="subject"
-                          placeholder="choose a subject"
-                          styleClass="w-full"
-                          [virtualScroll]="true"
-
-              >
-              </p-dropdown>
-              @if (fieldHasError('subject')) {
-                <div class="ng-invalid p-error">subject is required</div>
-              }
-            </div>
-            <div class="col-12 field">
-              <label for="startTime" class="text-900 font-semibold">Start Time</label>
-              <p-calendar id="startTime" formControlName="startDateTime" [showTime]="true" placeholder="Select Start Time"></p-calendar>
-              @if (fieldHasError('startTime')) {
-                <div class="mb-2 ng-invalid p-error">Start Time is required</div>
-              }
-            </div>
-          </div>
-        </form>
-        <button pButton label="Book Session" icon="pi pi-check" (click)="handleSave()" class="p-button-primary p-button-sm"></button>
-      </div>
-      <div id="pricing" class="my-6 py-6 md:my-8 md:py-8">
-        <div class="text-900 font-bold text-5xl mb-4 text-center">Flexible Pricing</div>
-        <div class="text-700 text-xl mb-8 text-center line-height-3">Choose a plan that fits your learning goals and budget.</div>
-
-        <div class="grid grid-nogutter justify-content-center mt-8">
-          <div class="col-12 lg:col-6 xl:col-4">
-            <div class="p-3 h-full">
-              <div class="shadow-2 p-6 h-full flex flex-column surface-card" style="border-radius: 6px">
-                <span class="text-900 block font-medium text-xl mb-2 text-center">Basic Plan</span>
-                <span class="font-bold block text-2xl text-900 text-center">$29</span>
-
-                <ul class="list-none p-0 m-0 flex-grow-1 mt-6">
-                  <li class="flex align-items-center mb-3">
-                    <i class="pi pi-check text-green-500 mr-2"></i>
-                    <span>Access to 10 Courses</span>
-                  </li>
-                  <li class="flex align-items-center mb-3">
-                    <i class="pi pi-check text-green-500 mr-2"></i>
-                    <span>Community Support</span>
-                  </li>
-                  <li class="flex align-items-center mb-3">
-                    <i class="pi pi-check text-green-500 mr-2"></i>
-                    <span>Basic Analytics</span>
-                  </li>
-                  <li class="flex align-items-center mb-3">
-                    <i class="pi pi-times text-red-500 mr-2"></i>
-                    <span>Advanced Features</span>
-                  </li>
-                </ul>
-
-                <button pButton pRipple label="Choose Plan" class="px-5 w-full mt-6 p-button-outlined" icon="pi pi-arrow-right" iconPos="right"></button>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-12 lg:col-6 xl:col-4">
-            <div class="p-3 h-full">
-              <div class="shadow-2 p-6 h-full flex flex-column surface-card" style="border-radius: 6px">
-                <span class="text-900 block font-medium text-xl mb-2 text-center">Premium Plan</span>
-                <span class="font-bold block text-2xl text-900 text-center">$49</span>
-
-                <ul class="list-none p-0 m-0 flex-grow-1 mt-6">
-                  <li class="flex align-items-center mb-3">
-                    <i class="pi pi-check text-green-500 mr-2"></i>
-                    <span>Unlimited Course Access</span>
-                  </li>
-                  <li class="flex align-items-center mb-3">
-                    <i class="pi pi-check text-green-500 mr-2"></i>
-                    <span>Dedicated Support</span>
-                  </li>
-                  <li class="flex align-items-center mb-3">
-                    <i class="pi pi-check text-green-500 mr-2"></i>
-                    <span>Advanced Analytics</span>
-                  </li>
-                  <li class="flex align-items-center mb-3">
-                    <i class="pi pi-times text-red-500 mr-2"></i>
-                    <span>Custom Integrations</span>
-                  </li>
-                </ul>
-
-                <button pButton pRipple label="Choose Plan" class="px-5 w-full mt-6 p-button-outlined" icon="pi pi-arrow-right" iconPos="right"></button>
-              </div>
-            </div>
           </div>
         </div>
       </div>
@@ -321,5 +376,6 @@
         </div>
       </div>
     </div>
-    </div>
   </div>
+
+</div>

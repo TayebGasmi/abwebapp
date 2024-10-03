@@ -47,7 +47,6 @@
               formControlName="subject"
               placeholder="choose a subject"
               [options]="subjects"
-              [(ngModel)]="selectedSubjects"
             ></p-multiSelect>
             @if (isFieldInvalid("subject")) {
               <div class="mb-2 ng-invalid p-error">Subject is required</div>
@@ -60,6 +59,7 @@
             <p-dropdown
               formControlName="schoolYear"
               [options]="schoolYears"
+              [(ngModel)]="currentSchoolYear"
               optionLabel="name"
             ></p-dropdown>
             @if (isFieldInvalid("schoolYear")) {
@@ -71,6 +71,7 @@
             <p-dropdown
               formControlName="schoolType"
               [options]="schoolTypes"
+              [(ngModel)]="currentSchoolType"
               optionLabel="name"
             ></p-dropdown>
             @if (isFieldInvalid("schoolType")) {
@@ -88,4 +89,21 @@
     </form>
   </div>
 </div>
+@if(selectedRole=="TEACHER"){
+  <div class="col-12">
+    <div class="card">
+      <h5>Upload your resume</h5>
+      <div class="file-upload-container">
+        <p-fileUpload name="file" accept=".doc,.docx,.pdf,.txt,.rtf,.odt,.xls,.xlsx,.ppt,.pptx,.csv,.xml,.html,.htm" maxFileSize="1000000"
+                      customUpload="true" (uploadHandler)="onFileSelected($event)"></p-fileUpload>
+      </div>
+
+        <h4>Resume details</h4>
+        <!-- PDF Viewer -->
+        <pdf-viewer  src="{{userFileCv}}"    [render-text]="true"
+                     style="display: block; width: 100%; height: 500px;">>
+        </pdf-viewer>
+      </div>
+  </div>
+}
 

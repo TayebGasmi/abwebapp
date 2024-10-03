@@ -12,7 +12,7 @@ import {ToastModule} from "primeng/toast";
 import {StepsModule} from "primeng/steps";
 import {DropdownChangeEvent, DropdownModule} from "primeng/dropdown";
 import {SchoolType} from "../../../core/models/school-type";
-import {Role} from "../../../core/models/role";
+import {Role, RoleName} from "../../../core/models/role";
 import {User} from "../../../core/models/user";
 import {SchoolYear} from "../../../core/models/school-year";
 import {Subject} from "../../../core/models/subject"
@@ -69,22 +69,7 @@ export class CompleteProfileComponent implements OnInit{
   sessionDto!:SessionDto;
   selectedRole: number | null = null;
   constructor(private sessionBookingLanding:SessionBookLandingService,private teacherService:TeacherService,private subjectService:SubjectService,private roleService:RoleService,private browserStorage:BrowserStorageService,private router:Router,private studentService:StudentService,private fb: FormBuilder,private userService:UserService,private authService:AuthService ,private schoolTypeService: SchoolService, private SchoolYearService: SchoolYearService) {
-    this.schoolTypeService.getALL().subscribe(schoolTypes => {
-        this.schoolTypes = schoolTypes.map(schoolType => ({name: schoolType.name, value: schoolType}));
-      }
-    );
-    this.SchoolYearService.getALL().subscribe(schoolYears => {
-        this.schoolYears = schoolYears.map(schoolYear => ({name: schoolYear.name, value: schoolYear}));
-      }
-    );
-    this.roleService.getALL().subscribe(roles => {
-        roles=roles.filter(role=>role.id!==1)
-        this.roles = roles.map(role => ({name: role.name, value: role}));
-      }
-    );
-    this.subjectService.getALL().subscribe(subjects=>{
-      this.subjects = subjects.map(subject=>({label:subject.name,value:subject}))
-    });
+
 
     this.user=authService.getUser();
   }
@@ -100,13 +85,76 @@ export class CompleteProfileComponent implements OnInit{
       schoolType: [{ value: '', disabled: !this.isEditing }, Validators.required],
       subject: [{ value: '', disabled: !this.isEditing }, Validators.required]
     });
-    this.sessionBookingLanding.currentMessage.subscribe(session=>this.sessionDto=session)
+    this.sessionBookingLanding.currentMessage.subscribe(session=>{
+      if(session && Object.keys(session).length > 0){
+      this.schoolYears =[{
+        name:session['schoolYear']['name'],
+        value:session['schoolYear']
+      }]
+      this.schoolTypes =[{
+        name:session['schoolType']['name'],
+        value:session['schoolYear']
+      }]
+      this.roles=[{
+        name:'Student',
+        value:{id:2,name:RoleName.STUDENT}
+      }]
+        this.profileForm.patchValue({
+          roles:this.roles[0],
+          schoolYears:this.schoolYears[0],
+          schoolTypes:this.schoolTypes[0]
+        })
+      this.sessionDto=session}else{
+        this.schoolTypeService.getALL().subscribe(schoolTypes => {
+            this.schoolTypes = schoolTypes.map(schoolType => ({name: schoolType.name, value: schoolType}));
+          }
+        );
+        this.SchoolYearService.getALL().subscribe(schoolYears => {
+            this.schoolYears = schoolYears.map(schoolYear => ({name: schoolYear.name, value: schoolYear}));
+          }
+        );
+        this.roleService.getALL().subscribe(roles => {
+            roles=roles.filter(role=>role.id!==1)
+            this.roles = roles.map(role => ({name: role.name, value: role}));
+          }
+        );
+        this.subjectService.getALL().subscribe(subjects=>{
+          this.subjects = subjects.map(subject=>({label:subject.name,value:subject}))
+        });
+      }
+    })
+
+
   }
   isFieldInvalid(field: string): undefined | false | true {
     const control = this.profileForm.get(field);
     return control?.invalid && (control?.touched || control?.dirty);
   }
   onSubmit(): void {
+    if(this.sessionDto && Object.keys(this.sessionDto).length>0){
+      const schoolYearControl = this.profileForm.get('schoolYear');
+      const schoolTypeControl = this.profileForm.get('schoolType');
+      const subjectControl = this.profileForm.get('subject');
+      schoolYearControl?.enable();
+      schoolTypeControl?.enable();
+      subjectControl?.disable();
+      if (this.profileForm.valid){
+        const schoolTypeControl = this.profileForm.get("schoolType");
+        const schoolYearControl = this.profileForm.get("schoolYear");
+        const roleControl = this.profileForm.get("role");
+        if (schoolTypeControl && schoolYearControl && this.user !=null){
+          this.user.isCompleted=true;
+          this.user.roles=[roleControl?.value['value']]
+          this.studentService.save({...this.user, schoolType: schoolTypeControl.value['value'], schoolYear: schoolYearControl.value['value']}).subscribe(user => {
+          this.browserStorage.setItem('user', JSON.stringify(user))
+          this.browserStorage.setItem('roles',JSON.stringify(user.roles.map(role=>role.name)))
+          this.sessionBookingLanding.changeMessage(this.sessionDto,true);
+          console.log(this.sessionDto)
+          this.router.navigate(['/profile/details']);
+        });
+        }
+      }
+    }
     if (this.profileForm.valid) {
       console.log(this.profileForm.value)
       const schoolTypeControl = this.profileForm.get("schoolType");
@@ -115,7 +163,6 @@ export class CompleteProfileComponent implements OnInit{
       const roleControl = this.profileForm.get("role");
       if(subjectControl && this.user!=null && this.selectedRole==3){
         this.user.isCompleted=true;
-
         this.user.roles=[roleControl?.value['value']]
         this.teacherService.save({...this.user, subjects: subjectControl.value, payRate: 0}).subscribe(user => {
           this.browserStorage.setItem('user', JSON.stringify(user))
@@ -140,6 +187,7 @@ export class CompleteProfileComponent implements OnInit{
 
 
   onChange(event: DropdownChangeEvent) {
+
     this.selectedRole =event.value['value']['id'];
     const schoolYearControl = this.profileForm.get('schoolYear');
     const schoolTypeControl = this.profileForm.get('schoolType');
@@ -154,4 +202,6 @@ export class CompleteProfileComponent implements OnInit{
       subjectControl?.disable();
     }
   }
+
+  protected readonly Object = Object;
 }
