@@ -1,6 +1,5 @@
 import {inject, Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
-import {Router} from '@angular/router';
 import {environment} from '../../../environments/environment';
 import {HttpClient} from '@angular/common/http';
 import {TokenResponse} from "../models/token-response";
@@ -13,7 +12,6 @@ import {User} from "../models/user";
 export class AuthService {
 
   private readonly AUTH_URL = `${environment.APPOINTMENT_BOOKING_URL}/auth`;
-  private readonly router = inject(Router);
   private readonly httpClient: HttpClient = inject(HttpClient);
 
   constructor(
@@ -71,26 +69,27 @@ export class AuthService {
   }
 
   getUser(): User | null {
-    if (typeof window !== 'undefined' && window.localStorage) {
-      const userJson = this.browserStorage.getItem('user')
-      if (userJson) {
-        return JSON.parse(userJson) as User;
-      } else {
-        // Handle the case where the user is not found (e.g., return a default value or throw an error)
-        return null;
-      }
-    } else {
-      return null;
+
+    const userJson = this.browserStorage.getItem('user')
+    if (userJson) {
+      return JSON.parse(userJson) as User;
     }
+    return null
   }
 
-  addRoles(roles: string[]) {
+
+  addRoles(roles
+             :
+             string[]
+  ) {
     if (typeof window !== 'undefined' && window.localStorage) {
       this.browserStorage.setItem('roles', JSON.stringify(roles));
     }
   }
 
-  isProfileComplete(): boolean {
+  isProfileComplete()
+    :
+    boolean {
     if (typeof window !== 'undefined' && window.localStorage) {
       const userJson = this.browserStorage.getItem('user')
       if (!userJson) {

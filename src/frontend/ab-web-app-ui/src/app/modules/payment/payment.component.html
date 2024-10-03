@@ -1,0 +1,19 @@
+@if (isPaymentReady) {
+  <p class="text-center m-2">
+    Confirm payment of <span class="font-bold">{{ amount | currency }}</span>?
+  </p>
+}
+<ngx-stripe-elements
+    [stripe]="stripe"
+    [elementsOptions]="elementsOptions"
+>
+  <ngx-stripe-payment (ready)="onPaymentElementReady()" [options]="paymentElementOptions"/>
+</ngx-stripe-elements>
+@if (isPaymentReady) {
+  @if (payButton) {
+    <ng-container *ngTemplateOutlet="payButton"></ng-container>
+  }
+}
+
+
+

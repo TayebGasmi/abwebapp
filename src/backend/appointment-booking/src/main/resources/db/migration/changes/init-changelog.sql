@@ -66,6 +66,8 @@ CREATE TABLE payment
     is_teacher_paid    BOOLEAN                                 NOT NULL,
     teacher_share      numeric(19, 2)                          NOT NULL,
     total              numeric(19, 2)                          NOT NULL,
+    status             VARCHAR(255)                            NOT NULL,
+    payment_intent_id  VARCHAR(255)                            NOT NULL UNIQUE,
     session_id         BIGINT,
     CONSTRAINT payment_pkey PRIMARY KEY (id)
 );
