@@ -1,6 +1,7 @@
 package com.appointment.booking.dto;
 
 import com.appointment.booking.base.BaseDto;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -19,6 +20,7 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @Setter
 @EqualsAndHashCode(callSuper = true)
+@Schema
 public class SchoolYearDto extends BaseDto<Long> {
 
     @NotBlank

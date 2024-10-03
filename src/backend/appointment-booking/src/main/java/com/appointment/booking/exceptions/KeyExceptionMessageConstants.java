@@ -14,7 +14,7 @@ public class KeyExceptionMessageConstants {
     static final String GOOGLE_CALENDAR = "error.google.calendar";
     static final String SESSION_EDIT_EXPIRED = "error.session.edit.expired";
     static final String SESSION_CANCEL = "error.session.cancel";
-
+    static final String STRIPE_EXCEPTION = "error.stripe.exception";
 
     private KeyExceptionMessageConstants() {
     }
