@@ -19,7 +19,7 @@ import {Subject} from "../../core/models/subject";
 import {Teacher} from "../../core/models/teacher";
 import {SessionBookLandingService} from "../../core/service/session-book-landing.service";
 import {GoogleSigninButtonModule, SocialAuthService} from "@abacritt/angularx-social-login";
-import {distinctUntilChanged, map, of, switchMap} from "rxjs";
+import {combineLatest, distinctUntilChanged, map, of, switchMap} from "rxjs";
 import {MenuItem} from "primeng/api";
 import {StepsModule} from "primeng/steps";
 import {NotificationService} from "../../core/service/notification.service";
@@ -29,6 +29,7 @@ import {SchoolYear} from "../../core/models/school-year";
 import {SchoolYearService} from "../../core/service/school-year.service";
 import {SchoolType} from "../../core/models/school-type";
 import {DialogModule} from "primeng/dialog";
+import {matchNewline} from "quill/modules/clipboard";
 
 interface MonthlyPayment {
   name?: string;
@@ -70,6 +71,7 @@ export class LandingpageComponent implements OnInit {
   sessionSteps: MenuItem[] = [];
   activeStep = 0;
   popupVisible:boolean=false;
+  currentDate=new Date();
   constructor(private notificationService:NotificationService,private sessionBook: SessionBookLandingService, private fb: FormBuilder,
               private socialAuthService: SocialAuthService,
               private teacherService: TeacherService,
@@ -172,15 +174,32 @@ export class LandingpageComponent implements OnInit {
     this.popupVisible=false
   }
 
-  private loadTeachers() {
-    this.sessionForm.get('subject')?.valueChanges
+  loadTeachers() {
+    const subjectChanges$ = this.subject?.valueChanges.pipe(
+      filter(subject => !!subject),
+      map(subject => subject.name),
+      distinctUntilChanged()
+    ) || of(null);
+
+    const startTimeChanges$ = this.sessionStartDateTime?.valueChanges.pipe(
+      filter(start => !!start),
+      distinctUntilChanged(),
+      map(start => start.toISOString())
+    ) || of(null);
+
+    combineLatest([subjectChanges$, startTimeChanges$])
       .pipe(
-        filter(subject => !!subject),
-        map(subject => subject.name),
-        distinctUntilChanged(),
-        switchMap(subjectName => subjectName ? this.teacherService.getTeachersBySubjectName(subjectName) : of([]))
+        map(([subjectName, startTime]) => ({
+          subjectName,
+          startTime
+        })),
+        filter(({subjectName, startTime}) => !!subjectName && !!startTime),
+        switchMap(({subjectName, startTime}) =>
+          this.teacherService.getAvailableTeachers(subjectName, startTime)
+        )
       )
       .subscribe(teachers => {
+
         this.teachers = teachers.map(teacher => ({
           label: `${teacher.firstName} ${teacher.lastName}`,
           value: teacher
@@ -194,6 +213,9 @@ export class LandingpageComponent implements OnInit {
         value:schoolYear
       }));
     });
+  }
+  get subject() {
+    return this.sessionForm.get('subject');
   }
   private loadSchooTypes(){
     this.schooltypeService.getALL().subscribe(schoolTypes =>{

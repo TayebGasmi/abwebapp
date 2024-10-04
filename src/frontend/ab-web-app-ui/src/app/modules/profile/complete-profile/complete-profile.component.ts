@@ -10,7 +10,7 @@ import {ToggleButtonModule} from "primeng/togglebutton";
 import {InputTextModule} from "primeng/inputtext";
 import {ToastModule} from "primeng/toast";
 import {StepsModule} from "primeng/steps";
-import {DropdownChangeEvent, DropdownModule} from "primeng/dropdown";
+import {DropdownModule} from "primeng/dropdown";
 import {SchoolType} from "../../../core/models/school-type";
 import {Role, RoleName} from "../../../core/models/role";
 import {User} from "../../../core/models/user";
@@ -18,18 +18,19 @@ import {SchoolYear} from "../../../core/models/school-year";
 import {Subject} from "../../../core/models/subject"
 import {TeacherService} from "../../../core/service/teacher.service";
 import {SubjectService} from "../../../core/service/subject.service";
-import {RoleService} from "../../../core/service/role.service";
 import {BrowserStorageService} from "../../../core/service/browser-storage.service";
 import {Router} from "@angular/router";
 import {SchoolService} from "../../../core/service/school.service";
 import {AuthService} from "../../../core/service/auth.service";
 import {StudentService} from "../../../core/service/student.service";
-import {UserService} from "../../../core/service/user.service";
 import {MultiSelectModule} from "primeng/multiselect";
 import {InputSwitchModule} from "primeng/inputswitch";
 import {SchoolYearService} from "../../../core/service/school-year.service";
 import {SessionBookLandingService} from "../../../core/service/session-book-landing.service";
 import {SessionDto} from "../../../core/models/session";
+import {NotificationService} from "../../../core/service/notification.service";
+import {SessionService} from "../../../core/service/session.service";
+import {EMPTY, switchMap} from "rxjs";
 
 
 @Component({
@@ -57,154 +58,230 @@ import {SessionDto} from "../../../core/models/session";
   styleUrl: './complete-profile.component.scss'
 })
 export class CompleteProfileComponent implements OnInit {
-  isEditing = true;
-  profileForm: FormGroup = new FormGroup({}, {updateOn: 'blur'});
-  user!: null | User;
-  switch: boolean = false;
-  roles!: { name: string, value: Role }[];
-  schoolTypes!: { name: string, value: SchoolType }[];
-  schoolYears!: { name: string, value: SchoolYear }[];
+  profileForm: FormGroup = new FormGroup({});
+  user!: User | null;
+  roles: { label: string, value: Role }[] = [
+    {label: 'Student', value: {id: 2, name: RoleName.STUDENT}},
+    {label: 'Teacher', value: {id: 3, name: RoleName.TEACHER}}
+  ];
+  schoolYear!: SchoolYear
+  schoolType!: SchoolYear
+  schoolTypes!: { label: string, value: SchoolType }[];
+  schoolYears!: { label: string, value: SchoolYear }[];
   subjects!: { label: string, value: Subject }[];
-  checked: boolean = true;
-  sessionDto!: SessionDto;
-  selectedRole: number | null = null;
-  protected readonly Object = Object;
+  sessionDto: SessionDto | null = null;
+  protected readonly RoleName = RoleName;
 
-  constructor(private sessionBookingLanding: SessionBookLandingService, private teacherService: TeacherService, private subjectService: SubjectService, private roleService: RoleService, private browserStorage: BrowserStorageService, private router: Router, private studentService: StudentService, private fb: FormBuilder, private userService: UserService, private authService: AuthService, private schoolTypeService: SchoolService, private SchoolYearService: SchoolYearService) {
+  constructor(
+    private fb: FormBuilder,
+    private router: Router,
+    private authService: AuthService,
+    private browserStorage: BrowserStorageService,
+    private sessionBookingLanding: SessionBookLandingService,
+    private teacherService: TeacherService,
+    private subjectService: SubjectService,
+    private studentService: StudentService,
+    private schoolTypeService: SchoolService,
+    private schoolYearService: SchoolYearService,
+    private notificationService: NotificationService,
+    private sessionService: SessionService
+  ) {
+    this.user = this.authService.getUser();
+    this.loadSessionData();
+  }
+
+  get selectedRole() {
+    return this.profileForm.get("role")?.value["name"];
+  }
 
 
-    this.user = authService.getUser();
+  private get selectedRoleField() {
+    return this.profileForm.get("role")
   }
 
   ngOnInit(): void {
+    this.initForm()
+    this.loadUserData()
+    this.loadProfileData()
+  }
+
+  isFieldInvalid(field: string): boolean {
+    const control = this.profileForm.get(field);
+    return !!(control && control.invalid && (control.dirty || control.touched));
+  }
+
+  initForm(): void {
 
     this.profileForm = this.fb.group({
-      firstName: [{value: this.user?.firstName, disabled: !this.isEditing}, Validators.required],
-      lastName: [{value: this.user?.lastName, disabled: !this.isEditing}, Validators.required],
-      role: [{value: ''}, Validators.required],
-      email: [{value: this.user?.email, disabled: true}, Validators.required],
-      schoolYear: [{value: '', disabled: !this.isEditing}, Validators.required],
-      schoolType: [{value: '', disabled: !this.isEditing}, Validators.required],
-      subject: [{value: '', disabled: !this.isEditing}, Validators.required]
+      firstName: ['', Validators.required],
+      lastName: ['', Validators.required],
+      email: [{value: '', disabled: true}, Validators.required],
+      role: [{value: ''}, Validators.required]
     });
-    this.sessionBookingLanding.currentMessage.subscribe(session => {
-      if (session && Object.keys(session).length > 0) {
-        this.schoolYears = [{
-          name: session['schoolYear']['name'],
-          value: session['schoolYear']
-        }]
-        this.schoolTypes = [{
-          name: session['schoolType']['name'],
-          value: session['schoolYear']
-        }]
-        this.roles = [{
-          name: 'Student',
-          value: {id: 2, name: RoleName.STUDENT}
-        }]
-        this.profileForm.patchValue({
-          roles: this.roles[0],
-          schoolYears: this.schoolYears[0],
-          schoolTypes: this.schoolTypes[0]
-        })
-        this.sessionDto = session
-      } else {
-        this.schoolTypeService.getALL().subscribe(schoolTypes => {
-            this.schoolTypes = schoolTypes.map(schoolType => ({name: schoolType.name, value: schoolType}));
-          }
-        );
-        this.SchoolYearService.getALL().subscribe(schoolYears => {
-            this.schoolYears = schoolYears.map(schoolYear => ({name: schoolYear.name, value: schoolYear}));
-          }
-        );
-        this.roleService.getALL().subscribe(roles => {
-            roles = roles.filter(role => role.id !== 1)
-            this.roles = roles.map(role => ({name: role.name, value: role}));
-          }
-        );
-        this.subjectService.getALL().subscribe(subjects => {
-          this.subjects = subjects.map(subject => ({label: subject.name, value: subject}))
-        });
-      }
-    })
+  }
 
+  loadUserData(): void {
+    const user = this.authService.getUser();
+    if (user === null) return;
+    this.user = user;
+    this.profileForm.patchValue({
+      firstName: this.user.firstName,
+      lastName: this.user.lastName,
+      email: this.user.email,
+      role: ""
+    });
 
   }
 
-  isFieldInvalid(field: string): undefined | false | true {
-    const control = this.profileForm.get(field);
-    return control?.invalid && (control?.touched || control?.dirty);
+  addTeacherFields(): void {
+    this.profileForm.addControl('subjects', this.fb.control<{ label: string, value: Subject }[]>([], Validators.required));
+    this.removeControlIfExists('schoolYear');
+    this.removeControlIfExists('schoolType');
+  }
+
+  addStudentFields(): void {
+    this.profileForm.addControl('schoolYear', this.fb.control('', Validators.required));
+    this.profileForm.addControl('schoolType', this.fb.control('', Validators.required));
+    this.removeControlIfExists('subjects');
+
   }
 
   onSubmit(): void {
-    if (this.sessionDto && Object.keys(this.sessionDto).length > 0) {
-      const schoolYearControl = this.profileForm.get('schoolYear');
-      const schoolTypeControl = this.profileForm.get('schoolType');
-      const subjectControl = this.profileForm.get('subject');
-      schoolYearControl?.enable();
-      schoolTypeControl?.enable();
-      subjectControl?.disable();
-      if (this.profileForm.valid) {
-        const schoolTypeControl = this.profileForm.get("schoolType");
-        const schoolYearControl = this.profileForm.get("schoolYear");
-        const roleControl = this.profileForm.get("role");
-        if (schoolTypeControl && schoolYearControl && this.user != null) {
-          this.user.isCompleted = true;
-          this.user.roles = [roleControl?.value['value']]
-          this.studentService.save({
-            ...this.user,
-            schoolType: schoolTypeControl.value['value'],
-            schoolYear: schoolYearControl.value['value']
-          }).subscribe(user => {
-            this.browserStorage.setItem('user', JSON.stringify(user))
-            this.browserStorage.setItem('roles', JSON.stringify(user.roles.map(role => role.name)))
-            this.sessionBookingLanding.changeMessage(this.sessionDto, true);
-            this.router.navigate(['/profile/details']);
-          });
-        }
+    if (this.profileForm.invalid) return;
+    if (!this.user) return;
+    const commonData = {
+
+      ...this.user,
+      firstName: this.profileForm.value["firstName"],
+      lastName: this.profileForm.value["lastName"],
+      roles: [this.selectedRoleField?.value],
+      isCompleted: true,
+    };
+    if (this.selectedRole === RoleName.STUDENT) {
+      if (this.sessionDto) {
+        this.studentService.save({
+          ...commonData,
+          schoolYear: this.schoolYear,
+          schoolType: this.schoolType,
+        }).pipe(
+          switchMap((user) => {
+            this.onSaveSuccess(user);
+            if (this.sessionDto) {
+              return this.sessionService.save(this.sessionDto)
+            } else {
+              return EMPTY;
+            }
+          })
+        ).subscribe(() => {
+          this.notificationService.showSuccess("You have successfully booked a session")
+          this.router.navigate(["/session-settings"]).then()
+        });
+      } else {
+        this.studentService.save({
+          ...commonData,
+          schoolYear: this.profileForm.get("schoolYear")?.value,
+          schoolType: this.profileForm.get("schoolType")?.value,
+        }).subscribe((user) => {
+          this.onSaveSuccess(user)
+          this.router.navigate(["/profile/details"]).then()
+        });
       }
     }
-    if (this.profileForm.valid) {
-      const schoolTypeControl = this.profileForm.get("schoolType");
-      const schoolYearControl = this.profileForm.get("schoolYear");
-      const subjectControl = this.profileForm.get("subject");
-      const roleControl = this.profileForm.get("role");
-      if (subjectControl && this.user != null && this.selectedRole == 3) {
-        this.user.isCompleted = true;
-        this.user.roles = [roleControl?.value['value']]
-        this.teacherService.save({...this.user, subjects: subjectControl.value, payRate: 0}).subscribe(user => {
-          this.browserStorage.setItem('user', JSON.stringify(user))
-          this.browserStorage.setItem('roles', JSON.stringify(user.roles.map(role => role.name)))
-          this.router.navigate(['/profile/details']);
-        });
-      }
-      if (schoolTypeControl && schoolYearControl && this.user != null && this.selectedRole == 2) {
-        this.user.isCompleted = true;
-        this.user.roles = [roleControl?.value['value']]
 
-        this.studentService.save({...this.user, schoolType: schoolTypeControl.value['value'], schoolYear: schoolYearControl.value['value']}).subscribe(user => {
-          this.browserStorage.setItem('user', JSON.stringify(user))
-          this.browserStorage.setItem('roles', JSON.stringify(user.roles.map(role => role.name)))
-          this.sessionBookingLanding.changeMessage(this.sessionDto, true);
-          this.router.navigate(['/profile/details']);
-        });
-      }
+
+    if (this.selectedRole === RoleName.TEACHER) {
+      console.log(this.profileForm.value["subjects"])
+      this.teacherService.save({
+        ...commonData,
+        subjects: this.profileForm.value["subjects"],
+        payRate: 0,
+      }).subscribe((user) => {
+        this.onSaveSuccess(user)
+        this.router.navigate(["/profile/details"]).then()
+      });
     }
   }
 
-  onChange(event: DropdownChangeEvent) {
-
-    this.selectedRole = event.value['value']['id'];
-    const schoolYearControl = this.profileForm.get('schoolYear');
-    const schoolTypeControl = this.profileForm.get('schoolType');
-    const subjectControl = this.profileForm.get('subject');
-    if (this.selectedRole == 3) {
-      schoolYearControl?.disable();
-      schoolTypeControl?.disable();
-      subjectControl?.enable();
-    } else {
-      schoolYearControl?.enable();
-      schoolTypeControl?.enable();
-      subjectControl?.disable();
+  private removeControlIfExists(controlName: string): void {
+    if (this.profileForm.contains(controlName)) {
+      this.profileForm.removeControl(controlName);
     }
+  }
+
+  private onSaveSuccess(user: User): void {
+    user.isCompleted = true
+    this.browserStorage.setItem('user', JSON.stringify(user));
+    this.browserStorage.setItem('roles', JSON.stringify(user.roles.map(role => role.name)));
+  }
+
+  private loadProfileData() {
+    if (!this.sessionDto) {
+      this.selectedRoleField?.valueChanges.subscribe(role => this.loadRoleBasedData(role))
+    } else {
+      this.lodProfileDataFromSession()
+    }
+  }
+
+  private lodProfileDataFromSession() {
+    const schoolYear = this.schoolYear;
+    const schoolType = this.schoolType;
+
+    this.schoolYears = [{label: schoolYear.name, value: schoolYear}];
+    this.schoolTypes = [{label: schoolType.name, value: schoolType}];
+    const studentRole = {id: 2, name: RoleName.STUDENT};
+
+    this.profileForm.addControl('schoolYear', this.fb.control({value: schoolYear, disabled: true}, Validators.required));
+    this.profileForm.addControl('schoolType', this.fb.control({value: schoolType, disabled: true}, Validators.required));
+    this.selectedRoleField?.patchValue(studentRole)
+    this.selectedRoleField?.disable()
+  }
+
+  private loadRoleBasedData(role: Role) {
+    if (role?.name == RoleName.STUDENT) {
+      this.addStudentFields()
+      this.loadStudentData()
+    }
+    if (role?.name == RoleName.TEACHER) {
+      this.addTeacherFields()
+      this.loadTeacherData()
+    }
+  }
+
+  private loadSessionData(): void {
+    this.sessionBookingLanding.currentMessage.subscribe(session => {
+      if (session) {
+        const {schoolYear, schoolType, ...sessionInfo} = session;
+        this.sessionDto = sessionInfo
+        this.schoolYear = schoolYear
+        this.schoolType = schoolType
+      }
+
+    });
+  }
+
+  private loadTeacherData(): void {
+    this.subjectService.getALL().subscribe(subjects => {
+        this.subjects = subjects.map((subject) => ({
+          label: subject.name,
+          value: subject,
+        }));
+      }
+    )
+  }
+
+  private loadStudentData(): void {
+    this.schoolTypeService.getALL().subscribe((schoolTypes) => {
+      this.schoolTypes = schoolTypes.map((type) => ({
+        label: type.name,
+        value: type,
+      }));
+    })
+
+    this.schoolYearService.getALL().subscribe((schoolYears) => {
+      this.schoolYears = schoolYears.map((year) => ({
+        label: year.name,
+        value: year,
+      }));
+    });
   }
 }

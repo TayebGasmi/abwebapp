@@ -9,25 +9,23 @@ import com.appointment.booking.mapper.FileMapper;
 import com.appointment.booking.mapper.UserMapper;
 import com.appointment.booking.repository.FileRepository;
 import com.appointment.booking.repository.UserRepository;
-import com.google.cloud.storage.*;
-import lombok.Builder;
-import lombok.RequiredArgsConstructor;
+import com.google.cloud.storage.BlobId;
+import com.google.cloud.storage.BlobInfo;
+import com.google.cloud.storage.Storage;
+import com.google.cloud.storage.StorageOptions;
+import java.io.IOException;
+import java.net.URL;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.net.URL;
-import java.time.Duration;
-import java.util.Collections;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
-import java.util.concurrent.TimeUnit;
-
 
 @Service
 public class FileService extends BaseServiceImpl<File, Long, FileDto> {
+
     private final Storage storage;
     private final FileRepository fileRepository;
     private final FileMapper fileMapper;
@@ -60,9 +58,9 @@ public class FileService extends BaseServiceImpl<File, Long, FileDto> {
         UserDto userDto = userMapper.convertEntityToDto(user);
         String fileUrl = String.format("https://storage.googleapis.com/%s/%s", bucketName, fileName);
         FileDto fileDto = FileDto.builder().
-                user(userDto)
-                .fileUrl(fileUrl)
-                .fileName(fileName).build();
+            user(userDto)
+            .fileUrl(fileUrl)
+            .fileName(fileName).build();
         return this.add(fileDto);
     }
 
@@ -97,9 +95,9 @@ public class FileService extends BaseServiceImpl<File, Long, FileDto> {
 
     public String getFileByUserId(Long userId) {
         Optional<User> user = userRepository.findById(userId);
-        if(user.isPresent()) {
-            File file =user.get().getFiles().stream().findFirst().orElse(null);
-            if(file != null) {
+        if (user.isPresent()) {
+            File file = user.get().getFiles().stream().findFirst().orElse(null);
+            if (file != null) {
                 return file.getFileUrl();
             }
         }

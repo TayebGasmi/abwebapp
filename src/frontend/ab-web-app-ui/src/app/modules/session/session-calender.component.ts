@@ -61,6 +61,7 @@ export class SessionCalenderComponent implements OnInit, OnDestroy {
   currentDate = new Date();
   isTeacher = false
   Subscriptions: Subscription[] = []
+  selectedStartDateTime!: Date
   protected readonly SessionStatus = SessionStatus;
 
   constructor(
@@ -168,7 +169,7 @@ export class SessionCalenderComponent implements OnInit, OnDestroy {
       eventClick: (e: EventClickArg) => this.onEventClick(e),
       select: (e: DateSelectArg) => this.onDateSelect(e),
       events: this.events,
-      datesSet: (dateInfo) => this.onDateRangeChange(dateInfo)
+      datesSet: (dateInfo) => this.onDateRangeChange(dateInfo),
     };
   }
 
@@ -234,8 +235,13 @@ export class SessionCalenderComponent implements OnInit, OnDestroy {
     if (this.authService.hasRoles(["TEACHER"])) {
       return;
     }
-    if (selectInfo.start < new Date())
-      return;
+    const now = new Date()
+    if (selectInfo.start < now) {
+      if (selectInfo.start.toDateString() === now.toDateString()) {
+        this.selectedStartDateTime = now
+      } else return;
+    }
+    this.selectedStartDateTime = (selectInfo.start)
     this.resetEvent();
     this.showDialog = true;
     this.view = 'new';

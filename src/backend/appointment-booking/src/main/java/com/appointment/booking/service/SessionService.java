@@ -8,22 +8,36 @@ import com.appointment.booking.dto.SessionDto;
 import com.appointment.booking.entity.Session;
 import com.appointment.booking.entity.Student;
 import com.appointment.booking.entity.Teacher;
+import com.appointment.booking.enums.MatchMode;
+import com.appointment.booking.enums.Operator;
 import com.appointment.booking.enums.SessionStatus;
 import com.appointment.booking.exceptions.NotFoundException;
 import com.appointment.booking.exceptions.SessionCancelException;
 import com.appointment.booking.exceptions.SessionConflictException;
 import com.appointment.booking.exceptions.SessionEditExpiredException;
 import com.appointment.booking.mapper.SessionMapper;
+import com.appointment.booking.mapper.StudentMapperImpl;
+import com.appointment.booking.model.FilterModel;
+import com.appointment.booking.model.PageData;
+import com.appointment.booking.model.PageLink;
 import com.appointment.booking.repository.SessionRepository;
 import com.appointment.booking.utils.ConfigKeyConstants;
+import com.appointment.booking.utils.FilterUtil;
+import com.appointment.booking.utils.PaginationUtil;
 import com.google.api.services.calendar.model.Event;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -37,12 +51,13 @@ public class SessionService extends BaseServiceImpl<Session, Long, SessionDto> {
     private final SessionRepository sessionRepository;
     private final SessionMapper sessionMapper;
     private final ConfigService configService;
+    private final StudentMapperImpl studentMapper;
 
     private static void validateCancelTime(Session existingSession) throws SessionCancelException {
         if (existingSession.getStartDateTime().isAfter(ZonedDateTime.now()) && (existingSession.getStatus() == SessionStatus.CONFIRMED)) {
             throw new SessionCancelException("Cannot cancel session. The session has already started.");
         }
-        if (existingSession.getCreatedDate().isBefore(LocalDateTime.now().minusDays(1))) {
+        if (existingSession.getCreatedDate().isBefore(ZonedDateTime.now().minusDays(1))) {
             throw new SessionCancelException("unable to cancel session");
         }
         if (existingSession.getStatus() == SessionStatus.CANCELED) {
@@ -52,6 +67,7 @@ public class SessionService extends BaseServiceImpl<Session, Long, SessionDto> {
 
     @Override
     public SessionDto add(SessionDto sessionDto) {
+        setSessionStudent(sessionDto);
         setDefaultValues(sessionDto);
         validateSessionConflict(sessionDto);
 
@@ -64,6 +80,14 @@ public class SessionService extends BaseServiceImpl<Session, Long, SessionDto> {
         return super.add(sessionDto);
     }
 
+    private void setSessionStudent(SessionDto sessionDto) {
+        if (sessionDto.getStudent() == null) {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            Student student = (Student) authentication.getPrincipal();
+            sessionDto.setStudent(studentMapper.convertEntityToDto(student));
+        }
+    }
+
     private void validateSessionConflict(SessionDto sessionDto) {
         boolean conflictingSessionExists = sessionRepository.existsConflictingSession(sessionDto.getTeacher().getId(), sessionDto.getStudent().getId(),
             sessionDto.getStartDateTime(), sessionDto.getEndDateTime());
@@ -73,8 +97,7 @@ public class SessionService extends BaseServiceImpl<Session, Long, SessionDto> {
     }
 
     public List<SessionDto> getCurrentUserSessionsWithinDateRange(ZonedDateTime startDate, ZonedDateTime endDate) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Object principal = authentication.getPrincipal();
+        Object principal = getPrincipal();
 
         List<Session> sessions;
         if (principal instanceof Student student) {
@@ -124,7 +147,7 @@ public class SessionService extends BaseServiceImpl<Session, Long, SessionDto> {
         Session existingSession = sessionRepository.findById(sessionDto.getId()).orElseThrow(() -> new NotFoundException("session not found"));
         existingSession.setEndDateTime(sessionDto.getStartDateTime().plusMinutes(existingSession.getDuration()));
         existingSession.setStartDateTime(sessionDto.getStartDateTime());
-        if (existingSession.getCreatedDate().isBefore(LocalDateTime.now().minusDays(1))) {
+        if (existingSession.getCreatedDate().isBefore(ZonedDateTime.now().minusDays(1))) {
             throw new SessionEditExpiredException("unable to edit session ");
         }
         boolean conflictingSessionExists = sessionRepository.existsConflictingSession(existingSession.getTeacher().getId(),
@@ -149,6 +172,44 @@ public class SessionService extends BaseServiceImpl<Session, Long, SessionDto> {
         googleCalendarService.deleteEvent(existingSession.getEventId());
 
         return sessionMapper.convertEntityToDto(sessionRepository.save(existingSession));
+    }
+
+    public PageData<SessionDto> getCurrentUserPagination(PageLink pageLink) {
+        Object principal = getPrincipal();
+        Map<String, List<FilterModel>> filters = Optional.ofNullable(pageLink.getFilters()).orElse(Collections.emptyMap());
+        Pageable pageable = PaginationUtil.toPageable(pageLink);
+        if (principal instanceof Teacher teacher) {
+            FilterModel teacherEmailFilter = new FilterModel(MatchMode.EQUALS, teacher.getEmail(), Operator.AND);
+            filters.putIfAbsent("teacher.email", List.of(teacherEmailFilter));
+        } else if (principal instanceof Student student) {
+            FilterModel studentEmailFilter = new FilterModel(MatchMode.EQUALS, student.getEmail(), Operator.AND);
+            filters.putIfAbsent("student.email", List.of(studentEmailFilter));
+        } else {
+            throw new IllegalStateException("Unexpected user type: " + principal.getClass().getSimpleName());
+        }
+
+        if (Objects.isNull(pageLink.getGlobalFilter()) && filters.isEmpty()) {
+            return paginateSessionData(null, pageable);
+        }
+        if (Objects.isNull(pageLink.getGlobalFilter())) {
+            Specification<Session> specification = FilterUtil.filter(filters);
+            return paginateSessionData(specification, pageable);
+        }
+        Specification<Session> specification = FilterUtil.filter(filters, pageLink.getGlobalFilter());
+        return paginateSessionData(specification, pageable);
+    }
+
+    private PageData<SessionDto> paginateSessionData(Specification<Session> specification, Pageable pageable) {
+        Page<Session> resultPage = sessionRepository.findAll(specification, pageable);
+        return PaginationUtil.paginate(resultPage, sessionMapper);
+    }
+
+    private static Object getPrincipal() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || authentication.getPrincipal() == null) {
+            throw new IllegalStateException("No authenticated user found.");
+        }
+        return authentication.getPrincipal();
     }
 
 

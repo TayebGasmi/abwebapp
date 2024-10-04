@@ -21,7 +21,6 @@ import lombok.experimental.SuperBuilder;
 @EqualsAndHashCode(callSuper = true)
 public class TeacherDto extends UserDto {
 
-    @NotNull
     private BigDecimal payRate;
     @NotNull
     private Set<SubjectDto> subjects;

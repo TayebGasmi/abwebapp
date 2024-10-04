@@ -19,6 +19,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @Table(name = "file")
 public class File extends BaseEntity<Long> {
+
     private String fileName;
     private String fileUrl;
     @ManyToOne(optional = false)

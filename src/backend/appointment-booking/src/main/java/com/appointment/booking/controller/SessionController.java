@@ -5,6 +5,8 @@ import com.appointment.booking.dto.SessionDto;
 import com.appointment.booking.entity.Session;
 import com.appointment.booking.exceptions.SessionCancelException;
 import com.appointment.booking.exceptions.SessionEditExpiredException;
+import com.appointment.booking.model.PageData;
+import com.appointment.booking.model.PageLink;
 import com.appointment.booking.service.SessionService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.time.ZonedDateTime;
@@ -16,6 +18,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -45,5 +49,10 @@ public class SessionController extends BaseController<Session, Long, SessionDto>
     @PatchMapping("/cancel/{id}")
     public ResponseEntity<SessionDto> cancel(@PathVariable Long id) throws SessionCancelException {
         return ResponseEntity.ok(sessionService.cancelSession(id));
+    }
+
+    @PostMapping("/current")
+    ResponseEntity<PageData<SessionDto>> getCurrentUserSessions(@RequestBody PageLink pageLink) {
+        return ResponseEntity.ok(sessionService.getCurrentUserPagination(pageLink));
     }
 }

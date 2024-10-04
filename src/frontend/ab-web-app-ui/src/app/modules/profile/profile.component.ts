@@ -81,6 +81,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
     this.initForm();
     this.loadUserData();
     this.loadStaticData();
+    this.userFileLoad();
   }
 
   initForm(): void {
@@ -163,14 +164,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
         });
       })
     );
-  }
-
-  loadStaticData(): void {
-    this.subscriptions.push(
-      this.roleService.getALL().subscribe((roles) => {
-        this.roles = roles.map((role) => ({name: role.name, value: role}));
-      })
-    );
     this.subscriptions.push(
       this.schoolService.getALL().subscribe((schoolTypes) => {
         this.schoolTypes = schoolTypes.map((type) => ({
@@ -185,6 +178,14 @@ export class ProfileComponent implements OnInit, OnDestroy {
           name: year.name,
           value: year,
         }));
+      })
+    );
+  }
+
+  loadStaticData(): void {
+    this.subscriptions.push(
+      this.roleService.getALL().subscribe((roles) => {
+        this.roles = roles.map((role) => ({name: role.name, value: role}));
       })
     );
   }
@@ -235,21 +236,33 @@ export class ProfileComponent implements OnInit, OnDestroy {
     );
   }
 
-  uploadFile(): void {
+  onFileSelected(event: any): void {
+    this.selectedFile = event.files[0];
+    console.log(this.selectedFile?.name)
     if (this.selectedFile) {
-      this.fileService.uploadFile(<number>this.user?.id, this.selectedFile).subscribe({
+      this.fileService.uploadFile(this.user?.id, this.selectedFile).subscribe({
         next: (data: FileDto) => {
           this.fileMetadata = data;
+          this.notificationService.showSuccess("resume uploaded successfully")
+          this.fileService.getUserFile(this.user?.id).subscribe(cvLink => this.userFileCv = cvLink)
         },
-        error: (err) => {
+        error: () => {
           this.notificationService.showError('File upload failed')
         },
-      });
+      })
     }
   }
 
   ngOnDestroy(): void {
     this.subscriptions.forEach((subscription) => subscription.unsubscribe());
+  }
+
+
+  private userFileLoad(): void {
+    this.fileService.getUserFile(this.user?.id).subscribe(
+      url => {
+        this.userFileCv = url;
+      })
   }
 }
 

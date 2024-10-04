@@ -7,7 +7,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -33,9 +33,9 @@ public class BaseEntity<I extends Serializable> implements Serializable {
 
     @CreatedDate
     @Column(updatable = false)
-    private LocalDateTime createdDate;
+    private ZonedDateTime createdDate;
 
     @LastModifiedDate
     @Column(updatable = false)
-    private LocalDateTime lastModifiedDate;
+    private ZonedDateTime lastModifiedDate;
 }
