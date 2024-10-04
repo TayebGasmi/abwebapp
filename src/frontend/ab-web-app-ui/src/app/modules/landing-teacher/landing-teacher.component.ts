@@ -11,6 +11,7 @@ import {StyleClassModule} from "primeng/styleclass";
 import {Router} from "@angular/router";
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import {PdfViewerModule} from "ng2-pdf-viewer";
+import {FileService} from "../../core/service/file.service";
 @Component({
   selector: 'app-landing-teacher',
   standalone: true,
@@ -32,8 +33,8 @@ export class LandingTeacherComponent implements OnInit{
       responsiveOptions: any[] | undefined;
       show:boolean=false;
       selectedTeacher: Teacher | undefined ;
-
-  constructor(public router:Router,private teacherService:TeacherService) {
+      pdfTeacher:string ="";
+  constructor(public router:Router,private teacherService:TeacherService,private fileService:FileService) {
       }
       getAllTeachers(){
         this.teacherService.getALL().subscribe(teachers=>{
@@ -63,6 +64,9 @@ export class LandingTeacherComponent implements OnInit{
   }
   showDialog(teacherId:number){
     this.show=true;
+    this.fileService.getUserFile(teacherId).subscribe((link)=>{
+      this.pdfTeacher=link;
+    })
     this.teacherService.findById(teacherId).subscribe(teacher=>{
       this.selectedTeacher=teacher;
     })
