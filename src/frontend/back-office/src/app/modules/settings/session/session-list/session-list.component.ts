@@ -1,34 +1,31 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {PageLink} from "../../../core/models/page-link";
-import {TableColumn} from "../../../core/models/table-cloumn";
-import {FormControl, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
-import {NotificationService} from "../../../core/service/notification.service";
-import {SortOrder} from "../../../core/enum/sort-order.enum";
-import {SessionDto} from "../../../core/models/session";
-import {SessionService} from "../../../core/service/session.service";
+import {Component, OnDestroy, OnInit} from "@angular/core";
 import {ButtonDirective} from "primeng/button";
-import {FormSideBarComponent} from "../../../shared/components/form-side-bar/form-side-bar.component";
+import {FormSideBarComponent} from "../../../../shared/components/form-side-bar/form-side-bar.component";
+import {FormControl, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {InputTextModule} from "primeng/inputtext";
 import {Ripple} from "primeng/ripple";
-import {TableComponent} from "../../../shared/components/table/table.component";
 import {CalendarModule} from "primeng/calendar";
+import {TableComponent} from "../../../../shared/components/table/table.component";
 import {CurrencyPipe, DatePipe, NgClass} from "@angular/common";
 import {DialogModule} from "primeng/dialog";
 import {DropdownModule} from "primeng/dropdown";
 import {PrimeTemplate} from "primeng/api";
-import {AuthService} from "../../../core/service/auth.service";
-import {SessionStatus} from "../../../core/enum/session-status";
-import {ColumnDefDirective} from "../../../shared/directives/column-def.directive";
+import {ColumnDefDirective} from "../../../../shared/directives/column-def.directive";
 import {StepsModule} from "primeng/steps";
-import {RoleName} from "../../../core/models/role";
-import {MatchMode} from "../../../core/enum/match-mode.enum";
-import {Operator} from "../../../core/enum/operator.enum";
-import {DeleteConfirmationComponent} from "../../../shared/components/delete-confirmation/delete-confirmation.component";
-import {Subscription} from "rxjs";
+import {DeleteConfirmationComponent} from "../../../../shared/components/delete-confirmation/delete-confirmation.component";
 import {SessionAddComponent} from "../session-add/session-add.component";
 import {SessionDetailsComponent} from "../session-details/session-details.component";
-import {RxStompService} from "../../../core/service/rx-stomp.service";
-
+import {SessionDto} from "../../../../core/models/session";
+import {PageLink} from "../../../../core/models/page-link";
+import {TableColumn} from "../../../../core/models/table-cloumn";
+import {RoleName} from "../../../../core/models/role";
+import {Subscription} from "rxjs";
+import {SessionService} from "../../../../core/service/session.service";
+import {NotificationService} from "../../../../core/service/notification.service";
+import {SortOrder} from "../../../../core/enum/sort-order.enum";
+import {MatchMode} from "../../../../core/enum/match-mode.enum";
+import {Operator} from "../../../../core/enum/operator.enum";
+import {SessionStatus} from "../../../../core/enum/session-status";
 
 @Component({
   selector: 'app-session-list',
@@ -52,7 +49,8 @@ import {RxStompService} from "../../../core/service/rx-stomp.service";
     StepsModule,
     DeleteConfirmationComponent,
     SessionAddComponent,
-    SessionDetailsComponent
+    SessionDetailsComponent,
+    ColumnDefDirective
   ],
   templateUrl: './session-list.component.html',
   styleUrl: './session-list.component.scss'
@@ -69,7 +67,9 @@ export class SessionListComponent implements OnInit, OnDestroy {
     {field: 'subject', header: 'subject', type: 'text', sortable: true, filterable: true},
     {field: 'status', header: 'status', type: 'text', sortable: true, filterable: true},
     {field: 'price', header: 'price', type: 'number', sortable: true, filterable: true},
-    {field: 'duration', header: 'duration', type: 'number', sortable: true, filterable: true}
+    {field: 'duration', header: 'duration', type: 'number', sortable: true, filterable: true},
+    {field: 'teacher', header: 'teacher', type: 'text', filterable: true, sortable: true},
+    {field: 'student', header: 'student', type: 'text', filterable: true, sortable: true}
   ];
   title = '';
   currentPageReportTemplate = "Showing {first} to {last} of {totalRecords} entries";
@@ -83,22 +83,19 @@ export class SessionListComponent implements OnInit, OnDestroy {
   Subscriptions: Subscription[] = []
   disableEdit = false;
   sessionEditStartTime = new FormControl<any>(null, Validators.required);
+  protected readonly SessionStatus = SessionStatus;
 
-  constructor(private authService: AuthService, private sessionService: SessionService, private notificationService: NotificationService, private rxStompService: RxStompService
+  constructor(private sessionService: SessionService, private notificationService: NotificationService
   ) {
-    const user = this.authService.getUser();
-    if (user)
-      this.currentRole = user.roles[0].name;
-    this.isTeacher = this.authService.hasRoles([RoleName.TEACHER])
   }
 
   ngOnInit(): void {
     this.addRoleBasedColumn()
-    this.getSessionFormWs();
 
   }
+
   loadSessions(): void {
-    this.sessionService.getCurrentUserSession(this.pageLink).subscribe(pageData => {
+    this.sessionService.findAll(this.pageLink).subscribe(pageData => {
       this.data = pageData.data;
       this.totalRecords = pageData.totalElements;
     });
@@ -141,10 +138,7 @@ export class SessionListComponent implements OnInit, OnDestroy {
   }
 
   onGlobalFilter(value: string) {
-    if (this.currentRole === RoleName.STUDENT)
-      this.pageLink.globalFilter = {keys: ['subject.name', 'status', 'teacher.firstName', 'teacher.lastName'], value};
-    if (this.currentRole == RoleName.TEACHER)
-      this.pageLink.globalFilter = {keys: ['subject.name', 'status', 'student.firstName', 'student.lastName'], value};
+    this.pageLink.globalFilter = {keys: ['subject.name', 'status', 'teacher.firstName', 'teacher.lastName', 'student.firstName', 'student.lastName'], value};
     this.loadSessions();
   }
 
@@ -168,11 +162,6 @@ export class SessionListComponent implements OnInit, OnDestroy {
     this.view = 'display'
   }
 
-  handleSessionPayment() {
-    this.showDialog = false
-    this.notificationService.showSuccess("payment done successfully.")
-  }
-
   ngOnDestroy(): void {
     this.Subscriptions.forEach(sub => sub.unsubscribe())
   }
@@ -192,15 +181,6 @@ export class SessionListComponent implements OnInit, OnDestroy {
     this.showDialog = true;
   }
 
-  private getSessionFormWs() {
-    this.Subscriptions.push(
-      this.rxStompService.watch("/session")
-      .subscribe(
-        () => this.loadSessions()
-      )
-    );
-  }
-
   private updateSession() {
     if (this.selectedSession) {
       const updatedSession = {...this.selectedSession, startDateTime: this.sessionEditStartTime.value};
@@ -217,7 +197,6 @@ export class SessionListComponent implements OnInit, OnDestroy {
     if (this.currentRole === RoleName.TEACHER)
       this.columns.push({field: 'student', header: 'student', type: 'text', filterable: true, sortable: true})
   }
-  protected readonly SessionStatus = SessionStatus;
 
   private handleSorting(sortField: string, sortOrder: number): void {
     let sortProperty = sortField;
