@@ -21,7 +21,7 @@
         <label for="startTime">Start Time</label>
         <p-calendar id="startTime" formControlName="startDateTime" [showTime]="true"
                     [touchUI]="true"
-                    placeholder="Select Start Time" [minDate]="currentDate" [showButtonBar]="true"></p-calendar>
+                    placeholder="Select Start Time" [minDate]="mintDate" [showButtonBar]="true"></p-calendar>
         @if (fieldHasError('startDateTime')) {
           <div class="mb-2 ng-invalid p-error">Start Time is required</div>
         }

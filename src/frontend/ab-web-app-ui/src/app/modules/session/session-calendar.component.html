@@ -22,7 +22,7 @@
         }
       }
       @if (view === 'new') {
-        <app-session-add (sessionPayed)="handleSessionPayment()" ></app-session-add>
+        <app-session-add [startDateTime]="selectedStartDateTime" (sessionPayed)="handleSessionPayment()" ></app-session-add>
       }
       @if (view === 'edit') {
         @if (selectedSession) {

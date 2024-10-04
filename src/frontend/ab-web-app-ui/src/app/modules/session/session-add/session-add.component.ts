@@ -42,7 +42,9 @@ export class SessionAddComponent implements OnInit {
     sessionEditStartTime = new FormControl<any>(null, Validators.required);
     activeStep = 0;
     @Input()
-    currentDate = new Date()
+    mintDate = new Date()
+    @Input()
+    startDateTime!: Date;
     @ViewChild(PaymentComponent)
     paymentComponent!: PaymentComponent;
     sessionPrice: number = 0;
@@ -79,7 +81,7 @@ export class SessionAddComponent implements OnInit {
 
     initializeForm() {
         this.sessionForm = this.fb.group({
-            startDateTime: [null, Validators.required],
+            startDateTime: [this.startDateTime, Validators.required],
             teacher: [null, Validators.required],
             subject: [null, Validators.required]
         });
