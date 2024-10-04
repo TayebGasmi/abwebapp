@@ -1,5 +1,5 @@
 <div class="card">
-  <button (click)="add()" icon="pi pi-plus" class="p-button-sm m-2" label="New" pButton pRipple type="button"></button>
+  <button icon="pi pi-plus" class="p-button-sm m-2" label="New" pButton pRipple type="button"></button>
   <app-table
     #table
     (onGlobalFilter)="onGlobalFilter($event)"
@@ -13,7 +13,7 @@
   >
 
       <ng-template #actions let-item>
-        <button (click)="edit(item)" class="mr-2 p-button-rounded p-button-outlined" icon="pi pi-pencil" pButton pRipple type="button"></button>
+        <button class="mr-2 p-button-rounded p-button-outlined" icon="pi pi-pencil" pButton pRipple type="button"></button>
       </ng-template>
 
     <ng-template appColumnDef="startDateTime" let-session>
