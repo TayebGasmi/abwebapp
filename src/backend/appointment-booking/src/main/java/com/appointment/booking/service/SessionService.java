@@ -182,7 +182,7 @@ public class SessionService extends BaseServiceImpl<Session, Long, SessionDto> {
             FilterModel teacherEmailFilter = new FilterModel(MatchMode.EQUALS, teacher.getEmail(), Operator.AND);
             filters.putIfAbsent("teacher.email", List.of(teacherEmailFilter));
         } else if (principal instanceof Student student) {
-            FilterModel studentEmailFilter = new FilterModel(MatchMode.EQUALS, "student.getEmail()", Operator.AND);
+            FilterModel studentEmailFilter = new FilterModel(MatchMode.EQUALS, student.getEmail(), Operator.AND);
             filters.putIfAbsent("student.email", List.of(studentEmailFilter));
         } else {
             throw new IllegalStateException("Unexpected user type: " + principal.getClass().getSimpleName());
