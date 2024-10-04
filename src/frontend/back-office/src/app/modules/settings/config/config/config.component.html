@@ -9,6 +9,7 @@
     [pageSize]="pageSize"
     [rowsPerPageOptions]="rowsPerPageOptions"
     [totalRecords]="totalRecords"
+    [multiSelect]="false"
   >
     <ng-template #actions let-item>
       <button (click)="edit(item)" class="mr-2 p-button-rounded p-button-outlined" icon="pi pi-pencil" pButton pRipple type="button"></button>
