@@ -1,14 +1,22 @@
 package com.appointment.booking.controller;
+
 import com.appointment.booking.dto.FileDto;
 import com.appointment.booking.entity.File;
 import com.appointment.booking.service.FileService;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.Optional;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/file")
@@ -16,12 +24,14 @@ import java.util.Optional;
 @Tag(name = "File")
 @CrossOrigin
 public class FileController {
+
     private final FileService googleCloudStorageService;
+
     // Upload file endpoint
     @PostMapping("/upload/{id}")
     public ResponseEntity<FileDto> uploadFile(@PathVariable Long id, @RequestParam("file") MultipartFile file) {
         try {
-            FileDto fileMetadata = googleCloudStorageService.uploadFile(id,file);
+            FileDto fileMetadata = googleCloudStorageService.uploadFile(id, file);
             return ResponseEntity.ok(fileMetadata);
         } catch (IOException e) {
             return ResponseEntity.status(500).body(null);
@@ -33,7 +43,7 @@ public class FileController {
     public ResponseEntity<File> getFile(@PathVariable Long id) {
         Optional<File> fileMetadata = googleCloudStorageService.getFile(id);
         return fileMetadata.map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+            .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     // Delete file by ID
@@ -42,6 +52,7 @@ public class FileController {
         googleCloudStorageService.deleteFile(id);
         return ResponseEntity.ok().build();
     }
+
     @GetMapping("/doownloadlink/{filePath}")
     public ResponseEntity<String> getDowloadLink(@PathVariable String filePath) throws IOException {
         return ResponseEntity.ok(googleCloudStorageService.generateSignedUrl(filePath));

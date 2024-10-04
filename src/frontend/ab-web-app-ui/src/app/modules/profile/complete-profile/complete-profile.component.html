@@ -4,7 +4,7 @@
     <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
       <div class="p-fluid p-formgrid grid">
         <div class="field col-12 md:col-6">
-          <label htmlFor="firstname">Firstname</label>
+          <label for="firstname">Firstname</label>
           <input
             pInputText
             id="firstname"
@@ -17,7 +17,7 @@
           }
         </div>
         <div class="field col-12 md:col-6">
-          <label htmlFor="lastname">Lastname</label>
+          <label for="lastname">Lastname</label>
           <input
             pInputText
             id="lastname"
@@ -30,108 +30,109 @@
           }
         </div>
         <div class="field col-12">
-          <label htmlFor="email">Email</label>
+          <label for="email">Email</label>
           <input
             pInputText
             id="email"
             type="text"
             formControlName="email"
-            [disabled]="true"
-            readonly
+
           />
         </div>
-        @if(sessionDto && Object.keys(sessionDto).length > 0){
-        <div class="field col-12 ">
-          <label htmlFor="role">Select Role</label>
-            <p-dropdown
-              formControlName="role"
-              [options]="roles"
-              [(ngModel)]="roles[0]"
-              optionLabel="name"
-              readonly
-            ></p-dropdown>
-            @if (isFieldInvalid("role")) {
-              <div class="mb-2 ng-invalid p-error">Role is required</div>
-            }
+
+        <div class="field col-12">
+          <label for="role">Select Role</label>
+          <p-dropdown
+            [options]="roles"
+            formControlName="role"
+            id="role"
+          ></p-dropdown>
+          @if (isFieldInvalid("role")) {
+            <div class="mb-2 ng-invalid p-error">Role is required</div>
+          }
         </div>
-            <div class="field col-12 md:col-6">
-              <label htmlFor="schoolYear">School Year</label>
-              <p-dropdown
-                formControlName="schoolYear"
-                [options]="schoolYears"
-                [(ngModel)]="schoolYears[0]"
-                [disabled]="true"
-                optionLabel="name"
-                readonly
-              ></p-dropdown>
-              @if (isFieldInvalid("schoolYear")) {
-                <div class="mb-2 ng-invalid p-error">School Year is required</div>
-              }
-            </div>
-            <div class="field col-12 md:col-6">
-              <label htmlFor="schoolType">School Type</label>
-              <p-dropdown
-                formControlName="schoolType"
-                [options]="schoolTypes"
-                [(ngModel)]="schoolTypes[0]"
-                [disabled]="true"
-                optionLabel="name"
-                readonly
-              ></p-dropdown>
-              @if (isFieldInvalid("schoolType")) {
-                <div class="mb-2 ng-invalid p-error">School Type is required</div>
-              }
-            </div>
-        } @else {
+        @if (!sessionDto) {
+          @if (selectedRole === RoleName.TEACHER) {
             <div class="field col-12">
-              <label htmlFor="role">Select Role</label>
-              <p-dropdown
-                formControlName="role"
-                [options]="roles"
-                (onChange)="onChange($event)"
-                optionLabel="name"
-              ></p-dropdown>
-              @if (isFieldInvalid("role")) {
-                <div class="mb-2 ng-invalid p-error">Role is required</div>}
-            </div>
-          @if(selectedRole==3){
-            <div class="field col-12 ">
-              <label htmlFor="subject">Select Subject</label>
+              <label for="subject">Subject</label>
               <p-multiSelect
-                formControlName="subject"
-                placeholder="choose a subject"
+                id="subject"
+                formControlName="subjects"
+                placeholder="Choose a subject"
                 [options]="subjects"
+                optionLabel="label"
+                optionValue="value"
+                dataKey="id"
+
               ></p-multiSelect>
-              @if (isFieldInvalid("subject")) {
-                <div class="mb-2 ng-invalid p-error">Subject is required</div>
+              @if (isFieldInvalid('subject')) {
+                <div class="mb-2 ng-invalid p-error">
+                  Subject is required
+                </div>
               }
             </div>
           }
-          @if(selectedRole==2){
+
+          @if (selectedRole === RoleName.STUDENT) {
             <div class="field col-12 md:col-6">
-              <label htmlFor="schoolYear">School Year</label>
+              <label for="schoolYear">School Year</label>
               <p-dropdown
+                id="schoolYear"
                 formControlName="schoolYear"
                 [options]="schoolYears"
-                optionLabel="name"
+
               ></p-dropdown>
-              @if (isFieldInvalid("schoolYear")) {
-                <div class="mb-2 ng-invalid p-error">School Year is required</div>
+              @if (isFieldInvalid('schoolYear')) {
+                <div class="mb-2 ng-invalid p-error">
+                  School Year is required
+                </div>
               }
             </div>
             <div class="field col-12 md:col-6">
-              <label htmlFor="schoolType">School Type</label>
+              <label for="schoolType">School Type</label>
               <p-dropdown
+                id="schoolType"
                 formControlName="schoolType"
                 [options]="schoolTypes"
-                optionLabel="name"
+
               ></p-dropdown>
-              @if (isFieldInvalid("schoolType")) {
-                <div class="mb-2 ng-invalid p-error">School Type is required</div>
+              @if (isFieldInvalid('schoolType')) {
+                <div class="mb-2 ng-invalid p-error">
+                  School Type is required
+                </div>
               }
             </div>
           }
+        } @else {
+          <div class="field col-12 md:col-6">
+            <label for="SessionSchoolYear">School Year</label>
+            <p-dropdown
+              id="SessionSchoolYear"
+              formControlName="schoolYear"
+              [options]="schoolYears"
+
+            ></p-dropdown>
+            @if (isFieldInvalid('schoolYear')) {
+              <div class="mb-2 ng-invalid p-error">
+                School Year is required
+              </div>
+            }
+          </div>
+          <div class="field col-12 md:col-6">
+            <label for="sessionSchoolType">School Type</label>
+            <p-dropdown
+              id="sessionSchoolType"
+              formControlName="schoolType"
+              [options]="schoolTypes"
+            ></p-dropdown>
+            @if (isFieldInvalid('schoolType')) {
+              <div class="mb-2 ng-invalid p-error">
+                School Type is required
+              </div>
+            }
+          </div>
         }
+
       </div>
       <button
         pButton

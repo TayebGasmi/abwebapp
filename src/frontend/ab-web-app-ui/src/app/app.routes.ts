@@ -2,6 +2,7 @@ import {ExtraOptions, RouterModule, Routes} from '@angular/router';
 import {AppLayoutComponent} from "./layout/app.layout.component";
 import {authGuard} from "./core/guard/auth.guard";
 import {NgModule} from "@angular/core";
+import {profileCompletedGuard} from "./core/guard/profile-completed.guard";
 
 const routerOptions: ExtraOptions = {
   anchorScrolling: 'enabled',
@@ -15,6 +16,7 @@ export const routes: Routes = [
 
   {
     path: 'complete',
+    canActivate: [profileCompletedGuard],
     loadComponent: () => import('./modules/profile/complete-profile/complete-profile.component').then(m => m.CompleteProfileComponent),
   },
   {
@@ -54,7 +56,7 @@ export const routes: Routes = [
         path: 'profile',
         loadChildren: () => import('./modules/profile/profile.routes').then(m => m.routes),
         canActivate: [authGuard],
-        data: {roles: ['STUDENT', 'TEACHER','ADMIN']}
+        data: {roles: ['STUDENT', 'TEACHER', 'ADMIN']}
       }
       , {
         path: 'session-settings',
