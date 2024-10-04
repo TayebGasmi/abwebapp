@@ -181,7 +181,8 @@ export class CompleteProfileComponent implements OnInit {
           ...commonData,
           schoolYear: this.profileForm.get("schoolYear")?.value,
           schoolType: this.profileForm.get("schoolType")?.value,
-        }).subscribe(() => {
+        }).subscribe((user) => {
+          this.onSaveSuccess(user)
           this.router.navigate(["/profile/details"]).then()
         });
       }
@@ -208,6 +209,7 @@ export class CompleteProfileComponent implements OnInit {
   }
 
   private onSaveSuccess(user: User): void {
+    user.isCompleted = true
     this.browserStorage.setItem('user', JSON.stringify(user));
     this.browserStorage.setItem('roles', JSON.stringify(user.roles.map(role => role.name)));
   }
