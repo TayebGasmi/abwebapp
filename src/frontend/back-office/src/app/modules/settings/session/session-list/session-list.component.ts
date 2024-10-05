@@ -101,6 +101,11 @@ export class SessionListComponent implements OnInit, OnDestroy {
     });
   }
 
+  sessionAdded(): void {
+    this.loadSessions()
+    this.resetEvent()
+    this.showDialog = false;
+  }
   onEditClick() {
     this.view = 'edit';
     this.title = `edit ${this.selectedSession?.title}`

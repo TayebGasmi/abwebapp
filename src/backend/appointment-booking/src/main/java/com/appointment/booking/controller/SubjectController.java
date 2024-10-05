@@ -31,9 +31,9 @@ public class SubjectController extends BaseController<Subject, Long, SubjectDto>
 
     @GetMapping("/school")
     public ResponseEntity<List<SubjectDto>> findBySchoolYearNameAndTypeName(
-        @RequestParam String year,
-        @RequestParam String type){
-        return ResponseEntity.ok(subjectService.findBySchoolYearNameAndTypeName(year,type));
+        @RequestParam String type,
+        @RequestParam String year){
+        return ResponseEntity.ok(subjectService.findBySchoolYearNameAndTypeName(type,year));
     }
 
 

@@ -34,6 +34,7 @@
       <div class="col-12 field">
         <label for="startTime">Start Time</label>
         <p-calendar id="startTime" formControlName="startDateTime" [showTime]="true"
+                    [touchUI]="true"
                     placeholder="Select Start Time" [minDate]="mintDate" [showButtonBar]="true"></p-calendar>
         @if (fieldHasError('startDateTime')) {
           <div class="mb-2 ng-invalid p-error">Start Time is required</div>
@@ -62,7 +63,11 @@
     }
     @if (activeStep < sessionSteps.length - 1) {
       <button pButton pRipple label="Next" icon="pi pi-angle-right" (click)="nextStep()" class="p-button-primary p-button-sm m-1"
-              [disabled]="activeStep === 0 ? student?.invalid : sessionForm.invalid"></button>
+              [disabled]="activeStep === 0 ? student?.invalid :subject?.invalid || sessionStartDateTime?.invalid "></button>
+    }
+    @if (activeStep == sessionSteps.length - 1) {
+      <button pButton pRipple label="Submit" icon="pi pi-check" (click)="addSession()" class="p-button-primary p-button-sm m-1"
+              [disabled]="sessionForm.invalid"></button>
     }
   </div>
 </form>

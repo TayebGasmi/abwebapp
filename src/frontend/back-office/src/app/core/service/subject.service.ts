@@ -17,16 +17,12 @@ export class SubjectService extends BaseService<Subject, number> {
     super(http, url);
   }
 
-  getCurrentUserSubject(): Observable<Subject[]> {
-    return this.http.get<Subject[]>(`${baseUrl}/subject/current`);
-  }
-
   getBySchool(schoolType: string, schoolYear: string): Observable<Subject[]> {
     const params = new HttpParams()
-    params.set("year", schoolYear)
-    params.set("type", schoolType)
-    return this.http.get<Subject[]>(`${baseUrl}/subject/school`, {
-      params
-    });
+    .set("year", schoolYear)
+    .set("type", schoolType);
+
+    return this.http.get<Subject[]>(`${baseUrl}/subject/school`, {params});
   }
+
 }

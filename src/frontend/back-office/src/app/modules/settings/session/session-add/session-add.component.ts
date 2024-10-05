@@ -14,6 +14,10 @@ import {TeacherService} from "../../../../core/service/teacher.service";
 import {SubjectService} from "../../../../core/service/subject.service";
 import {StudentService} from "../../../../core/service/student.service";
 import {Student} from "../../../../core/models/student";
+import {filter, switchMap} from "rxjs/operators";
+import {combineLatest, distinctUntilChanged, map, of} from "rxjs";
+import {SessionService} from "../../../../core/service/session.service";
+import {NotificationService} from "../../../../core/service/notification.service";
 
 @Component({
   selector: 'app-session-add',
@@ -31,7 +35,6 @@ import {Student} from "../../../../core/models/student";
 })
 export class SessionAddComponent implements OnInit {
   @Input() session!: SessionDto | null;
-  @Output() sessionPayed = new EventEmitter<void>();
   sessionForm!: FormGroup;
   teachers: { label: string, value: Teacher }[] = [];
   subjects: { label: string, value: Subject }[] = [];
@@ -40,12 +43,15 @@ export class SessionAddComponent implements OnInit {
   activeStep = 0;
   @Input() mintDate = new Date();
   @Input() startDateTime!: Date;
+  @Output() sessionAdded = new EventEmitter<void>();
 
   constructor(
     private fb: FormBuilder,
     private teacherService: TeacherService,
     private subjectService: SubjectService,
-    private studentService: StudentService
+    private studentService: StudentService,
+    private sessionService: SessionService,
+    private notificationService: NotificationService
   ) {
   }
 
@@ -55,6 +61,10 @@ export class SessionAddComponent implements OnInit {
 
   get subject() {
     return this.sessionForm.get('subject');
+  }
+
+  get teacher() {
+    return this.sessionForm.get('teacher');
   }
 
   get sessionStartDateTime() {
@@ -82,6 +92,8 @@ export class SessionAddComponent implements OnInit {
   loadInitialData() {
     this.loadStudents();
     this.loadSubjects();
+    this.loadTeachers();
+
   }
 
   loadStudents() {
@@ -94,6 +106,17 @@ export class SessionAddComponent implements OnInit {
   }
 
   loadSubjects() {
+    this.student?.valueChanges.pipe(
+      filter(student => !!student),
+      distinctUntilChanged(),
+      switchMap((student: Student) => this.subjectService.getBySchool(student.schoolType?.name, student.schoolYear?.name))
+    ).subscribe(subjects => {
+
+      this.subjects = subjects.map(subject => ({
+        label: `${subject.name}`,
+        value: subject
+      }));
+    });
 
   }
 
@@ -119,6 +142,39 @@ export class SessionAddComponent implements OnInit {
     this.activeStep--;
   }
 
+  loadTeachers() {
+    const subjectChanges$ = this.subject?.valueChanges.pipe(
+      filter(subject => !!subject),
+      map(subject => subject.name),
+      distinctUntilChanged()
+    ) || of(null);
+
+    const startTimeChanges$ = this.sessionStartDateTime?.valueChanges.pipe(
+      filter(start => !!start),
+      distinctUntilChanged(),
+      map(start => start.toISOString())
+    ) || of(null);
+
+    combineLatest([subjectChanges$, startTimeChanges$])
+    .pipe(
+      map(([subjectName, startTime]) => ({
+        subjectName,
+        startTime
+      })),
+      filter(({subjectName, startTime}) => !!subjectName && !!startTime),
+      switchMap(({subjectName, startTime}) =>
+        this.teacherService.getAvailableTeachers(subjectName, startTime)
+      )
+    )
+    .subscribe(teachers => {
+
+      this.teachers = teachers.map(teacher => ({
+        label: `${teacher.firstName} ${teacher.lastName}`,
+        value: teacher
+      }));
+    });
+  }
+
   private initializeSteps() {
     this.sessionSteps = [
       {label: 'Student'},
@@ -126,4 +182,19 @@ export class SessionAddComponent implements OnInit {
       {label: 'Teacher'},
     ];
   }
+
+  addSession() {
+    if (this.sessionForm.invalid)
+      return;
+    this.sessionService.save(this.sessionForm.value).subscribe(
+      () => {
+        this.notificationService.showSuccess('new session added')
+        this.activeStep = 0;
+        this.sessionForm.reset()
+        this.sessionAdded.emit()
+      }
+    )
+
+  }
+
 }

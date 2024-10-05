@@ -81,7 +81,7 @@
       }
     }
     @if (view === 'new') {
-      <app-session-add></app-session-add>
+      <app-session-add (sessionAdded)="sessionAdded()"></app-session-add>
     }
     @if (view === 'edit') {
       @if (selectedSession) {
