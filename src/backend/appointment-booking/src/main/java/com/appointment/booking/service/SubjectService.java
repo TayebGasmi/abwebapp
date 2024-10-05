@@ -36,4 +36,8 @@ public class SubjectService extends BaseServiceImpl<Subject, Long, SubjectDto> {
         return subjectMapper.convertEntitiesToDtos(subjects);
 
     }
+
+    public List<SubjectDto> findBySchoolYearNameAndTypeName(String type,String year) {
+        return subjectMapper.convertEntitiesToDtos(subjectRepository.findBySchoolTypeNameAndSchoolYearName(type, year));
+    }
 }

@@ -2,6 +2,7 @@ package com.appointment.booking.controller;
 
 import com.appointment.booking.base.BaseController;
 import com.appointment.booking.dto.SubjectDto;
+import com.appointment.booking.dto.TeacherDto;
 import com.appointment.booking.entity.Subject;
 import com.appointment.booking.service.SubjectService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -11,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -23,8 +25,16 @@ public class SubjectController extends BaseController<Subject, Long, SubjectDto>
     private final SubjectService subjectService;
 
     @GetMapping("/current")
-    ResponseEntity<List<SubjectDto>> getCurrent() {
+    public ResponseEntity<List<SubjectDto>> getCurrent() {
         return ResponseEntity.ok(subjectService.getCurrent());
     }
+
+    @GetMapping("/school")
+    public ResponseEntity<List<SubjectDto>> findBySchoolYearNameAndTypeName(
+        @RequestParam String type,
+        @RequestParam String year){
+        return ResponseEntity.ok(subjectService.findBySchoolYearNameAndTypeName(type,year));
+    }
+
 
 }

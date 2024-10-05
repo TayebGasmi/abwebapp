@@ -4,7 +4,7 @@ import {SchoolYear} from "./school-year";
 import {SessionDto} from "./session";
 
 export interface Student extends User {
-  schoolType?: SchoolType,
-  schoolYear?: SchoolYear,
+  schoolType: SchoolType,
+  schoolYear: SchoolYear,
   sessions?: SessionDto[]
 }

@@ -4,6 +4,8 @@ import {BaseService} from "./base.service";
 import {HttpClient} from "@angular/common/http";
 import {SessionDto} from "../models/session";
 import {Observable} from 'rxjs';
+import {PageLink} from "../models/page-link";
+import {PageData} from "../models/page-data";
 
 const baseUrl = environment.APPOINTMENT_BOOKING_URL;
 
@@ -24,5 +26,13 @@ export class SessionService extends BaseService<SessionDto, number> {
         endDate: endDate
       }
     });
+  }
+
+  cancelSession(id: number): Observable<SessionDto> {
+    return this.http.patch<SessionDto>(`${baseUrl}/session/cancel/${id}`, null);
+  }
+
+  getCurrentUserSession(pageLink: PageLink): Observable<PageData<SessionDto>> {
+    return this.http.post<PageData<SessionDto>>(`${baseUrl}/session/current`, pageLink)
   }
 }
