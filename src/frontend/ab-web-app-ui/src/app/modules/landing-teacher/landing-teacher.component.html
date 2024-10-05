@@ -71,10 +71,10 @@
           </a>
         </li>
         <li>
-          <a (click)="router.navigate(['/'], {fragment: 'pricing'})" pRipple pStyleClass="@grandparent"
+          <a (click)="router.navigate(['/subjects-overview'], {fragment: 'pricing'})" pRipple pStyleClass="@grandparent"
              enterFromClass="ng-hidden" enterActiveClass="px-fadein" leaveToClass="ng-hidden"
              class="flex m-0 md:ml-5 px-0 py-3 text-900 font-medium line-height-3 cursor-pointer">
-            <span>Pricing</span>
+            <span>Courses</span>
           </a>
         </li>
         <li>
@@ -93,8 +93,8 @@
       </ul>
 
     </div>
-    <div class="py-4 px-4 mx-0 md:mx-6 lg:mx-8 lg:px-8 z-2">
-      <div class="my-6 md:my-8">
+    <div class="grid ">
+    <div class="col-12">
         <p-carousel
           [value]="teachers"
           [numVisible]="3"
@@ -103,31 +103,27 @@
           [responsiveOptions]="responsiveOptions"
           autoplayInterval="3000">
           <ng-template let-teacher pTemplate="item">
-            <div class="surface-border border-round m-2 p-3">
-              <div class="mb-3">
-                <div class="relative mx-auto">
+            <div class="border-round  text-center w-12 " style="border: 1px solid var(--surface-d)">
+              <div class="mt-4">
                   <img
                     src="{{teacher.profilePicture}}"
-                    class="w-full border-round"/>
-                </div>
+                     width="30%"/>
               </div>
-              <div class="mb-3 font-medium">
+              <div>
+                <h5 class="mb-1">
                 {{ teacher.firstName +" "+  teacher.lastName}}
-              </div>
-              <div class="flex justify-content-between align-items-center">
-                <div class="mt-0 font-semibold text-xl">
+                </h5>
+              <h6 class="mt-0 mb-3">
                   Pay : {{ '$' + teacher.payRate }}
+              </h6>
+                <div >
+                  <p-button icon="pi pi-info " styleClass="ml-2 mb-4" label="Teacher Information" (onClick)="showDialog(teacher.id)"/>
                 </div>
-                <span>
-
-                            <p-button icon="pi pi-info" styleClass="ml-2" label="Teacher Information" (onClick)="showDialog(teacher.id)"/>
-                        </span>
               </div>
             </div>
           </ng-template>
 
         </p-carousel>
-      </div>
       <div class="grid justify-content-between my-6 pt-4 md:my-8">
         <div class="col-12 md:col-2 text-center md:text-left">
           <a class="cursor-pointer" href="#">
@@ -205,6 +201,7 @@
           </div>
         </div>
       </div>
+    </div>
     </div>
   </div>
   <p-dialog header="{{selectedTeacher?.firstName}}" [modal]="true" [(visible)]="show" [style]="{ width: '90rem' }">
