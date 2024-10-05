@@ -1,8 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-
-import {combineLatest, distinctUntilChanged, map, of, switchMap} from 'rxjs';
-import {filter} from 'rxjs/operators';
+import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 
 import {DropdownModule} from "primeng/dropdown";
 import {NgClass} from "@angular/common";
@@ -15,6 +12,8 @@ import {Teacher} from "../../../../core/models/teacher";
 import {Subject} from "../../../../core/models/subject";
 import {TeacherService} from "../../../../core/service/teacher.service";
 import {SubjectService} from "../../../../core/service/subject.service";
+import {StudentService} from "../../../../core/service/student.service";
+import {Student} from "../../../../core/models/student";
 
 @Component({
   selector: 'app-session-add',
@@ -36,31 +35,30 @@ export class SessionAddComponent implements OnInit {
   sessionForm!: FormGroup;
   teachers: { label: string, value: Teacher }[] = [];
   subjects: { label: string, value: Subject }[] = [];
+  students: { label: string, value: Student }[] = [];
   sessionSteps: MenuItem[] = [];
-  sessionEditStartTime = new FormControl<any>(null, Validators.required);
   activeStep = 0;
-  @Input()
-  mintDate = new Date()
-  @Input()
-  startDateTime!: Date;
+  @Input() mintDate = new Date();
+  @Input() startDateTime!: Date;
 
   constructor(
     private fb: FormBuilder,
     private teacherService: TeacherService,
     private subjectService: SubjectService,
+    private studentService: StudentService
   ) {
+  }
+
+  get student() {
+    return this.sessionForm.get('student');
   }
 
   get subject() {
     return this.sessionForm.get('subject');
   }
 
-  get sessionSubject() {
-    return this.sessionForm.get("subject")
-  }
-
   get sessionStartDateTime() {
-    return this.sessionForm.get("startDateTime")
+    return this.sessionForm.get("startDateTime");
   }
 
   ngOnInit(): void {
@@ -74,6 +72,7 @@ export class SessionAddComponent implements OnInit {
 
   initializeForm() {
     this.sessionForm = this.fb.group({
+      student: [null, Validators.required],
       startDateTime: [this.startDateTime, Validators.required],
       teacher: [null, Validators.required],
       subject: [null, Validators.required]
@@ -81,59 +80,30 @@ export class SessionAddComponent implements OnInit {
   }
 
   loadInitialData() {
-    this.loadTeachers();
+    this.loadStudents();
     this.loadSubjects();
   }
 
-  loadTeachers() {
-    const subjectChanges$ = this.subject?.valueChanges.pipe(
-      filter(subject => !!subject),
-      map(subject => subject.name),
-      distinctUntilChanged()
-    ) || of(null);
-
-    const startTimeChanges$ = this.sessionStartDateTime?.valueChanges.pipe(
-      filter(start => !!start),
-      distinctUntilChanged(),
-      map(start => start.toISOString())
-    ) || of(null);
-
-    combineLatest([subjectChanges$, startTimeChanges$])
-    .pipe(
-      map(([subjectName, startTime]) => ({
-        subjectName,
-        startTime
-      })),
-      filter(({subjectName, startTime}) => !!subjectName && !!startTime),
-      switchMap(({subjectName, startTime}) =>
-        this.teacherService.getAvailableTeachers(subjectName, startTime)
-      )
-    )
-    .subscribe(teachers => {
-
-      this.teachers = teachers.map(teacher => ({
-        label: `${teacher.firstName} ${teacher.lastName}`,
-        value: teacher
+  loadStudents() {
+    this.studentService.getALL().subscribe(students => {
+      this.students = students.map(student => ({
+        label: `${student.firstName} ${student.lastName}`,
+        value: student
       }));
     });
   }
 
   loadSubjects() {
-    this.subjectService.getCurrentUserSubject().subscribe(subjects => {
-      this.subjects = subjects.map(subject => ({
-        label: subject.name,
-        value: subject
-      }));
-    });
+
   }
 
   patchFormWithSessionData(session: SessionDto) {
     this.sessionForm.patchValue({
+      student: session.student,
       startDateTime: session.startDateTime,
       teacher: session.teacher,
       subject: session.subject
     });
-    this.sessionEditStartTime.patchValue(session.startDateTime);
   }
 
   fieldHasError(fieldName: string): boolean {
@@ -149,24 +119,11 @@ export class SessionAddComponent implements OnInit {
     this.activeStep--;
   }
 
-  paySession() {
-    if (this.sessionForm.invalid)
-      return;
-  }
-
-  onPaymentCompleted() {
-    this.sessionForm.reset()
-    this.activeStep = 0
-    this.sessionPayed.emit()
-  }
-
   private initializeSteps() {
     this.sessionSteps = [
-      {label: 'Choose Subject & Time'},
-      {label: 'Choose Teacher'},
-      {
-        label: "Confirm Payment "
-      }
+      {label: 'Student'},
+      {label: 'Subject & Time'},
+      {label: 'Teacher'},
     ];
   }
 }

@@ -2,65 +2,67 @@
 <form [formGroup]="sessionForm">
   <div class="grid p-fluid formgrid">
     @if (activeStep === 0) {
+
       <div class="col-12 field">
-        <label class="mb-2" for="subject">subject</label>
+        <label for="student">Student</label>
+        <p-dropdown [filter]="true" [ngClass]="{'ng-invalid ng-dirty': fieldHasError('student')}" [options]="students"
+                    formControlName="student"
+                    id="student"
+                    placeholder="Choose a Student"
+                    styleClass="w-full">
+        </p-dropdown>
+        @if (fieldHasError('student')) {
+          <div class="ng-invalid p-error">Student is required</div>
+        }
+      </div>
+    }
+    @if (activeStep === 1) {
+
+      <div class="col-12 field">
+        <label class="mb-2" for="subject">Subject</label>
         <p-dropdown [filter]="true" [ngClass]="{'ng-invalid ng-dirty': fieldHasError('subject')}" [options]="subjects"
                     [showClear]="true"
                     formControlName="subject"
                     id="subject"
-                    placeholder="choose a subject"
-                    styleClass="w-full"
-                    [virtualScroll]="true"
-        >
+                    placeholder="Choose a Subject"
+                    styleClass="w-full">
         </p-dropdown>
         @if (fieldHasError('subject')) {
-          <div class="ng-invalid p-error">subject is required</div>
+          <div class="ng-invalid p-error">Subject is required</div>
         }
       </div>
       <div class="col-12 field">
         <label for="startTime">Start Time</label>
         <p-calendar id="startTime" formControlName="startDateTime" [showTime]="true"
-                    [touchUI]="true"
                     placeholder="Select Start Time" [minDate]="mintDate" [showButtonBar]="true"></p-calendar>
         @if (fieldHasError('startDateTime')) {
           <div class="mb-2 ng-invalid p-error">Start Time is required</div>
         }
       </div>
     }
-    @if (activeStep === 1) {
+    @if (activeStep === 2) {
+
       <div class="col-12 field">
-        <label class="mb-2" for="teacher">teacher</label>
-        <p-dropdown [filter]="true" [ngClass]="{'ng-invalid ng-dirty': fieldHasError('schoolTypes')}" [options]="teachers"
-                    [showClear]="true"
+        <label class="mb-2" for="teacher">Teacher</label>
+        <p-dropdown [filter]="true" [ngClass]="{'ng-invalid ng-dirty': fieldHasError('teacher')}" [options]="teachers"
                     formControlName="teacher"
                     id="teacher"
-                    placeholder="choose a teacher"
-                    styleClass="w-full  mb-2"
-        >
+                    placeholder="Choose a Teacher"
+                    styleClass="w-full mb-2">
         </p-dropdown>
         @if (fieldHasError('teacher')) {
-          <div class="mb-2 ng-invalid p-error">teacher is required</div>
+          <div class="mb-2 ng-invalid p-error">Teacher is required</div>
         }
       </div>
     }
   </div>
-  @if (activeStep == 2) {
-    
-  }
   <div class="flex justify-content-end">
-    @if (activeStep > 0 && activeStep < this.sessionSteps.length - 1) {
-      <button pButton pRipple label="Back" icon="pi pi-angle-left" (click)="prevStep()" class="p-button-primary p-button-sm m-1 "></button>
+    @if (activeStep > 0) {
+      <button pButton pRipple label="Back" icon="pi pi-angle-left" (click)="prevStep()" class="p-button-primary p-button-sm m-1"></button>
     }
-    @if (activeStep < this.sessionSteps.length - 1) {
-      <button pButton pRipple label="Next" icon="pi pi-angle-right" class="p-button-primary p-button-sm m-1 "
-              (click)="nextStep()"
-              [disabled]="activeStep == 0 ? sessionSubject?.invalid || sessionStartDateTime?.invalid:
-              sessionForm.invalid"
-      ></button>
+    @if (activeStep < sessionSteps.length - 1) {
+      <button pButton pRipple label="Next" icon="pi pi-angle-right" (click)="nextStep()" class="p-button-primary p-button-sm m-1"
+              [disabled]="activeStep === 0 ? student?.invalid : sessionForm.invalid"></button>
     }
-
   </div>
-
 </form>
-
-
