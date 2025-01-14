@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "doowi-432309",
+  "private_key_id": "62d4f6417a3e0fbddf60c5762dfb830a372c9a87",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQC61P0Rl0sYnnV1\n3rKzqqLhnQVCPylKOLeie3rSwqvvNlJ20qay28Qww4GUq/lOJ/1uAwtygNmZpil2\noOg5IWM7/oJnM7CFhtuEjjJqv73IpAvmk0ryqAykw0tpz3GnVdMGw0XpX1lwiMvN\nhZdjpXAIoXZcNubNkNvSp/ogvVxgFq2yF3ot828fftVvMZts6zZLPUMzP0JPl+VD\npAM9XIeWqlZcwtQ8DR7W5Pi4XPjPnDmdRXgi2pSX4r1BwV8/1sF5gG+a6BrnR/YZ\nMl2lHed9OcfvABz/ksQldHbpG5nGD8MpVwccuxttQGB8A/nFueeKD9AJ+F2NdHHT\naZuJLJUPAgMBAAECggEARBkg+tnx6dHMD3/yE9G019ZDVe+urZp5uJQYYxzIzYK3\n0Q6b6yJ2Yq3IG/gJAUdLNN+QOxai+cGaaF5i9nvobzQntNUe2LSca7bmwokL9Edy\n/QKf9U1yelWitbkCfJMoPVVMtLDn6UA7RLiWQyBIcyTi/t6WBsRvk1tdrLRIqM7L\nL6fsvNyXbV7jge4yCxh1WQAd18ereNqi6i9ZKsmS8yY+anAfOuK50Mmu0UgsbIA8\nbiqQIlNd8NLt6PMQ24HQVkggS4D0iCGMufFnrcxcSBv+pPD4Ph9sy3R6bPvjBS2K\nw1IfFtmcBB416Tqspt7xhOcn4FQFlOWnOVAJyTPfWQKBgQDwgKZ4tNrZILB+BbCs\nCEDLrjP4FGBKAcXqTdHbAoZauYZr9w0g0YTfD9tGIHtE7Uvv2vRRDB7M4TSfK+Ke\nxfpGK/LRfBoUHvaVfAMpqJW4Dyo3QyKvqeoc4FPF/UISQewPcsG/FmaXCK1kiPbN\nT5VQehUrK8fuR1xm3pxyALJZOQKBgQDG3vwBTyhC+4zQc2SnTClWW+Ielm24w2Is\nYLa+sZUp+oTDeLidMc7hz8GPn9mKH66oEv5xGHbbXGm/HREYuTvbv6lr/ZnkzFt2\nqgLYMap73ll7c9txRwXoS86H/8u/VEAUvBvi+FIuq9mPXc02DBqAVWE+oPxujoAJ\nz1Zx18PIhwKBgDCDgxEuSkcqVO/W7gCF2aw8g7czRQkoume9Muve4oNCkV8OAtPv\n78GfTTgkLTmGNJ85p7cBnuTtONQy4g/tF8M38k9XnVsZs9wLnAe3PhxW0sk6/bA5\nskQI7F0v7TgJnDixiWumdSNaWL/C8SYRO6l0NvjyZ+4k7vrBRQWqJk/hAoGAWqrY\n6+Ph8D/tYC/r6NYxVn0Hp3hfx8fUX3Use95Mqlnb456LVKebsZndnpR7QpzVLS2T\nsY48yh/k2kvvOn1hC/viyyhQ3F5LKNuz9ksWdejWlREqMAf4aoL9Q0Xc53sKyClG\n8YDTPxH8W3+hio2UG4RRlJMi42i2eUJ9H+QGD8sCgYBSoO7tID5QEAYorcCnnsvu\nq8YqrjEXyJXWfMViHsDiOy78HTPiY5CddGnt3i05TPYqIW3lWPUrPTsR7Vt2d4fB\n6ldi9yCNZFFFROkU8ygme6gfD4DU9bnIAmWSwzy/vRqZtWUpHR3bfa72EUDCdj6V\nw4dFXM0ed23ydIL2q3jelA==\n-----END PRIVATE KEY-----\n",
+  "client_email": "doowi-storage-service@doowi-432309.iam.gserviceaccount.com",
+  "client_id": "109398846626395432772",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/doowi-storage-service%40doowi-432309.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}

@@ -21,4 +21,8 @@ export const routes: Routes = [
     path: 'teacher',
     loadComponent: () => import('./teacher/teacher.component').then(m => m.TeacherComponent)
   },
+  {
+    path: 'session',
+    loadComponent: () => import('./session/session-list/session-list.component').then(m => m.SessionListComponent)
+  },
 ];

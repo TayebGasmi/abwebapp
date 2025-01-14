@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Subject} from "../models/subject";
 import {BaseService} from "./base.service";
-import {HttpClient} from "@angular/common/http";
+import {HttpClient, HttpParams} from "@angular/common/http";
 import {environment} from "../../../environments/environment";
 import {Observable} from "rxjs";
 
@@ -17,7 +17,12 @@ export class SubjectService extends BaseService<Subject, number> {
     super(http, url);
   }
 
-  getCurrentUserSubject(): Observable<Subject[]> {
-    return this.http.get<Subject[]>(`${baseUrl}/subject/current`);
+  getBySchool(schoolType: string, schoolYear: string): Observable<Subject[]> {
+    const params = new HttpParams()
+    .set("year", schoolYear)
+    .set("type", schoolType);
+
+    return this.http.get<Subject[]>(`${baseUrl}/subject/school`, {params});
   }
+
 }

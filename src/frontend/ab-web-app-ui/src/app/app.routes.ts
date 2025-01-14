@@ -31,6 +31,11 @@ export const routes: Routes = [
     data: {roles: ['STUDENT,ADMIN', 'TEACHER']}
   },
   {
+    path: 'subjects-overview',
+    loadComponent: () => import('./modules/landing-subject/landing-subject.component').then(m => m.LandingSubjectComponent),
+    data: {roles: ['STUDENT,ADMIN', 'TEACHER']}
+  },
+  {
     path: '', component: AppLayoutComponent,
     canActivate: [authGuard],
     children: [

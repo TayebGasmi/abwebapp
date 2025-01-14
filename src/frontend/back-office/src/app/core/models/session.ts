@@ -1,6 +1,9 @@
 import {Teacher} from "./teacher";
 import {Student} from "./student";
 import {Subject} from "./subject";
+import {SessionStatus} from "../enum/session-status";
+
+
 
 export interface SessionDto {
   id: number;
@@ -11,7 +14,7 @@ export interface SessionDto {
   meetingLink?: string;
   price: number;
   duration: number;
-  status: string;
+  status: SessionStatus;
   teacher?:Teacher;
   student?:Student;
   subject:Subject;
